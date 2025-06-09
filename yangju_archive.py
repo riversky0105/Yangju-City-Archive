@@ -2,28 +2,22 @@ import streamlit as st
 
 st.set_page_config(page_title="양주시 아카이브", layout="wide")
 
-# 사용자 정의 CSS
+# CSS 스타일로 문단 간격 및 여백 조정
 st.markdown("""
     <style>
         .markdown-text-container {
-            line-height: 1.8;
+            line-height: 1.8;  /* 줄 간격 */
         }
         .block-container {
             padding-top: 2rem;
             padding-bottom: 2rem;
-            padding-left: 5rem;
-            padding-right: 5rem;
         }
         h1, h2, h3 {
             margin-top: 1.2em;
             margin-bottom: 0.6em;
         }
         p {
-            margin-bottom: 1.2em;
-        }
-        /* 탭 콘텐츠 높이 고정 */
-        [data-testid="stTabs"] > div > div {
-            min-height: 1000px;  /* 원하는 높이 설정 */
+            margin-bottom: 1.2em;  /* 문단 간격 */
         }
     </style>
 """, unsafe_allow_html=True)
@@ -35,7 +29,6 @@ tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래"])
 
 with tabs[0]:
     st.header("📜 양주시의 과거")
-
     st.subheader("1. 고려~조선 시대, 북방의 행정·군사 중심지")
     st.markdown("""
     - 양주목 설치: 경기 북부 광역 행정 단위  
@@ -50,8 +43,6 @@ with tabs[0]:
     - 승과(僧科) 시행 장소  
     - 현재는 회암사지 및 국립 회암사지박물관으로 보존
     """)
-    st.image("회암사지_복원예상도.jpg", caption="회암사지 복원 예상도", use_column_width=True)
-    st.image("회암사지_터.jpg", caption="현재의 회암사지 터", use_column_width=True)
 
     st.subheader("3. 조선 후기 천주교 박해의 현장")
     st.markdown("""
@@ -66,18 +57,15 @@ with tabs[0]:
     - 1951년 대규모 민간인 피해  
     - 전쟁 후 장기 복구 과정
     """)
-    st.image("6.25전쟁_양주시.jpg", caption="6.25 전쟁 당시 양주시 모습", use_column_width=True)
 
     st.subheader("5. 농업과 장터")
     st.markdown("""
     - 장흥, 은현, 남면은 조선시대 곡창지대  
     - 읍내 장터는 한양 상인과의 활발한 교역지
     """)
-    st.image("조선시대_농업_환경.jpg", caption="조선시대 양주시의 농업 환경", use_column_width=True)
 
 with tabs[1]:
     st.header("🏙️ 양주시의 현재")
-
     st.subheader("1. 옥정·회천 신도시 개발")
     st.markdown("""
     - 수도권 주택난 해소 위한 대규모 개발  
@@ -114,7 +102,6 @@ with tabs[1]:
 
 with tabs[2]:
     st.header("🌐 양주시의 미래")
-
     st.subheader("1. 경기북부 중심도시 성장")
     st.markdown("""
     - 수도권 동북부 거점도시로 발전  
@@ -149,6 +136,9 @@ with tabs[2]:
     - 지역 대학 및 평생학습 거점 마련  
     - 맞춤형 복지 설계: 고령자, 청년, 다문화 가정 대상
     """)
+
+# --- 이미지 예시: 만약 이미지 넣을 때 ---
+# st.image("path/to/image.png", use_container_width=True)
 
 
 
