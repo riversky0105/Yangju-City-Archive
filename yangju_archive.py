@@ -139,6 +139,7 @@ with tabs[2]:
 
 # --- 이미지 예시: 만약 이미지 넣을 때 ---
 # st.image("path/to/image.png", use_container_width=True)
+st.image("path/to/양주 회암사지.jpg", use_container_width=True)
 
 
 
