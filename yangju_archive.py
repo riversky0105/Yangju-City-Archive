@@ -1,8 +1,13 @@
+import os
 import streamlit as st
+
+# 'images' 폴더가 없다면 새로 만든다
+if not os.path.exists("images"):
+    os.makedirs("images")
 
 st.set_page_config(page_title="양주시 아카이브", layout="wide")
 
-# CSS 스타일로 문단 간격 및 여백 조정
+# 사용자 정의 CSS로 문단 간격 조정
 st.markdown("""
     <style>
         .markdown-text-container {
@@ -136,10 +141,5 @@ with tabs[2]:
     - 지역 대학 및 평생학습 거점 마련  
     - 맞춤형 복지 설계: 고령자, 청년, 다문화 가정 대상
     """)
-
-# --- 이미지 예시: 만약 이미지 넣을 때 ---
-# st.image("path/to/image.png", use_container_width=True)
-st.image("path/to/1.jpg", use_container_width=True)
-
 
 
