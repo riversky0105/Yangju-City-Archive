@@ -2,22 +2,28 @@ import streamlit as st
 
 st.set_page_config(page_title="양주시 아카이브", layout="wide")
 
-# 사용자 정의 CSS로 문단 간격 조정
+# 사용자 정의 CSS
 st.markdown("""
     <style>
         .markdown-text-container {
-            line-height: 1.8;  /* 줄 간격 */
+            line-height: 1.8;
         }
         .block-container {
             padding-top: 2rem;
             padding-bottom: 2rem;
+            padding-left: 5rem;
+            padding-right: 5rem;
         }
         h1, h2, h3 {
             margin-top: 1.2em;
             margin-bottom: 0.6em;
         }
         p {
-            margin-bottom: 1.2em;  /* 문단 간격 */
+            margin-bottom: 1.2em;
+        }
+        /* 탭 콘텐츠 높이 고정 */
+        [data-testid="stTabs"] > div > div {
+            min-height: 1000px;  /* 원하는 높이 설정 */
         }
     </style>
 """, unsafe_allow_html=True)
