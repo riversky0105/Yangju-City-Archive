@@ -1,30 +1,22 @@
 import os
 import streamlit as st
 import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+import pandas as pd
 
-# 'images' 폴더가 없다면 새로 만든다
-if not os.path.exists("images"):
-    os.makedirs("images")
+# 폰트 경로와 fontprop 설정
+font_path = "fonts/NanumGothicCoding.ttf"
+fontprop = fm.FontProperties(fname=font_path)
+plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
 
 st.set_page_config(page_title="양주시 아카이브", layout="wide")
 
-# 사용자 정의 CSS로 문단 간격 조정
 st.markdown("""
     <style>
-        .markdown-text-container {
-            line-height: 1.8;
-        }
-        .block-container {
-            padding-top: 2rem;
-            padding-bottom: 2rem;
-        }
-        h1, h2, h3 {
-            margin-top: 1.2em;
-            margin-bottom: 0.6em;
-        }
-        p {
-            margin-bottom: 1.2em;
-        }
+        .markdown-text-container { line-height: 1.8; }
+        .block-container { padding-top: 2rem; padding-bottom: 2rem; }
+        h1, h2, h3 { margin-top: 1.2em; margin-bottom: 0.6em; }
+        p { margin-bottom: 1.2em; }
     </style>
 """, unsafe_allow_html=True)
 
@@ -80,10 +72,13 @@ with tabs[1]:
     pops = [270000, 290000, 292089]
     fig, ax = plt.subplots()
     ax.plot(years, pops, marker='o')
-    ax.set_title('양주시 인구 추이')
-    ax.set_xlabel('연도')
-    ax.set_ylabel('인구수 (명)')
-    ax.grid(True)
+    ax.set_title('양주시 인구 추이', fontproperties=fontprop)
+    ax.set_xlabel('연도', fontproperties=fontprop)
+    ax.set_ylabel('인구수 (명)', fontproperties=fontprop)
+    ax.set_xticks(years)
+    ax.set_xticklabels([str(year) for year in years], fontproperties=fontprop)
+    for label in ax.get_yticklabels():
+        label.set_fontproperties(fontprop)
     st.pyplot(fig)
     st.caption("자료: 행정안전부 주민등록 인구통계, 양주시청 기본현황")
 
@@ -92,9 +87,21 @@ with tabs[1]:
     events = ['출생', '사망']
     counts = [765, 820]
     fig2, ax2 = plt.subplots()
-    ax2.bar(events, counts, color=['green', 'red'])
-    ax2.set_ylabel('명')
-    ax2.set_title('출생/사망 현황')
+    bars = ax2.bar(events, counts, color=['green', 'red'])
+    ax2.set_ylabel('명', fontproperties=fontprop)
+    ax2.set_title('출생/사망 현황', fontproperties=fontprop)
+    ax2.set_xticks(range(len(events)))
+    ax2.set_xticklabels(events, fontproperties=fontprop)
+    for label in ax2.get_yticklabels():
+        label.set_fontproperties(fontprop)
+    for bar in bars:
+        height = bar.get_height()
+        ax2.annotate(f'{height}',
+                     xy=(bar.get_x() + bar.get_width() / 2, height),
+                     xytext=(0, 3),
+                     textcoords="offset points",
+                     ha='center', va='bottom',
+                     fontproperties=fontprop)
     st.pyplot(fig2)
     st.caption("자료: 양주시청 (2025.5.31 기준)")
 
@@ -103,9 +110,21 @@ with tabs[1]:
     categories = ['공장', '학교']
     values = [2845, 67]
     fig3, ax3 = plt.subplots()
-    ax3.bar(categories, values, color=['blue', 'orange'])
-    ax3.set_ylabel('개수')
-    ax3.set_title('등록 공장 수 / 학교 수')
+    bars3 = ax3.bar(categories, values, color=['blue', 'orange'])
+    ax3.set_ylabel('개수', fontproperties=fontprop)
+    ax3.set_title('등록 공장 수 / 학교 수', fontproperties=fontprop)
+    ax3.set_xticks(range(len(categories)))
+    ax3.set_xticklabels(categories, fontproperties=fontprop)
+    for label in ax3.get_yticklabels():
+        label.set_fontproperties(fontprop)
+    for bar in bars3:
+        height = bar.get_height()
+        ax3.annotate(f'{height}',
+                     xy=(bar.get_x() + bar.get_width() / 2, height),
+                     xytext=(0, 3),
+                     textcoords="offset points",
+                     ha='center', va='bottom',
+                     fontproperties=fontprop)
     st.pyplot(fig3)
     st.caption("자료: 양주시청 (2025.5.31 기준)")
 
