@@ -19,6 +19,18 @@ st.markdown("""
     .stApp {
         font-size: 16px !important;
     }
+    /* 이미지 가로 배치 스타일 */
+    .img-container {
+        display: flex;
+        justify-content: flex-start;
+        gap: 20px;
+        margin-top: 10px;
+    }
+    .img-container img {
+        width: 48%;
+        height: auto;
+        border-radius: 5px;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -40,7 +52,6 @@ tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변
 
 with tabs[0]:
     st.header("📜 양주시의 과거")
-    # 텍스트 부분
     st.markdown("""
     <div style='font-size:13pt;'>
     <b>1. 고려~조선 시대, 북방의 행정·군사 중심지</b><br>
@@ -53,6 +64,12 @@ with tabs[0]:
     - 세종 시대까지 국가 불교 중심지로 기능<br>
     - 승과(僧科) 시행 장소<br>
     - 현재는 회암사지 및 국립 회암사지박물관으로 보존<br>
+
+    <!-- 이미지 가로 배치 -->
+    <div class="img-container">
+        <img src="회암사지.jpg" alt="회암사지 터">
+        <img src="회암사지 복원도.jpg" alt="회암사지 추정 복원도">
+    </div>
     <br>
     <b>3. 조선 후기 천주교 박해의 현장</b><br>
     - 신유박해(1801) 시기 여성 신자 다수 순교<br>
@@ -69,13 +86,6 @@ with tabs[0]:
     - 읍내 장터는 한양 상인과의 활발한 교역지
     </div>
     """, unsafe_allow_html=True)
-
-    # 이미지 가로 배치 (텍스트 바로 아래 위치)
-    col1, col2 = st.columns(2)
-    with col1:
-        st.image("회암사지.jpg", caption="회암사지 터", use_container_width=True)
-    with col2:
-        st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", use_container_width=True)
 
 with tabs[1]:
     st.header("🏙️ 양주시의 현재")
