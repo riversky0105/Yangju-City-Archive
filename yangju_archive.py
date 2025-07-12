@@ -196,3 +196,84 @@ with tabs[2]:
     - 맞춤형 복지 설계: 고령자, 청년, 다문화 가정 대상
     </div>
     """, unsafe_allow_html=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+with tabs[1]:
+    st.header("🏙️ 양주시의 현재")
+    # ... (본문 생략)
+
+    st.subheader("양주시 5년 단위 연도별 출생자수·사망자수 (2005~최신)")
+
+    DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
+    try:
+        df = pd.read_csv(DATA_PATH, encoding="cp949")
+        df['행정구역별'] = df['행정구역별'].astype(str).str.strip()
+        df_yg = df[df['행정구역별'] == "양주시"]
+
+        # st.write("컬럼명 목록:", list(df_yg.columns))  # 컬럼명 직접 확인!
+        
+        # [1] 연도/데이터 추출
+        birth_cols = [c for c in df_yg.columns if '출생건수' in c and re.match(r"\d{4}", c)]
+        death_cols = [c for c in df_yg.columns if '사망건수' in c and re.match(r"\d{4}", c)]
+
+        years = [int(re.match(r"(\d{4})", c).group(1)) for c in birth_cols]
+        # 2005부터 5년 단위 및 마지막 연도만 필터
+        filtered = [(y, b, d) for y, b, d in zip(years, birth_cols, death_cols)
+                    if y >= 2005 and (y % 5 == 0 or y == max(years))]
+
+        # 오름차순 정렬
+        filtered = sorted(filtered, key=lambda x: x[0])
+
+        base_years = []
+        births = []
+        deaths = []
+        for y, bcol, dcol in filtered:
+            bval = df_yg[bcol].values[0]
+            dval = df_yg[dcol].values[0]
+            try:
+                bval = int(str(bval).replace(",", "").strip())
+            except:
+                bval = 0
+            try:
+                dval = int(str(dval).replace(",", "").strip())
+            except:
+                dval = 0
+            base_years.append(y)
+            births.append(bval)
+            deaths.append(dval)
+
+        # [디버깅] 실제 값 확인
+        st.write("x축 연도(base_years):", base_years)
+        st.write("출생자수:", births)
+        st.write("사망자수:", deaths)
+
+        # ▒▒ 그래프 크기/폰트 축소 ▒▒
+        fig, ax = plt.subplots(figsize=(5, 2.7))
+        ax.plot(base_years, births, marker='o', label='출생자수')
+        ax.plot(base_years, deaths, marker='o', label='사망자수')
+        ax.set_title("양주시 5년 단위 출생자수·사망자수 변화", fontproperties=font_prop, fontsize=13)
+        ax.set_xlabel("연도", fontproperties=font_prop, fontsize=11)
+        ax.set_ylabel("명", fontproperties=font_prop, fontsize=11)
+        ax.set_xticks(base_years)
+        ax.set_xticklabels(base_years, fontproperties=font_prop, fontsize=10)
+        ax.legend(prop=font_prop, fontsize=10)
+        plt.yticks(fontproperties=font_prop, fontsize=10)
+        plt.xticks(fontproperties=font_prop, fontsize=10)
+        plt.tight_layout()
+        st.pyplot(fig)
+        st.caption("양주시 인구 구조 변화를 5년 단위로 시각화. 데이터 출처: KOSIS 국가통계포털")
+    except Exception as e:
+        st.warning(f"그래프를 불러오는 중 오류가 발생했습니다: {e}")
+
