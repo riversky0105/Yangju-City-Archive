@@ -141,10 +141,3 @@ with tabs[2]:
     - 지역 대학 및 평생학습 거점 마련  
     - 맞춤형 복지 설계: 고령자, 청년, 다문화 가정 대상
     """)
-
-    st.image("images/양주 회암사지.jpg", use_container_width=True)
-
-
-
-
-
