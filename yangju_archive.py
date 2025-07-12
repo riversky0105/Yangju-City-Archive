@@ -55,12 +55,11 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
-    # 텍스트 바로 아래 이미지 가로 배치
     col1, col2 = st.columns(2)
     with col1:
-        st.image("회암사지.jpg", caption="회암사지 터", use_container_width=True)
+        st.image("회암사지.jpg", caption="회암사지 터", width=350)
     with col2:
-        st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", use_container_width=True)
+        st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=350)
 
     st.markdown("""
     <div style='font-size:13pt;'>
@@ -146,13 +145,9 @@ with tabs[3]:
     # 인구수 변화 그래프
     POP_DATA_PATH = "양주시_연도별_인구수.csv"
     try:
-        # 멀티 헤더(2줄)로 읽기
         df_pop = pd.read_csv(POP_DATA_PATH, encoding="cp949", header=[0,1])
-
-        # 양주시 데이터 필터링 (첫 컬럼 '행정구역(시군구)별' 포함 '양주시' 문자열)
         df_pop = df_pop[df_pop.iloc[:, 0].str.contains("양주시")].reset_index(drop=True)
 
-        # 연도별로 월별 데이터 그룹핑
         year_cols = {}
         for col in df_pop.columns[1:]:
             year = col[0][:4]
@@ -160,18 +155,15 @@ with tabs[3]:
                 year_cols[year] = []
             year_cols[year].append(col)
 
-        # 연도별 월별 인구수 평균 계산
         year_avg = {}
         for y, cols in year_cols.items():
             vals = df_pop.loc[0, cols].values.astype(float)
             year_avg[int(y)] = np.mean(vals)
 
-        # 5년 단위 필터링
         years = sorted(year_avg.keys())
         years_5yr = [y for y in years if y >= 2005 and (y % 5 == 0 or y == years[-1])]
         pop_5yr_avg = [year_avg[y] for y in years_5yr]
 
-        # 시각화
         fig, ax = plt.subplots(figsize=(6, 3.5))
         ax.plot(years_5yr, pop_5yr_avg, marker='o', color='tab:green', label='인구수 (연평균)')
         ax.set_title("양주시 연평균 인구수 변화", fontproperties=font_prop, fontsize=12)
@@ -183,13 +175,13 @@ with tabs[3]:
         plt.xticks(fontproperties=font_prop, fontsize=9)
         ax.legend(prop=font_prop, fontsize=10)
         plt.tight_layout()
-        st.pyplot(fig, use_container_width=False)
+        st.pyplot(fig, use_container_width=True)
     except Exception as e:
         st.error(f"인구수 그래프 로드 중 오류가 발생했습니다: {e}")
 
     st.markdown("---")
 
-    # 출생자수·사망자수 그래프 (기존 코드 재사용)
+    # 출생자수·사망자수 그래프
     BIRTH_DEATH_DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
     try:
         df = pd.read_csv(BIRTH_DEATH_DATA_PATH, encoding="cp949")
@@ -244,7 +236,7 @@ with tabs[3]:
         plt.xticks(fontproperties=font_prop, fontsize=9)
         ax.legend(prop=font_prop, fontsize=10)
         plt.tight_layout()
-        st.pyplot(fig, use_container_width=False)
+        st.pyplot(fig, use_container_width=True)
 
         st.caption("양주시 인구 구조 변화를 5년 단위로 시각화. 데이터 출처: KOSIS 국가통계포털")
     except Exception as e:
