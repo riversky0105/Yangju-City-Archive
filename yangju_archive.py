@@ -30,7 +30,6 @@ if os.path.exists(FONT_PATH):
 else:
     font_prop = None
 
-# ▒▒ Streamlit 세팅 ▒▒
 st.set_page_config(page_title="양주시 아카이브: 과거, 현재, 미래", layout="wide")
 st.title("🏙️ 양주시 아카이브: 과거, 현재, 미래")
 st.markdown("<span style='font-size:15pt;'>경기도 양주시의 역사와 미래 비전을 살펴보는 디지털 아카이브입니다.</span>", unsafe_allow_html=True)
@@ -102,60 +101,63 @@ with tabs[1]:
         df = pd.read_csv(DATA_PATH, encoding="cp949")
         df['행정구역별'] = df['행정구역별'].astype(str).str.strip()
         df_yg = df[df['행정구역별'] == "양주시"].reset_index(drop=True)
-
-        births_years = []
-        births = []
-        deaths_years = []
-        deaths = []
+        
+        births_years, births = [], []
+        deaths_years, deaths = [], []
 
         for col in df_yg.columns:
-            # 연도 추출
-            year_match = re.match(r"(\d{4})", col)
+            # 연도 추출: 2005 또는 2005.1 형식 모두
+            year_match = re.match(r"(\d{4})(?:\.\d)?", col)
             if not year_match:
                 continue
             year = int(year_match.group(1))
-            # 출생자수
+            # 출생자수 컬럼
             if "출생" in col and year >= 2005 and (year % 5 == 0 or year == 2023):
                 val = df_yg[col].values[0]
                 try:
+                    val_int = int(float(str(val).replace(",", "")))
                     births_years.append(year)
-                    births.append(int(str(val).replace(",", "")))
+                    births.append(val_int)
                 except: continue
-            # 사망자수
+            # 사망자수 컬럼
             if "사망" in col and year >= 2005 and (year % 5 == 0 or year == 2023):
                 val = df_yg[col].values[0]
                 try:
+                    val_int = int(float(str(val).replace(",", "")))
                     deaths_years.append(year)
-                    deaths.append(int(float(str(val).replace(",", ""))))
+                    deaths.append(val_int)
                 except: continue
 
-        # 연도 오름차순
-        births_years, births = zip(*sorted(zip(births_years, births)))
-        deaths_years, deaths = zip(*sorted(zip(deaths_years, deaths)))
+        # 정렬 및 예외처리
+        if births_years and births:
+            births_years, births = zip(*sorted(zip(births_years, births)))
+            fig1, ax1 = plt.subplots(figsize=(4.5, 2.5))
+            ax1.plot(births_years, births, marker='o', color='royalblue')
+            ax1.set_title("양주시 5년 단위 출생자수 변화", fontproperties=font_prop, fontsize=13)
+            ax1.set_xlabel("연도", fontproperties=font_prop, fontsize=11)
+            ax1.set_ylabel("명", fontproperties=font_prop, fontsize=11)
+            ax1.set_xticks(births_years)
+            ax1.set_xticklabels(births_years, fontproperties=font_prop, fontsize=10)
+            plt.yticks(fontproperties=font_prop, fontsize=10)
+            plt.tight_layout()
+            st.pyplot(fig1)
+        else:
+            st.warning("출생자수 데이터가 존재하지 않습니다.")
 
-        # 출생자수 그래프
-        fig1, ax1 = plt.subplots(figsize=(4.5, 2.5))
-        ax1.plot(births_years, births, marker='o', color='royalblue')
-        ax1.set_title("양주시 5년 단위 출생자수 변화", fontproperties=font_prop, fontsize=13)
-        ax1.set_xlabel("연도", fontproperties=font_prop, fontsize=11)
-        ax1.set_ylabel("명", fontproperties=font_prop, fontsize=11)
-        ax1.set_xticks(births_years)
-        ax1.set_xticklabels(births_years, fontproperties=font_prop, fontsize=10)
-        plt.yticks(fontproperties=font_prop, fontsize=10)
-        plt.tight_layout()
-        st.pyplot(fig1)
-
-        # 사망자수 그래프
-        fig2, ax2 = plt.subplots(figsize=(4.5, 2.5))
-        ax2.plot(deaths_years, deaths, marker='o', color='orangered')
-        ax2.set_title("양주시 5년 단위 사망자수 변화", fontproperties=font_prop, fontsize=13)
-        ax2.set_xlabel("연도", fontproperties=font_prop, fontsize=11)
-        ax2.set_ylabel("명", fontproperties=font_prop, fontsize=11)
-        ax2.set_xticks(deaths_years)
-        ax2.set_xticklabels(deaths_years, fontproperties=font_prop, fontsize=10)
-        plt.yticks(fontproperties=font_prop, fontsize=10)
-        plt.tight_layout()
-        st.pyplot(fig2)
+        if deaths_years and deaths:
+            deaths_years, deaths = zip(*sorted(zip(deaths_years, deaths)))
+            fig2, ax2 = plt.subplots(figsize=(4.5, 2.5))
+            ax2.plot(deaths_years, deaths, marker='o', color='orangered')
+            ax2.set_title("양주시 5년 단위 사망자수 변화", fontproperties=font_prop, fontsize=13)
+            ax2.set_xlabel("연도", fontproperties=font_prop, fontsize=11)
+            ax2.set_ylabel("명", fontproperties=font_prop, fontsize=11)
+            ax2.set_xticks(deaths_years)
+            ax2.set_xticklabels(deaths_years, fontproperties=font_prop, fontsize=10)
+            plt.yticks(fontproperties=font_prop, fontsize=10)
+            plt.tight_layout()
+            st.pyplot(fig2)
+        else:
+            st.warning("사망자수 데이터가 존재하지 않습니다.")
 
         st.caption("양주시 인구 구조 변화를 5년 단위로 시각화. 데이터 출처: KOSIS 국가통계포털")
     except Exception as e:
