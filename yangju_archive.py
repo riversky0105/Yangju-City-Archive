@@ -19,24 +19,20 @@ st.markdown("""
     .stApp {
         font-size: 16px !important;
     }
+    /* 컬럼 간 간격 제거 */
+    .css-1lcbmhc.e16nr0p30 > div {
+        gap: 0px !important;
+    }
+    /* 이미지 마진 및 패딩 제거 */
+    .css-1lcbmhc.e16nr0p30 img {
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block;
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# 2. CSS로 컬럼 간격 및 이미지 마진 최소화
-st.markdown("""
-<style>
-.css-1lcbmhc.e16nr0p30 > div {
-    gap: 0px !important;  /* 컬럼 간 간격 완전 제거 */
-}
-.css-1lcbmhc.e16nr0p30 img {
-    margin: 0 !important;
-    padding: 0 !important;
-    display: block;
-}
-</style>
-""", unsafe_allow_html=True)
-
-# 3. 한글 폰트 설정 (NanumGothicCoding.ttf)
+# 2. 한글 폰트 설정 (NanumGothicCoding.ttf)
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 if os.path.exists(FONT_PATH):
     font_prop = fm.FontProperties(fname=FONT_PATH)
@@ -45,7 +41,7 @@ if os.path.exists(FONT_PATH):
 else:
     font_prop = None
 
-# 4. Streamlit 페이지 설정
+# 3. Streamlit 페이지 설정
 st.set_page_config(page_title="양주시 아카이브: 과거, 현재, 미래", layout="wide")
 st.title("🏙️ 양주시 아카이브: 과거, 현재, 미래")
 st.markdown("<span style='font-size:15pt;'>경기도 양주시의 역사와 미래 비전을 살펴보는 디지털 아카이브입니다.</span>", unsafe_allow_html=True)
@@ -69,12 +65,12 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
-    # 이미지 두 개를 가로로 공백없이 붙여서 배치 (gap="small" + CSS gap 0 적용됨)
-    col1, col2 = st.columns([1,1], gap="small")
+    # 이미지 두 개를 가로로 공백없이 붙여서 배치 (gap CSS 적용됨)
+    col1, col2 = st.columns([1, 1], gap="small")
     with col1:
-        st.image("회암사지.jpg", caption="회암사지 터", use_column_width=True)
+        st.image("회암사지.jpg", caption="회암사지 터", width=500, use_container_width=False)
     with col2:
-        st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", use_column_width=True)
+        st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=500, use_container_width=False)
 
     st.markdown("""
     <div style='font-size:13pt;'>
