@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
-# 🔵 웹사이트 폰트 스타일/크기
+# 🔵 스타일
 st.markdown("""
     <style>
     html, body, [class*="css"]  { font-size: 16px !important; }
@@ -13,7 +13,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 🔵 한글 폰트 설정 (NanumGothicCoding)
+# 한글 폰트
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 font_prop = None
 if os.path.exists(FONT_PATH):
@@ -21,7 +21,6 @@ if os.path.exists(FONT_PATH):
     plt.rcParams['font.family'] = font_prop.get_name()
     plt.rcParams['axes.unicode_minus'] = False
 
-# 🔵 Streamlit 페이지 세팅
 st.set_page_config(page_title="양주시 아카이브: 과거, 현재, 미래", layout="wide")
 st.title("🏙️ 양주시 아카이브: 과거, 현재, 미래")
 st.markdown("<span style='font-size:15pt;'>경기도 양주시의 역사와 미래 비전을 살펴보는 디지털 아카이브입니다.</span>", unsafe_allow_html=True)
@@ -90,48 +89,67 @@ with tabs[1]:
 
     DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
     try:
-        # (1) 데이터 읽기 (cp949, 첫 번째 '양주시' row만 사용)
         df = pd.read_csv(DATA_PATH, encoding="cp949")
         df = df[df['행정구역별'] == '양주시'].reset_index(drop=True)
-        # (2) 컬럼명에서 연도/타입 분리
+
+        # 출생자수/사망자수 컬럼명 추출
         cols = df.columns.tolist()
-        year_types = []
-        for col in cols:
-            if '출생건수' in col or '사망건수' in col:
-                y = col.split()[0].replace('.1', '')  # 2005, 2005.1 등
-                t = '출생' if '출생' in col else '사망'
-                year_types.append((y, t, col))
-        # (3) 5년 단위 및 마지막 연도만 추출
-        all_years = sorted(set([yt[0] for yt in year_types if yt[0].isdigit() and int(yt[0]) >= 2005]), key=int)
-        sel_years = [y for y in all_years if (int(y) - 2005) % 5 == 0 or y == all_years[-1]]
-        sel_years = sorted(list(set(sel_years)), key=int)
-        base_years, births, deaths = [], [], []
-        for y in sel_years:
-            bcol = next((c for (yy, t, c) in year_types if yy == y and t == '출생'), None)
-            dcol = next((c for (yy, t, c) in year_types if yy == y and t == '사망'), None)
-            if bcol and dcol:
-                bval = df[bcol].values[0]
-                dval = df[dcol].values[0]
-                try:
-                    births.append(int(str(bval).replace(",", "").strip()))
-                except: births.append(0)
-                try:
-                    deaths.append(int(str(dval).replace(",", "").strip()))
-                except: deaths.append(0)
-                base_years.append(int(y))
-        # (4) 그래프
-        fig, ax = plt.subplots(figsize=(5,2.5))
-        ax.plot(base_years, births, marker='o', label='출생자수')
-        ax.plot(base_years, deaths, marker='o', label='사망자수')
-        ax.set_title("양주시 5년 단위 출생자수·사망자수 변화", fontproperties=font_prop, fontsize=13)
-        ax.set_xlabel("연도", fontproperties=font_prop, fontsize=11)
-        ax.set_ylabel("명", fontproperties=font_prop, fontsize=11)
-        ax.set_xticks(base_years)
-        ax.legend(prop=font_prop, fontsize=10)
+        birth_years, birth_vals = [], []
+        death_years, death_vals = [], []
+        for c in cols:
+            if "출생건수" in c and c != "출생건수":
+                year = c.split()[0].replace('.1', '')
+                if year.isdigit() and int(year) >= 2005 and (int(year)-2005)%5 == 0:
+                    birth_years.append(int(year))
+                    birth_vals.append(int(str(df[c].values[0]).replace(",", "").strip()))
+            if "사망건수" in c and c != "사망건수":
+                year = c.split()[0].replace('.1', '')
+                if year.isdigit() and int(year) >= 2005 and (int(year)-2005)%5 == 0:
+                    death_years.append(int(year))
+                    death_vals.append(int(str(df[c].values[0]).replace(",", "").strip()))
+
+        # 혹시 마지막(최신) 연도가 포함 안 되어있으면 추가
+        last_birth_col = [c for c in cols if "출생건수" in c and c != "출생건수"][-1]
+        last_birth_year = int(last_birth_col.split()[0].replace('.1',''))
+        if last_birth_year not in birth_years:
+            birth_years.append(last_birth_year)
+            birth_vals.append(int(str(df[last_birth_col].values[0]).replace(",", "").strip()))
+        last_death_col = [c for c in cols if "사망건수" in c and c != "사망건수"][-1]
+        last_death_year = int(last_death_col.split()[0].replace('.1',''))
+        if last_death_year not in death_years:
+            death_years.append(last_death_year)
+            death_vals.append(int(str(df[last_death_col].values[0]).replace(",", "").strip()))
+
+        # 표로 먼저 확인
+        st.markdown("#### ▶️ 출생자수 Raw 데이터")
+        st.dataframe(pd.DataFrame({"연도": birth_years, "출생자수": birth_vals}))
+        st.markdown("#### ▶️ 사망자수 Raw 데이터")
+        st.dataframe(pd.DataFrame({"연도": death_years, "사망자수": death_vals}))
+
+        # 출생자수 그래프
+        fig1, ax1 = plt.subplots(figsize=(4,2.5))
+        ax1.plot(birth_years, birth_vals, marker='o', color='royalblue')
+        ax1.set_title("양주시 5년 단위 출생자수 변화", fontproperties=font_prop, fontsize=13)
+        ax1.set_xlabel("연도", fontproperties=font_prop, fontsize=11)
+        ax1.set_ylabel("명", fontproperties=font_prop, fontsize=11)
+        ax1.set_xticks(birth_years)
         plt.yticks(fontproperties=font_prop, fontsize=10)
         plt.xticks(fontproperties=font_prop, fontsize=10)
         plt.tight_layout()
-        st.pyplot(fig)
+        st.pyplot(fig1)
+
+        # 사망자수 그래프
+        fig2, ax2 = plt.subplots(figsize=(4,2.5))
+        ax2.plot(death_years, death_vals, marker='o', color='orange')
+        ax2.set_title("양주시 5년 단위 사망자수 변화", fontproperties=font_prop, fontsize=13)
+        ax2.set_xlabel("연도", fontproperties=font_prop, fontsize=11)
+        ax2.set_ylabel("명", fontproperties=font_prop, fontsize=11)
+        ax2.set_xticks(death_years)
+        plt.yticks(fontproperties=font_prop, fontsize=10)
+        plt.xticks(fontproperties=font_prop, fontsize=10)
+        plt.tight_layout()
+        st.pyplot(fig2)
+
         st.caption("양주시 인구 구조 변화를 5년 단위로 시각화. 데이터 출처: KOSIS 국가통계포털")
     except Exception as e:
         st.warning(f"그래프 오류: {e}")
