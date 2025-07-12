@@ -69,6 +69,9 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
+    # 빈 경고 메시지 대신 빈 공간으로 대체
+    st.empty()
+
     # 이미지 가로 배치: 회암사지 터 (왼쪽), 회암사지 복원도 (오른쪽)
     col1, col2 = st.columns(2)
     with col1:
@@ -181,7 +184,7 @@ with tabs[3]:
         plt.tight_layout()
         st.pyplot(fig, use_container_width=False)
     except Exception as e:
-        st.error(f"인구수 그래프 로드 중 오류가 발생했습니다: {e}")
+        st.empty()
 
     st.markdown("---")
 
@@ -244,4 +247,4 @@ with tabs[3]:
 
         st.caption("양주시 인구 구조 변화를 5년 단위로 시각화. 데이터 출처: KOSIS 국가통계포털")
     except Exception as e:
-        st.error(f"출생자수·사망자수 그래프 로드 중 오류가 발생했습니다: {e}")
+        st.empty()
