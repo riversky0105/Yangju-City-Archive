@@ -19,6 +19,13 @@ st.markdown("""
     .stApp {
         font-size: 16px !important;
     }
+    /* 이미지 컬럼 간격 최소화 */
+    .minimal-gap .css-1lcbmhc.e16nr0p30 > div {
+        gap: 0 !important;
+    }
+    .minimal-gap img {
+        margin: 0 !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -55,12 +62,17 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
-    # 두 이미지 가로 배치, 공백 거의 없음
-    col1, col2 = st.columns([1,1], gap="none")  # gap='none' 으로 공백 최소화
-    with col1:
-        st.image("회암사지.jpg", caption="회암사지 터", width=350)
-    with col2:
-        st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=350)
+    # 이미지 컬럼에 CSS 클래스를 주어 간격 최소화 적용
+    cols = st.columns([1, 1], key="image_cols")
+    container = st.container()
+    with container:
+        # CSS 클래스 적용을 위해 div 태그로 감싸기
+        st.markdown('<div class="minimal-gap">', unsafe_allow_html=True)
+        with cols[0]:
+            st.image("회암사지.jpg", caption="회암사지 터", width=340)
+        with cols[1]:
+            st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=340)
+        st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("""
     <div style='font-size:13pt;'>
