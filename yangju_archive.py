@@ -5,19 +5,23 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import re
 
-# 🔵 웹사이트 본문 폰트 크기
+# 🔵 1. 웹사이트 본문 폰트 크기 일괄 적용 (12pt)
 st.markdown("""
     <style>
-    html, body, [class*="css"]  { font-size: 16px !important; }
+    html, body, [class*="css"]  {
+        font-size: 16px !important;
+    }
     .stMarkdown, .stText, .stSubheader, .stHeader, .stTitle {
         font-size: 18px !important;
         line-height: 1.7 !important;
     }
-    .stApp { font-size: 16px !important; }
+    .stApp {
+        font-size: 16px !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
-# 🔵 한글 폰트 설정
+# 🔵 2. 한글 폰트 설정
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 if os.path.exists(FONT_PATH):
     font_prop = fm.FontProperties(fname=FONT_PATH)
@@ -26,7 +30,7 @@ if os.path.exists(FONT_PATH):
 else:
     font_prop = None
 
-# 🔵 Streamlit 페이지 세팅
+# 🔵 3. Streamlit 페이지 세팅
 st.set_page_config(page_title="양주시 아카이브: 과거, 현재, 미래", layout="wide")
 st.title("🏙️ 양주시 아카이브: 과거, 현재, 미래")
 st.markdown("<span style='font-size:15pt;'>경기도 양주시의 역사와 미래 비전을 살펴보는 디지털 아카이브입니다.</span>", unsafe_allow_html=True)
@@ -95,67 +99,55 @@ with tabs[1]:
 
     DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
     try:
-        # 데이터 불러오기 (cp949)
+        # 데이터 불러오기 (cp949로 인코딩)
         df = pd.read_csv(DATA_PATH, encoding="cp949")
         df['행정구역별'] = df['행정구역별'].astype(str).str.strip()
-        df_yg = df[df['행정구역별'] == "양주시"].reset_index(drop=True)
+        df_yg = df[df['행정구역별'] == "양주시"]
 
-        # 컬럼 리스트 추출
-        cols = list(df_yg.columns)
-        # 2005년 이후, 5년 단위 추출
-        years = [c for c in cols if re.fullmatch(r"\d{4}", c) and int(c) >= 2005 and int(c) % 5 == 0]
-        # 마지막 연도(최신) 추가
-        nums = sorted([int(y) for y in years])
-        if nums and str(max(nums) + 5) in cols:  # 혹시 2025까지 있는지
-            nums.append(max(nums) + 5)
-        if str(df_yg.columns[-2]) not in years:  # 마지막 연도(2023 등)가 없으면
-            if re.fullmatch(r"\d{4}", df_yg.columns[-2]) and int(df_yg.columns[-2]) > max(nums):
-                nums.append(int(df_yg.columns[-2]))
-        # 실제로 데이터에 존재하는 연도만 추출
-        base_years = [y for y in nums if str(y) in cols]
+        # 컬럼명 확인
+        columns = df_yg.columns.tolist()
 
-        # 출생자수/사망자수 추출
+        # 5년 단위 출생자수/사망자수 컬럼만 추출
+        base_years = []
         births = []
         deaths = []
-        years_for_graph = []
-        for y in base_years:
-            birth_col = str(y)
-            death_col = f"{y}.1"
-            if birth_col in df_yg.columns and death_col in df_yg.columns:
-                births.append(int(float(df_yg.loc[0, birth_col])))
-                deaths.append(float(df_yg.loc[0, death_col]))
-                years_for_graph.append(y)
 
-        # --------- 시각화: 출생자수 ----------
-        if births and years_for_graph:
-            fig1, ax1 = plt.subplots(figsize=(5,2.5))
-            ax1.plot(years_for_graph, births, marker='o', color='tab:blue')
-            ax1.set_title("양주시 5년 단위 출생자수", fontproperties=font_prop, fontsize=13)
-            ax1.set_xlabel("연도", fontproperties=font_prop, fontsize=11)
-            ax1.set_ylabel("출생자수 (명)", fontproperties=font_prop, fontsize=11)
-            ax1.set_xticks(years_for_graph)
-            ax1.set_xticklabels(years_for_graph, fontproperties=font_prop, fontsize=10)
-            plt.yticks(fontproperties=font_prop, fontsize=10)
-            plt.tight_layout()
-            st.pyplot(fig1)
-        else:
-            st.warning("출생자수 데이터가 존재하지 않습니다.")
+        for col in columns:
+            # 2005, 2010, ... : 정수로 변환 가능, .1 붙은 것은 무시(반복x)
+            if re.match(r"^20\d{2}$", col):
+                y = int(col)
+                if (y - 2005) % 5 == 0 and y >= 2005:
+                    base_years.append(y)
+                    val = df_yg[col].values[0]
+                    # 소숫점 없는게 출생자수
+                    if '.' not in str(val):
+                        births.append(int(str(val).replace(",", "")))
+                    else:
+                        deaths.append(int(float(val)))
+            # 사망자수: 소숫점 있음
+            elif re.match(r"^20\d{2}\.1$", col):
+                y = int(col.split('.')[0])
+                if (y - 2005) % 5 == 0 and y >= 2005:
+                    val = df_yg[col].values[0]
+                    deaths.append(int(float(val)))
 
-        # --------- 시각화: 사망자수 ----------
-        if deaths and years_for_graph:
-            fig2, ax2 = plt.subplots(figsize=(5,2.5))
-            ax2.plot(years_for_graph, deaths, marker='o', color='tab:orange')
-            ax2.set_title("양주시 5년 단위 사망자수", fontproperties=font_prop, fontsize=13)
-            ax2.set_xlabel("연도", fontproperties=font_prop, fontsize=11)
-            ax2.set_ylabel("사망자수 (명)", fontproperties=font_prop, fontsize=11)
-            ax2.set_xticks(years_for_graph)
-            ax2.set_xticklabels(years_for_graph, fontproperties=font_prop, fontsize=10)
-            plt.yticks(fontproperties=font_prop, fontsize=10)
-            plt.tight_layout()
-            st.pyplot(fig2)
-        else:
-            st.warning("사망자수 데이터가 존재하지 않습니다.")
+        # 둘 다 같은 길이로 정렬(혹시 길이 안 맞으면 zip에서 짧은 것만)
+        base_years = sorted(list(set(base_years)))
 
+        # ▒▒ 그래프 크기/폰트 축소 ▒▒
+        fig, ax = plt.subplots(figsize=(4, 2.1))  # <-- 더 작게
+        ax.plot(base_years, births, marker='o', label='출생자수')
+        ax.plot(base_years, deaths, marker='o', label='사망자수')
+        ax.set_title("양주시 5년 단위 출생자수 · 사망자수 변화", fontproperties=font_prop, fontsize=13)
+        ax.set_xlabel("연도", fontproperties=font_prop, fontsize=11)
+        ax.set_ylabel("명", fontproperties=font_prop, fontsize=11)
+        ax.set_xticks(base_years)
+        ax.set_xticklabels(base_years, fontproperties=font_prop, fontsize=10)
+        ax.legend(prop=font_prop, fontsize=10)
+        plt.yticks(fontproperties=font_prop, fontsize=10)
+        plt.xticks(fontproperties=font_prop, fontsize=10)
+        plt.tight_layout()
+        st.pyplot(fig)
         st.caption("양주시 인구 구조 변화를 5년 단위로 시각화. 데이터 출처: KOSIS 국가통계포털")
     except Exception as e:
         st.warning(f"그래프를 불러오는 중 오류가 발생했습니다: {e}")
