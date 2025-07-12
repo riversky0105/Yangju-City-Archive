@@ -4,8 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import re
+import numpy as np
 
-# 🔵 1. 웹사이트 본문 폰트 크기 일괄 적용 (16px 기본, 18px 헤더)
+# 🔵 1. 웹사이트 본문 폰트 크기 일괄 적용 (16px)
 st.markdown("""
     <style>
     html, body, [class*="css"]  {
@@ -37,6 +38,7 @@ st.markdown("<span style='font-size:15pt;'>경기도 양주시의 역사와 미�
 
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
 
+# --- 과거 탭 ---
 with tabs[0]:
     st.header("📜 양주시의 과거")
     st.markdown("""
@@ -68,6 +70,7 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
+# --- 현재 탭 ---
 with tabs[1]:
     st.header("🏙️ 양주시의 현재")
     st.markdown("""
@@ -93,7 +96,9 @@ with tabs[1]:
     - 다양한 커뮤니티와 라이프스타일 공존
     </div>
     """, unsafe_allow_html=True)
+    st.markdown("---")
 
+# --- 미래 탭 ---
 with tabs[2]:
     st.header("🌐 양주시의 미래")
     st.markdown("""
@@ -125,55 +130,68 @@ with tabs[2]:
     </div>
     """, unsafe_allow_html=True)
 
+# --- 인구 변화 탭 ---
 with tabs[3]:
     st.header("📊 양주시 인구 변화")
     st.markdown("양주시 인구 구조 변화를 월별/연도별 및 5년 단위 출생자수·사망자수와 함께 시각화합니다. 데이터 출처: KOSIS 국가통계포털")
 
-    # 1) 인구수 변화 그래프
     POPULATION_DATA_PATH = "양주시_연도별_인구수.csv"
+    BIRTH_DEATH_DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
+
+    # 인구수 5년 단위 집계
     try:
         df_pop = pd.read_csv(POPULATION_DATA_PATH, encoding="cp949", header=1)
         df_pop['행정구역(시군구)별'] = df_pop['행정구역(시군구)별'].astype(str).str.strip()
         df_yg_pop = df_pop[df_pop['행정구역(시군구)별'] == "양주시"].reset_index(drop=True)
 
-        # 월별/연도별 컬럼명 처리 (숫자.숫자 포함)로 필터링
+        # 월별 컬럼 (예: 2011.01)
         pop_cols = [col for col in df_yg_pop.columns if re.match(r"\d{4}\.\d{1,2}", col)]
-
-        pop_years = []
-        pop_vals = []
+        
+        # 연도만 추출해서 5년 단위로 필터링, 월별 데이터는 평균내기
+        pop_year_month = []
+        pop_values = []
         for col in pop_cols:
-            year_month = col.split(".")
-            year = int(year_month[0])
-            month = int(year_month[1])
-            pop_years.append(f"{year}-{month:02d}")
-            try:
-                val = int(str(df_yg_pop.loc[0, col]).replace(",", "").strip())
-            except:
-                val = 0
-            pop_vals.append(val)
+            year = int(col.split('.')[0])
+            if year >= 2005:
+                pop_year_month.append(col)
+                try:
+                    val = int(str(df_yg_pop.loc[0, col]).replace(",", "").strip())
+                except:
+                    val = 0
+                pop_values.append(val)
 
-        fig, ax = plt.subplots(figsize=(10, 3))
-        ax.plot(pop_years, pop_vals, marker='o', color='tab:green', label='인구수')
-        ax.set_title("양주시 월별·연도별 인구 변화", fontproperties=font_prop, fontsize=12)
-        ax.set_xlabel("기간", fontproperties=font_prop, fontsize=10)
+        # 연도별 평균 집계 (5년 단위)
+        df_pop_avg = pd.DataFrame({
+            'year': [int(c.split('.')[0]) for c in pop_year_month],
+            'value': pop_values
+        })
+        df_pop_avg_5yr = df_pop_avg.groupby('year').mean().reset_index()
+        # 5년 단위만 필터링
+        df_pop_avg_5yr = df_pop_avg_5yr[(df_pop_avg_5yr['year'] >= 2005) & (df_pop_avg_5yr['year'] % 5 == 0)]
+
+        fig, ax = plt.subplots(figsize=(4.5,2.7))
+        ax.plot(df_pop_avg_5yr['year'], df_pop_avg_5yr['value'], marker='o', color='tab:green', label='인구수 (연평균)')
+        ax.set_title("양주시 5년 단위 연평균 인구수 변화", fontproperties=font_prop, fontsize=12)
+        ax.set_xlabel("연도", fontproperties=font_prop, fontsize=10)
         ax.set_ylabel("명", fontproperties=font_prop, fontsize=10)
-        ax.tick_params(axis='x', rotation=45)
+        ax.set_xticks(df_pop_avg_5yr['year'])
+        ax.set_xticklabels(df_pop_avg_5yr['year'], fontproperties=font_prop, fontsize=9)
+        plt.yticks(fontproperties=font_prop, fontsize=9)
+        plt.xticks(fontproperties=font_prop, fontsize=9)
         ax.legend(prop=font_prop, fontsize=10)
         plt.tight_layout()
-        st.pyplot(fig, use_container_width=True)
+        st.pyplot(fig, use_container_width=False)
+
     except Exception as e:
         st.error(f"인구수 그래프를 불러오는 중 오류가 발생했습니다: {e}")
 
-    # 2) 출생자수·사망자수 그래프 (아래는 기존 코드)
-    st.subheader("양주시 5년 단위 연도별 출생자수·사망자수 (2005~최신)")
-    DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
+    # 출생자수·사망자수 5년 단위 그래프
     try:
-        df = pd.read_csv(DATA_PATH, encoding="cp949")
-        df['행정구역별'] = df['행정구역별'].astype(str).str.strip()
-        df_yg = df[df['행정구역별'] == "양주시"]
-        df_yg = df_yg.reset_index(drop=True)
-        
-        colnames = list(df_yg.columns)
+        df_bd = pd.read_csv(BIRTH_DEATH_DATA_PATH, encoding="cp949")
+        df_bd['행정구역별'] = df_bd['행정구역별'].astype(str).str.strip()
+        df_yg_bd = df_bd[df_bd['행정구역별'] == "양주시"].reset_index(drop=True)
+
+        colnames = list(df_yg_bd.columns)
         birth_cols = [col for col in colnames if col != "행정구역별" and "." not in col]
         death_cols = [col for col in colnames if col != "행정구역별" and "." in col]
 
@@ -186,7 +204,7 @@ with tabs[3]:
                 if y >= 2005 and (y % 5 == 0 or y == int(birth_cols[-1][:4])):
                     birth_years.append(y)
                     try:
-                        val = int(str(df_yg.iloc[0][col]).replace(",", "").strip())
+                        val = int(str(df_yg_bd.iloc[0][col]).replace(",", "").strip())
                     except:
                         val = 0
                     births.append(val)
@@ -200,7 +218,7 @@ with tabs[3]:
                 if y >= 2005 and (y % 5 == 0 or y == int(death_cols[-1][:4])):
                     death_years.append(y)
                     try:
-                        val = int(float(str(df_yg.iloc[0][col]).replace(",", "").strip()))
+                        val = int(float(str(df_yg_bd.iloc[0][col]).replace(",", "").strip()))
                     except:
                         val = 0
                     deaths.append(val)
@@ -209,19 +227,19 @@ with tabs[3]:
         births_aligned = [births[birth_years.index(y)] for y in common_years]
         deaths_aligned = [deaths[death_years.index(y)] for y in common_years]
 
-        fig, ax = plt.subplots(figsize=(4.5,2.7))
-        ax.plot(common_years, births_aligned, marker='o', color='tab:blue', label='출생자수')
-        ax.plot(common_years, deaths_aligned, marker='o', color='tab:orange', label='사망자수')
-        ax.set_title("양주시 5년 단위 출생자수·사망자수 변화", fontproperties=font_prop, fontsize=12)
-        ax.set_xlabel("연도", fontproperties=font_prop, fontsize=10)
-        ax.set_ylabel("명", fontproperties=font_prop, fontsize=10)
-        ax.set_xticks(common_years)
-        ax.set_xticklabels(common_years, fontproperties=font_prop, fontsize=9)
+        fig2, ax2 = plt.subplots(figsize=(4.5,2.7))
+        ax2.plot(common_years, births_aligned, marker='o', color='tab:blue', label='출생자수')
+        ax2.plot(common_years, deaths_aligned, marker='o', color='tab:orange', label='사망자수')
+        ax2.set_title("양주시 5년 단위 출생자수·사망자수 변화", fontproperties=font_prop, fontsize=12)
+        ax2.set_xlabel("연도", fontproperties=font_prop, fontsize=10)
+        ax2.set_ylabel("명", fontproperties=font_prop, fontsize=10)
+        ax2.set_xticks(common_years)
+        ax2.set_xticklabels(common_years, fontproperties=font_prop, fontsize=9)
         plt.yticks(fontproperties=font_prop, fontsize=9)
         plt.xticks(fontproperties=font_prop, fontsize=9)
-        ax.legend(prop=font_prop, fontsize=10)
+        ax2.legend(prop=font_prop, fontsize=10)
         plt.tight_layout()
-        st.pyplot(fig, use_container_width=True)
-        st.caption("양주시 인구 구조 변화를 5년 단위로 시각화. 데이터 출처: KOSIS 국가통계포털")
+        st.pyplot(fig2, use_container_width=False)
+
     except Exception as e:
-        st.error(f"그래프를 불러오는 중 오류가 발생했습니다: {e}")
+        st.error(f"출생자수·사망자수 그래프를 불러오는 중 오류가 발생했습니다: {e}")
