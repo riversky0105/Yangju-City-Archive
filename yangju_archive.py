@@ -5,9 +5,15 @@ import matplotlib.font_manager as fm
 import pandas as pd
 
 # 폰트 경로와 fontprop 설정
-font_path = "fonts/NanumGothicCoding.ttf"
-fontprop = fm.FontProperties(fname=font_path)
-plt.rcParams['axes.unicode_minus'] = False  # 마이너스 기호 깨짐 방지
+font_path = "fonts/NanumGothic.ttf"
+font_exists = os.path.exists(font_path)
+
+if font_exists:
+    fontprop = fm.FontProperties(fname=font_path)
+else:
+    fontprop = None
+
+plt.rcParams['axes.unicode_minus'] = False  # 마이너스 깨짐 방지
 
 st.set_page_config(page_title="양주시 아카이브", layout="wide")
 
@@ -22,6 +28,9 @@ st.markdown("""
 
 st.title("🏙️ 양주시 아카이브: 과거, 현재, 미래")
 st.markdown("경기도 양주시의 역사와 미래 비전을 살펴보는 디지털 아카이브입니다.")
+
+if not font_exists:
+    st.error("⚠️ 폰트 파일이 없습니다: fonts/NanumGothic.ttf가 실제로 프로젝트에 존재하는지 다시 확인하세요!")
 
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래"])
 
@@ -78,7 +87,7 @@ with tabs[1]:
     ax.set_xticks(years)
     ax.set_xticklabels([str(year) for year in years], fontproperties=fontprop)
     for label in ax.get_yticklabels():
-        label.set_fontproperties(fontprop)
+        if fontprop: label.set_fontproperties(fontprop)
     st.pyplot(fig)
     st.caption("자료: 행정안전부 주민등록 인구통계, 양주시청 기본현황")
 
@@ -93,7 +102,7 @@ with tabs[1]:
     ax2.set_xticks(range(len(events)))
     ax2.set_xticklabels(events, fontproperties=fontprop)
     for label in ax2.get_yticklabels():
-        label.set_fontproperties(fontprop)
+        if fontprop: label.set_fontproperties(fontprop)
     for bar in bars:
         height = bar.get_height()
         ax2.annotate(f'{height}',
@@ -116,7 +125,7 @@ with tabs[1]:
     ax3.set_xticks(range(len(categories)))
     ax3.set_xticklabels(categories, fontproperties=fontprop)
     for label in ax3.get_yticklabels():
-        label.set_fontproperties(fontprop)
+        if fontprop: label.set_fontproperties(fontprop)
     for bar in bars3:
         height = bar.get_height()
         ax3.annotate(f'{height}',
