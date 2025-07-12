@@ -184,3 +184,47 @@ with tabs[2]:
     - 맞춤형 복지 설계: 고령자, 청년, 다문화 가정 대상
     </div>
     """, unsafe_allow_html=True)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
+
+df = pd.read_csv(DATA_PATH, encoding="cp949")
+st.write("전체 데이터 미리보기:")
+st.dataframe(df)
+
+st.write("컬럼명:")
+st.write(df.columns.tolist())
+
+# 양주시만 추출
+df_yg = df[df['행정구역별'] == '양주시']
+st.write("양주시 데이터만 추출:")
+st.dataframe(df_yg)
+
+if df_yg.empty:
+    st.error("⚠️ '양주시' 데이터가 없습니다. 행정구역별 컬럼명과 값을 다시 확인하세요.")
+else:
+    st.success("'양주시' 행 추출 성공!")
+    st.write("양주시 데이터의 컬럼(헤더):", df_yg.columns.tolist())
+    st.write("양주시 데이터의 값:", df_yg.values.tolist())
+
