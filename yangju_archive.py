@@ -163,7 +163,7 @@ with tabs[3]:
         # 시각화
         fig, ax = plt.subplots(figsize=(6, 3.5))
         ax.plot(years_5yr, pop_5yr_avg, marker='o', color='tab:green', label='인구수 (연평균)')
-        ax.set_title("양주시 5년 단위 연평균 인구수 변화", fontproperties=font_prop, fontsize=12)
+        ax.set_title("양주시 연평균 인구수 변화", fontproperties=font_prop, fontsize=12)
         ax.set_xlabel("연도", fontproperties=font_prop, fontsize=10)
         ax.set_ylabel("명", fontproperties=font_prop, fontsize=10)
         ax.set_xticks(years_5yr)
@@ -224,7 +224,7 @@ with tabs[3]:
         fig, ax = plt.subplots(figsize=(6, 3.5))
         ax.plot(common_years, births_aligned, marker='o', color='tab:blue', label='출생자수')
         ax.plot(common_years, deaths_aligned, marker='o', color='tab:orange', label='사망자수')
-        ax.set_title("양주시 5년 단위 출생자수·사망자수 변화", fontproperties=font_prop, fontsize=12)
+        ax.set_title("양주시 출생자수·사망자수 변화", fontproperties=font_prop, fontsize=12)
         ax.set_xlabel("연도", fontproperties=font_prop, fontsize=10)
         ax.set_ylabel("명", fontproperties=font_prop, fontsize=10)
         ax.set_xticks(common_years)
