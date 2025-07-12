@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import re
 
-# 🔵 1. 웹사이트 본문 폰트 크기 일괄 적용 (16px)
+# 🔵 1. 웹사이트 본문 폰트 크기 일괄 적용 (16px 기본, 18px 헤더)
 st.markdown("""
     <style>
     html, body, [class*="css"]  {
@@ -129,56 +129,54 @@ with tabs[3]:
     st.header("📊 양주시 인구 변화")
     st.markdown("양주시 인구 구조 변화를 월별/연도별 및 5년 단위 출생자수·사망자수와 함께 시각화합니다. 데이터 출처: KOSIS 국가통계포털")
 
-    # 인구수 변화 데이터 경로
-    POP_PATH = "양주시_연도별_인구수.csv"
-    BIRTH_DEATH_PATH = "양주시_연도별_출생자수_사망자수.csv"
-
-    # 인구수 변화 그래프
+    # 1) 인구수 변화 그래프
+    POPULATION_DATA_PATH = "양주시_연도별_인구수.csv"
     try:
-        df_pop = pd.read_csv(POP_PATH, encoding="cp949")
-        st.write("인구수 데이터 컬럼명:", df_pop.columns.tolist())  # 디버그용 출력
+        df_pop = pd.read_csv(POPULATION_DATA_PATH, encoding="cp949", header=1)
+        df_pop['행정구역(시군구)별'] = df_pop['행정구역(시군구)별'].astype(str).str.strip()
+        df_yg_pop = df_pop[df_pop['행정구역(시군구)별'] == "양주시"].reset_index(drop=True)
 
-        # 실제 컬럼명에 맞게 설정
-        col_region = '행정구역(시군구)'
-        col_period = '기간'
-        col_population = '총인구수(명)'
+        # 월별/연도별 컬럼명 처리 (숫자.숫자 포함)로 필터링
+        pop_cols = [col for col in df_yg_pop.columns if re.match(r"\d{4}\.\d{1,2}", col)]
 
-        if col_region not in df_pop.columns or col_period not in df_pop.columns or col_population not in df_pop.columns:
-            st.warning(f"필요한 컬럼이 데이터에 없습니다: {col_region}, {col_period}, {col_population}")
-        else:
-            df_pop_yg = df_pop[df_pop[col_region] == "양주시"]
+        pop_years = []
+        pop_vals = []
+        for col in pop_cols:
+            year_month = col.split(".")
+            year = int(year_month[0])
+            month = int(year_month[1])
+            pop_years.append(f"{year}-{month:02d}")
+            try:
+                val = int(str(df_yg_pop.loc[0, col]).replace(",", "").strip())
+            except:
+                val = 0
+            pop_vals.append(val)
 
-            years_pop = df_pop_yg[col_period].tolist()
-            pop_counts = df_pop_yg[col_population].tolist()
-
-            fig_pop, ax_pop = plt.subplots(figsize=(10, 3))
-            ax_pop.plot(years_pop, pop_counts, marker='o', color='green', label='총 인구수')
-            ax_pop.set_title("양주시 월별·연도별 인구수 변화", fontproperties=font_prop, fontsize=13)
-            ax_pop.set_xlabel("기간", fontproperties=font_prop, fontsize=11)
-            ax_pop.set_ylabel("명", fontproperties=font_prop, fontsize=11)
-            ax_pop.tick_params(axis='x', rotation=45)
-            ax_pop.legend(prop=font_prop, fontsize=10)
-            plt.tight_layout()
-            st.pyplot(fig_pop, use_container_width=True)
+        fig, ax = plt.subplots(figsize=(10, 3))
+        ax.plot(pop_years, pop_vals, marker='o', color='tab:green', label='인구수')
+        ax.set_title("양주시 월별·연도별 인구 변화", fontproperties=font_prop, fontsize=12)
+        ax.set_xlabel("기간", fontproperties=font_prop, fontsize=10)
+        ax.set_ylabel("명", fontproperties=font_prop, fontsize=10)
+        ax.tick_params(axis='x', rotation=45)
+        ax.legend(prop=font_prop, fontsize=10)
+        plt.tight_layout()
+        st.pyplot(fig, use_container_width=True)
     except Exception as e:
-        st.error(f"인구수 그래프 로드 중 오류가 발생했습니다: {e}")
+        st.error(f"인구수 그래프를 불러오는 중 오류가 발생했습니다: {e}")
 
-    st.markdown("---")
-
-    # 출생자수·사망자수 그래프
+    # 2) 출생자수·사망자수 그래프 (아래는 기존 코드)
+    st.subheader("양주시 5년 단위 연도별 출생자수·사망자수 (2005~최신)")
+    DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
     try:
-        # 데이터 불러오기 (cp949로 인코딩)
-        df = pd.read_csv(BIRTH_DEATH_PATH, encoding="cp949")
+        df = pd.read_csv(DATA_PATH, encoding="cp949")
         df['행정구역별'] = df['행정구역별'].astype(str).str.strip()
         df_yg = df[df['행정구역별'] == "양주시"]
         df_yg = df_yg.reset_index(drop=True)
-
-        # 컬럼명 리스트
+        
         colnames = list(df_yg.columns)
-        # 출생자수(정수)와 사망자수(실수) 컬럼 구분
         birth_cols = [col for col in colnames if col != "행정구역별" and "." not in col]
         death_cols = [col for col in colnames if col != "행정구역별" and "." in col]
-        # 2005년 이상 5년 단위로, 마지막 연도 추가
+
         birth_years = []
         births = []
         for col in birth_cols:
@@ -192,6 +190,7 @@ with tabs[3]:
                     except:
                         val = 0
                     births.append(val)
+
         death_years = []
         deaths = []
         for col in death_cols:
@@ -205,12 +204,12 @@ with tabs[3]:
                     except:
                         val = 0
                     deaths.append(val)
-        # 두 연도 리스트의 교집합만 표시 (혹시 불일치시 대비)
+
         common_years = sorted(list(set(birth_years) & set(death_years)))
         births_aligned = [births[birth_years.index(y)] for y in common_years]
         deaths_aligned = [deaths[death_years.index(y)] for y in common_years]
 
-        fig, ax = plt.subplots(figsize=(4.5, 2.7))
+        fig, ax = plt.subplots(figsize=(4.5,2.7))
         ax.plot(common_years, births_aligned, marker='o', color='tab:blue', label='출생자수')
         ax.plot(common_years, deaths_aligned, marker='o', color='tab:orange', label='사망자수')
         ax.set_title("양주시 5년 단위 출생자수·사망자수 변화", fontproperties=font_prop, fontsize=12)
@@ -223,7 +222,6 @@ with tabs[3]:
         ax.legend(prop=font_prop, fontsize=10)
         plt.tight_layout()
         st.pyplot(fig, use_container_width=True)
-
         st.caption("양주시 인구 구조 변화를 5년 단위로 시각화. 데이터 출처: KOSIS 국가통계포털")
     except Exception as e:
-        st.warning(f"그래프를 불러오는 중 오류가 발생했습니다: {e}")
+        st.error(f"그래프를 불러오는 중 오류가 발생했습니다: {e}")
