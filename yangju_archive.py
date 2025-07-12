@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
+import re
 
 # 🔵 웹사이트 본문 폰트 크기
 st.markdown("""
