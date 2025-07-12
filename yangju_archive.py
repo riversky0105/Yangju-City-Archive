@@ -62,17 +62,13 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
-    # 이미지 컬럼에 CSS 클래스를 주어 간격 최소화 적용
-    cols = st.columns([1, 1], key="image_cols")
-    container = st.container()
-    with container:
-        # CSS 클래스 적용을 위해 div 태그로 감싸기
-        st.markdown('<div class="minimal-gap">', unsafe_allow_html=True)
-        with cols[0]:
-            st.image("회암사지.jpg", caption="회암사지 터", width=340)
-        with cols[1]:
-            st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=340)
-        st.markdown('</div>', unsafe_allow_html=True)
+    cols = st.columns([1, 1])  # key 제거
+    st.markdown('<div class="minimal-gap">', unsafe_allow_html=True)
+    with cols[0]:
+        st.image("회암사지.jpg", caption="회암사지 터", width=320)
+    with cols[1]:
+        st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=320)
+    st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("""
     <div style='font-size:13pt;'>
