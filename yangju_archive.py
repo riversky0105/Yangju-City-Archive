@@ -193,3 +193,15 @@ with tabs[2]:
     - 맞춤형 복지 설계: 고령자, 청년, 다문화 가정 대상
     </div>
     """, unsafe_allow_html=True)
+
+
+
+
+
+
+
+
+
+
+st.write("컬럼명 전체:", list(df_yg.columns))
+
