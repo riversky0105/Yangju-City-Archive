@@ -6,7 +6,7 @@ import matplotlib.font_manager as fm
 import re
 import numpy as np
 
-# 1. 웹사이트 폰트 크기 일괄 적용
+# 1. 폰트 스타일(전체 일괄 적용)
 st.markdown("""
     <style>
     html, body, [class*="css"]  {
@@ -22,7 +22,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 2. 한글 폰트 설정 (NanumGothicCoding.ttf)
+# 2. 한글 폰트 적용 (NanumGothicCoding.ttf)
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 if os.path.exists(FONT_PATH):
     font_prop = fm.FontProperties(fname=FONT_PATH)
@@ -31,7 +31,7 @@ if os.path.exists(FONT_PATH):
 else:
     font_prop = None
 
-# 3. Streamlit 페이지 설정
+# 3. 페이지 환경 설정
 st.set_page_config(page_title="양주시 아카이브: 과거, 현재, 미래", layout="wide")
 st.title("🏙️ 양주시 아카이브: 과거, 현재, 미래")
 st.markdown(
@@ -58,7 +58,7 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
-    # ★ 세로(위아래)로 이미지 배치
+    # 사진 두 개를 세로로 배치!
     st.image("회암사지.jpg", caption="회암사지 터", width=500)
     st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=500)
 
