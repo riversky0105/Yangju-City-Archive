@@ -55,12 +55,12 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
-    # 두 이미지 가로 배치, 간격 좁게 조정
-    col1, col2 = st.columns([1,1], gap="small")  # gap='small'로 간격 줄임
+    # 두 이미지 가로 배치, 공백 거의 없음
+    col1, col2 = st.columns([1,1], gap="none")  # gap='none' 으로 공백 최소화
     with col1:
-        st.image("회암사지.jpg", caption="회암사지 터", width=370)
+        st.image("회암사지.jpg", caption="회암사지 터", width=350)
     with col2:
-        st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=370)
+        st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=350)
 
     st.markdown("""
     <div style='font-size:13pt;'>
