@@ -40,6 +40,7 @@ tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변
 
 with tabs[0]:
     st.header("📜 양주시의 과거")
+    # 텍스트 부분
     st.markdown("""
     <div style='font-size:13pt;'>
     <b>1. 고려~조선 시대, 북방의 행정·군사 중심지</b><br>
@@ -69,6 +70,7 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
+    # 이미지 가로 배치 (텍스트 바로 아래 위치)
     col1, col2 = st.columns(2)
     with col1:
         st.image("회암사지.jpg", caption="회암사지 터", use_container_width=True)
