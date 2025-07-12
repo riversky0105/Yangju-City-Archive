@@ -67,9 +67,9 @@ with tabs[0]:
     st.markdown('<div class="minimal-gap">', unsafe_allow_html=True)
     cols = st.columns([1, 1])
     with cols[0]:
-        st.image("회암사지.jpg", caption="회암사지 터", width=400)
+        st.image("회암사지.jpg", caption="회암사지 터", width=500)
     with cols[1]:
-        st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=400)
+        st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=500)
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("""
