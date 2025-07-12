@@ -25,6 +25,8 @@ st.markdown("""
     }
     .minimal-gap img {
         margin: 0 !important;
+        padding: 0 !important;
+        display: block;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -62,12 +64,12 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
-    cols = st.columns([1, 1])  # key 제거
     st.markdown('<div class="minimal-gap">', unsafe_allow_html=True)
+    cols = st.columns([1, 1])
     with cols[0]:
-        st.image("회암사지.jpg", caption="회암사지 터", width=320)
+        st.image("회암사지.jpg", caption="회암사지 터", width=340)
     with cols[1]:
-        st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=320)
+        st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=340)
     st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown("""
