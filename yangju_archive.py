@@ -53,6 +53,15 @@ with tabs[0]:
     - 승과(僧科) 시행 장소<br>
     - 현재는 회암사지 및 국립 회암사지박물관으로 보존<br>
     <br>
+    """, unsafe_allow_html=True)
+
+    # 이미지 추가
+    st.image("회암사지.jpg", caption="회암사지 터 전경", use_column_width=True)
+    st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", use_column_width=True)
+
+    st.markdown("""
+    <div style='font-size:13pt;'>
+    <br>
     <b>3. 조선 후기 천주교 박해의 현장</b><br>
     - 신유박해(1801) 시기 여성 신자 다수 순교<br>
     - 강완숙, 이순이 등 순교자 기록<br>
