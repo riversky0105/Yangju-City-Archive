@@ -277,3 +277,16 @@ with tabs[1]:
     except Exception as e:
         st.warning(f"그래프를 불러오는 중 오류가 발생했습니다: {e}")
 
+df = pd.read_csv(DATA_PATH, encoding="cp949")
+st.write("전체 데이터 미리보기:", df.head())
+
+# 행정구역명 공백 문제 진단
+st.write("행정구역별 값 목록:", df['행정구역별'].unique())
+
+# 양주시 데이터만 추출
+df_yg = df[df['행정구역별'].str.strip() == "양주시"]
+st.write("df_yg(양주시):", df_yg)
+
+# 컬럼명 직접 확인
+st.write("컬럼명:", list(df_yg.columns))
+
