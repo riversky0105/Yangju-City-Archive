@@ -99,15 +99,11 @@ with tabs[1]:
 
     DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
     try:
-        # 데이터 불러오기 (cp949로 인코딩)
         df = pd.read_csv(DATA_PATH, encoding="cp949")
         df['행정구역별'] = df['행정구역별'].astype(str).str.strip()
         df_yg = df[df['행정구역별'] == "양주시"]
 
-        # 컬럼명 확인
         columns = df_yg.columns.tolist()
-
-        # 5년 단위 출생자수/사망자수 컬럼만 추출
         base_years = []
         births = []
         deaths = []
@@ -119,7 +115,6 @@ with tabs[1]:
                 if (y - 2005) % 5 == 0 and y >= 2005:
                     base_years.append(y)
                     val = df_yg[col].values[0]
-                    # 소숫점 없는게 출생자수
                     if '.' not in str(val):
                         births.append(int(str(val).replace(",", "")))
                     else:
@@ -131,11 +126,9 @@ with tabs[1]:
                     val = df_yg[col].values[0]
                     deaths.append(int(float(val)))
 
-        # 둘 다 같은 길이로 정렬(혹시 길이 안 맞으면 zip에서 짧은 것만)
         base_years = sorted(list(set(base_years)))
 
-        # ▒▒ 그래프 크기/폰트 축소 ▒▒
-        fig, ax = plt.subplots(figsize=(4, 2.1))  # <-- 더 작게
+        fig, ax = plt.subplots(figsize=(6, 4.5))  # ← 지도와 유사한 크기
         ax.plot(base_years, births, marker='o', label='출생자수')
         ax.plot(base_years, deaths, marker='o', label='사망자수')
         ax.set_title("양주시 5년 단위 출생자수 · 사망자수 변화", fontproperties=font_prop, fontsize=13)
