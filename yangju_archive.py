@@ -1,141 +1,198 @@
+import os
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
-import matplotlib as mpl
 import matplotlib.font_manager as fm
-import os
+import re
 
-# ---- 한글 폰트 설정 ----
-font_path = os.path.join(os.getcwd(), "fonts", "NanumGothicCoding.ttf")
-if os.path.exists(font_path):
-    font_prop = fm.FontProperties(fname=font_path)
-    mpl.rc('font', family=font_prop.get_name())
-    plt.rcParams['font.family'] = font_prop.get_name()
-else:
-    font_prop = None
-
-# ---- 웹 전체 폰트 크기 조정 ----
+# 🔵 1. 웹사이트 본문 폰트 크기 일괄 적용 (12pt)
 st.markdown("""
     <style>
     html, body, [class*="css"]  {
-      font-size: 16px !important;
+        font-size: 16px !important;
     }
-    .markdown-text-container {
-      font-size: 16px !important;
+    .stMarkdown, .stText, .stSubheader, .stHeader, .stTitle {
+        font-size: 18px !important;
+        line-height: 1.7 !important;
     }
-    h1, h2, h3 {
-      font-size: 2em !important;
+    .stApp {
+        font-size: 16px !important;
     }
     </style>
 """, unsafe_allow_html=True)
 
+# 🔵 2. 한글 폰트 설정
+FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
+if os.path.exists(FONT_PATH):
+    font_prop = fm.FontProperties(fname=FONT_PATH)
+    plt.rcParams['font.family'] = font_prop.get_name()
+    plt.rcParams['axes.unicode_minus'] = False
+else:
+    font_prop = None
+
+# 🔵 3. Streamlit 페이지 세팅
+st.set_page_config(page_title="양주시 아카이브: 과거, 현재, 미래", layout="wide")
 st.title("🏙️ 양주시 아카이브: 과거, 현재, 미래")
-st.markdown("경기도 양주시의 역사와 미래 비전을 살펴보는 디지털 아카이브입니다.", unsafe_allow_html=True)
+st.markdown("<span style='font-size:15pt;'>경기도 양주시의 역사와 미래 비전을 살펴보는 디지털 아카이브입니다.</span>", unsafe_allow_html=True)
 
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래"])
 
-# --------- 📜 과거 탭 ---------
+# --- 📜 과거 ---
 with tabs[0]:
-    st.markdown("<h1 style='font-size:28px;'>양주시의 과거</h1>", unsafe_allow_html=True)
+    st.header("📜 양주시의 과거")
     st.markdown("""
-    <span style='font-size:12pt;'>
-    <b>1. 삼국시대와 고려시대</b><br>
-    • 양주 지역은 삼국시대 때부터 한강 유역의 전략적 요충지로서, 백제·고구려·신라의 영향을 받음.<br>
-    • 고려시대에는 ‘양주(楊州)’라는 명칭이 공식적으로 사용되었고, 관청과 교통, 군사 요지로 성장.<br><br>
-    <b>2. 조선시대의 발전</b><br>
-    • 조선 초기 한성(서울)의 외곽을 담당하는 중요한 행정구역으로 발전.<br>
-    • 광해군 때 '양주목' 승격, 8도(道)와 이어지는 교통·군사적 거점.<br>
-    • 다양한 전통시장과 장시, 문화 유적지(회암사지 등)가 번성.<br><br>
-    <b>3. 일제강점기 ~ 근대화</b><br>
-    • 1914년 부군면 통폐합, 양주군에서 현재의 남양주, 의정부, 동두천, 포천 등 분리.<br>
-    • 20세기 중후반 행정구역 개편(읍·면 분리), 인구 증대 및 농업 중심지 역할.<br>
-    </span>
+    <div style='font-size:13pt;'>
+    <b>1. 고려~조선 시대, 북방의 행정·군사 중심지</b><br>
+    - 양주목 설치: 경기 북부 광역 행정 단위<br>
+    - 조선시대 서울 외곽 방어선 역할<br>
+    - 현재의 의정부, 동두천, 포천, 남양주 일대가 관할 지역<br>
+    <br>
+    <b>2. 회암사: 왕실의 불교 수행처</b><br>
+    - 태조 이성계 퇴위 후 회암사 중건<br>
+    - 세종 시대까지 국가 불교 중심지로 기능<br>
+    - 승과(僧科) 시행 장소<br>
+    - 현재는 회암사지 및 국립 회암사지박물관으로 보존<br>
+    <br>
+    <b>3. 조선 후기 천주교 박해의 현장</b><br>
+    - 신유박해(1801) 시기 여성 신자 다수 순교<br>
+    - 강완숙, 이순이 등 순교자 기록<br>
+    - 장흥면에 순교 기념비, 성지 조성<br>
+    <br>
+    <b>4. 한국전쟁과 양주</b><br>
+    - 1·4 후퇴 시 주요 격전지<br>
+    - 1951년 대규모 민간인 피해<br>
+    - 전쟁 후 장기 복구 과정<br>
+    <br>
+    <b>5. 농업과 장터</b><br>
+    - 장흥, 은현, 남면은 조선시대 곡창지대<br>
+    - 읍내 장터는 한양 상인과의 활발한 교역지
+    </div>
     """, unsafe_allow_html=True)
 
-# --------- 🏙️ 현재 탭 ---------
+# --- 🏙️ 현재 ---
 with tabs[1]:
-    st.markdown("<h1 style='font-size:28px;'>양주시의 현재</h1>", unsafe_allow_html=True)
+    st.header("🏙️ 양주시의 현재")
     st.markdown("""
-    <span style='font-size:12pt;'>
+    <div style='font-size:13pt;'>
     <b>1. 인구와 행정</b><br>
-    • 2025년 인구 약 29만 명, 면적 310.4㎢, 1읍 4면 7동.<br>
-    • 초중고대학 67교, 약 2,800여 개의 공장 및 산업시설이 위치.<br><br>
+    - 2025년 인구 약 29만 명, 면적 310.4㎢, 1읍 4면 7동.<br>
+    - 초중고대학 67교, 약 2,800여 개의 공장 및 산업시설이 위치.<br>
+    <br>
     <b>2. 신도시 개발 및 교통</b><br>
-    • 옥정·회천 신도시 개발로 수도권 내 인구 급증(최근 수도권 증가율 1위).<br>
-    • GTX-C 개통 등 서울 접근성 향상, 교통망 빠르게 확장.<br><br>
+    - 옥정·회천 신도시 개발로 수도권 내 인구 급증(최근 수도권 증가율 1위).<br>
+    - 7호선 연장, GTX-C 개통 등 서울 접근성 좋은 광역교통망 빠르게 확장.<br>
+    <br>
     <b>3. 산업기반 확충</b><br>
-    • 양주테크노밸리, 첨단산업단지 개발<br>
-    • 의료·바이오·IT 기업 유치 및 고용 창출, 세수 확대<br><br>
+    - 양주테크노밸리, 첨단산업단지 개발<br>
+    - 의료·바이오·IT 기업 유치 및 고용 창출, 세수 확대<br>
+    <br>
     <b>4. 문화·관광 자원 리브랜딩</b><br>
-    • 장흥 조각공원, 승일전망대, 나리농원, 회암사지 등 관광자원 리브랜딩<br>
-    • 전통+현대예술 융합, 청년예술가 지원<br><br>
+    - 장흥 조각공원, 송암천문대, 나리농원, 회암사지 등 관광자원 리브랜딩<br>
+    - 전통+현대예술 융합, 청년예술가 지원<br>
+    <br>
     <b>5. 도시·농촌 복합형 구조</b><br>
-    • 도심은 아파트 중심, 외곽은 농촌·산업지<br>
-    • 다양한 주거·라이프스타일 공존
-    </span>
+    - 도심은 아파트 중심, 외곽은 농촌·산림지<br>
+    - 다양한 커뮤니티와 라이프스타일 공존
+    </div>
     """, unsafe_allow_html=True)
-
     st.markdown("---")
 
-    st.markdown("### 🍼 양주시 5년 단위 연도별 출생자수·사망자수 변화(2005~최신)")
-    st.markdown(
-        "<span style='font-size:12pt;'>양주시의 인구 구조 변화는 5년 단위로 간략하게 시각화합니다. <br>데이터 출처: KOSIS 국가통계포털</span>",
-        unsafe_allow_html=True
-    )
+    st.subheader("양주시 5년 단위 연도별 출생자수·사망자수 (2005~최신)")
 
-    # ----- 데이터 불러오기 및 전처리 -----
-    data_path = "양주시_연도별_출생자수_사망자수.csv"
-    df = pd.read_csv(data_path, encoding="utf-8")
-    # 컬럼명에 공백이 있으면 자동 trim
-    df.columns = [c.strip() for c in df.columns]
-    # "행정구역별" 컬럼에서 "양주시"만 필터링
-    df_yangju = df[df["행정구역별"] == "양주시"].reset_index(drop=True)
+    DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
+    try:
+        # 데이터 불러오기 (cp949로 인코딩)
+        df = pd.read_csv(DATA_PATH, encoding="cp949")
+        df['행정구역별'] = df['행정구역별'].astype(str).str.strip()
+        df_yg = df[df['행정구역별'] == "양주시"]
 
-    # 데이터 형태 wide → long 전환
-    data_long = []
-    for col in df_yangju.columns:
-        if "출생건수" in col or "사망건수" in col:
-            year = col.split()[0]
-            value = int(df_yangju.loc[0, col])
-            kind = "출생자수" if "출생" in col else "사망자수"
-            data_long.append({"연도": int(year), "구분": kind, "값": value})
-    df_long = pd.DataFrame(data_long)
+        # 연도 추출
+        year_pattern = re.compile(r"(\d{4})\s*출생건수")
+        years = []
+        for col in df_yg.columns:
+            m = year_pattern.match(col)
+            if m:
+                years.append(int(m.group(1)))
 
-    # 2005년부터 5년 단위로만 필터링
-    year_list = list(range(2005, 2026, 5))
-    df_long = df_long[df_long["연도"].isin(year_list)]
+        # 2005년 이상, 5년 단위, 마지막 연도(최신) 포함
+        base_years = [y for y in years if y >= 2005 and y % 5 == 0]
+        if years and years[-1] not in base_years:
+            base_years.append(years[-1])
+        base_years = sorted(list(set(base_years)))
 
-    # wide 형태로 pivot
-    df_pivot = df_long.pivot(index="연도", columns="구분", values="값").sort_index()
+        births = []
+        deaths = []
+        for y in base_years:
+            birth_col = f"{y} 출생건수 (명)"
+            death_col = f"{y} 사망건수 (명)"
+            # 혹시 컬럼명이 미묘하게 다를 수 있으니 정규식 보조
+            bcol = None
+            dcol = None
+            for c in df_yg.columns:
+                if re.fullmatch(f"{y}\\s*출생건수.*", c): bcol = c
+                if re.fullmatch(f"{y}\\s*사망건수.*", c): dcol = c
+            if bcol: birth_col = bcol
+            if dcol: death_col = dcol
+            # 결측, 공백, NaN, '-' 등은 0 처리
+            bval = df_yg[birth_col].values[0]
+            dval = df_yg[death_col].values[0]
+            try:
+                bval = int(str(bval).replace(",", "").strip())
+            except:
+                bval = 0
+            try:
+                dval = int(str(dval).replace(",", "").strip())
+            except:
+                dval = 0
+            births.append(bval)
+            deaths.append(dval)
 
-    # ---- 시각화: 그래프 크기/폰트 최적화 ----
-    fig, ax = plt.subplots(figsize=(5.5, 3.2))  # 크기 축소
-    ax.plot(df_pivot.index, df_pivot["출생자수"], marker="o", label="출생자수", linewidth=2)
-    ax.plot(df_pivot.index, df_pivot["사망자수"], marker="o", label="사망자수", linewidth=2)
-    ax.set_title("양주시 5년 단위 출생자수 · 사망자수 변화", fontproperties=font_prop, fontsize=16)
-    ax.set_xlabel("연도", fontproperties=font_prop, fontsize=12)
-    ax.set_ylabel("명", fontproperties=font_prop, fontsize=12)
-    ax.legend(prop=font_prop, fontsize=12)
-    ax.grid(True, alpha=0.3)
-    plt.tight_layout()
-    st.pyplot(fig)
+        # ▒▒ 그래프 크기/폰트 축소 ▒▒
+        fig, ax = plt.subplots(figsize=(5, 2.7))
+        ax.plot(base_years, births, marker='o', label='출생자수')
+        ax.plot(base_years, deaths, marker='o', label='사망자수')
+        ax.set_title("양주시 5년 단위 출생자수·사망자수 변화", fontproperties=font_prop, fontsize=13)
+        ax.set_xlabel("연도", fontproperties=font_prop, fontsize=11)
+        ax.set_ylabel("명", fontproperties=font_prop, fontsize=11)
+        ax.set_xticks(base_years)
+        ax.set_xticklabels(base_years, fontproperties=font_prop, fontsize=10)
+        ax.legend(prop=font_prop, fontsize=10)
+        plt.yticks(fontproperties=font_prop, fontsize=10)
+        plt.xticks(fontproperties=font_prop, fontsize=10)
+        plt.tight_layout()
+        st.pyplot(fig)
+        st.caption("양주시 인구 구조 변화를 5년 단위로 시각화. 데이터 출처: KOSIS 국가통계포털")
+    except Exception as e:
+        st.warning(f"그래프를 불러오는 중 오류가 발생했습니다: {e}")
 
-# --------- 🌐 미래 탭 ---------
+# --- 🌐 미래 ---
 with tabs[2]:
-    st.markdown("<h1 style='font-size:28px;'>양주시의 미래</h1>", unsafe_allow_html=True)
+    st.header("🌐 양주시의 미래")
     st.markdown("""
-    <span style='font-size:12pt;'>
-    <b>1. 인구 30만 돌파와 도시 성장</b><br>
-    • 신도시, 신규 아파트 단지 확장, GTX-C 개통 등으로 2030년 인구 30만 명 돌파 예상.<br>
-    • 고령화율 증가와 청년층 유입, 인구구조 다변화.<br><br>
-    <b>2. 첨단산업·미래도시</b><br>
-    • 양주테크노밸리, 바이오·IT 융합산업단지 확대.<br>
-    • 친환경, 스마트도시 인프라 도입, 공공데이터·AI·에너지 혁신.<br><br>
-    <b>3. 문화·관광·예술 중심지</b><br>
-    • 장흥·회암사지 등 관광·예술 자원과 ICT 접목, 국내외 관광객 확대.<br>
-    • 청년예술인·디지털콘텐츠, 다양한 창업 및 예술 지원.<br><br>
-    <b>4. 도시와 농촌의 공존, 지속가능 성장</b><br>
-    • 스마트 농업, 그린에너지 도입 등으로 농촌과 도시가 함께 성장.<br>
-    • 도시정책과 교육, 주민참여 확대.<br>
-    </span>
+    <div style='font-size:13pt;'>
+    <b>1. 경기북부 중심도시 성장</b><br>
+    - 수도권 동북부 거점도시로 발전<br>
+    - 주거 중심에서 산업·문화·교육 복합도시로 전환<br>
+    - 광역교통망 중심축으로 기대<br>
+    <br>
+    <b>2. 첨단산업과 창업도시</b><br>
+    - 테크노밸리, 산업단지 중심 개발<br>
+    - 청년 창업 및 스타트업 인큐베이팅<br>
+    - 4차 산업 기반의 경제 체질 개선<br>
+    <br>
+    <b>3. 문화예술 중심도시</b><br>
+    - 장흥문화예술촌 레지던시 확대<br>
+    - 청년 예술가 정착 유도<br>
+    - 회암사지 등 역사와 콘텐츠 결합한 스토리텔링<br>
+    <br>
+    <b>4. 탄소중립 스마트시티</b><br>
+    - 스마트 교통, AI 행정 도입<br>
+    - 공공건물 태양광 등 에너지 절감 도시계획<br>
+    - 생태공원, 도시숲, 스마트팜 확장<br>
+    <br>
+    <b>5. 교육·복지 인프라</b><br>
+    - 국공립 유치원 및 학교 확충<br>
+    - 지역 대학 및 평생학습 거점 마련<br>
+    - 맞춤형 복지 설계: 고령자, 청년, 다문화 가정 대상
+    </div>
     """, unsafe_allow_html=True)
