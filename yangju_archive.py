@@ -38,7 +38,93 @@ st.markdown("<span style='font-size:15pt;'>경기도 양주시의 역사와 미�
 
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
 
-# 각 탭별 기존 콘텐츠(과거, 현재, 미래) 생략
+with tabs[0]:
+    st.header("📜 양주시의 과거")
+    st.markdown("""
+    <div style='font-size:13pt;'>
+    <b>1. 고려~조선 시대, 북방의 행정·군사 중심지</b><br>
+    - 양주목 설치: 경기 북부 광역 행정 단위<br>
+    - 조선시대 서울 외곽 방어선 역할<br>
+    - 현재의 의정부, 동두천, 포천, 남양주 일대가 관할 지역<br>
+    <br>
+    <b>2. 회암사: 왕실의 불교 수행처</b><br>
+    - 태조 이성계 퇴위 후 회암사 중건<br>
+    - 세종 시대까지 국가 불교 중심지로 기능<br>
+    - 승과(僧科) 시행 장소<br>
+    - 현재는 회암사지 및 국립 회암사지박물관으로 보존<br>
+    <br>
+    <b>3. 조선 후기 천주교 박해의 현장</b><br>
+    - 신유박해(1801) 시기 여성 신자 다수 순교<br>
+    - 강완숙, 이순이 등 순교자 기록<br>
+    - 장흥면에 순교 기념비, 성지 조성<br>
+    <br>
+    <b>4. 한국전쟁과 양주</b><br>
+    - 1·4 후퇴 시 주요 격전지<br>
+    - 1951년 대규모 민간인 피해<br>
+    - 전쟁 후 장기 복구 과정<br>
+    <br>
+    <b>5. 농업과 장터</b><br>
+    - 장흥, 은현, 남면은 조선시대 곡창지대<br>
+    - 읍내 장터는 한양 상인과의 활발한 교역지
+    </div>
+    """, unsafe_allow_html=True)
+
+with tabs[1]:
+    st.header("🏙️ 양주시의 현재")
+    st.markdown("""
+    <div style='font-size:13pt;'>
+    <b>1. 인구와 행정</b><br>
+    - 2025년 인구 약 29만 명, 면적 310.4㎢, 1읍 4면 7동.<br>
+    - 초중고대학 67교, 약 2,800여 개의 공장 및 산업시설이 위치.<br>
+    <br>
+    <b>2. 신도시 개발 및 교통</b><br>
+    - 옥정·회천 신도시 개발로 수도권 내 인구 급증(최근 수도권 증가율 1위).<br>
+    - 7호선 연장, GTX-C 개통 등 서울 접근성 좋은 광역교통망 빠르게 확장.<br>
+    <br>
+    <b>3. 산업기반 확충</b><br>
+    - 양주테크노밸리, 첨단산업단지 개발<br>
+    - 의료·바이오·IT 기업 유치 및 고용 창출, 세수 확대<br>
+    <br>
+    <b>4. 문화·관광 자원 리브랜딩</b><br>
+    - 장흥 조각공원, 송암천문대, 나리농원, 회암사지 등 관광자원 리브랜딩<br>
+    - 전통+현대예술 융합, 청년예술가 지원<br>
+    <br>
+    <b>5. 도시·농촌 복합형 구조</b><br>
+    - 도심은 아파트 중심, 외곽은 농촌·산림지<br>
+    - 다양한 커뮤니티와 라이프스타일 공존
+    </div>
+    """, unsafe_allow_html=True)
+
+with tabs[2]:
+    st.header("🌐 양주시의 미래")
+    st.markdown("""
+    <div style='font-size:13pt;'>
+    <b>1. 경기북부 중심도시 성장</b><br>
+    - 수도권 동북부 거점도시로 발전<br>
+    - 주거 중심에서 산업·문화·교육 복합도시로 전환<br>
+    - 광역교통망 중심축으로 기대<br>
+    <br>
+    <b>2. 첨단산업과 창업도시</b><br>
+    - 테크노밸리, 산업단지 중심 개발<br>
+    - 청년 창업 및 스타트업 인큐베이팅<br>
+    - 4차 산업 기반의 경제 체질 개선<br>
+    <br>
+    <b>3. 문화예술 중심도시</b><br>
+    - 장흥문화예술촌 레지던시 확대<br>
+    - 청년 예술가 정착 유도<br>
+    - 회암사지 등 역사와 콘텐츠 결합한 스토리텔링<br>
+    <br>
+    <b>4. 탄소중립 스마트시티</b><br>
+    - 스마트 교통, AI 행정 도입<br>
+    - 공공건물 태양광 등 에너지 절감 도시계획<br>
+    - 생태공원, 도시숲, 스마트팜 확장<br>
+    <br>
+    <b>5. 교육·복지 인프라</b><br>
+    - 국공립 유치원 및 학교 확충<br>
+    - 지역 대학 및 평생학습 거점 마련<br>
+    - 맞춤형 복지 설계: 고령자, 청년, 다문화 가정 대상
+    </div>
+    """, unsafe_allow_html=True)
 
 with tabs[3]:
     st.header("📊 양주시 인구 변화")
@@ -46,19 +132,16 @@ with tabs[3]:
     양주시 인구 구조 변화를 월별/연도별 및 5년 단위 출생자수·사망자수와 함께 시각화합니다. 데이터 출처: KOSIS 국가통계포털
     """)
 
-    # --- 인구수 변화 그래프 ---
+    # 인구수 변화 그래프
     POP_DATA_PATH = "양주시_연도별_인구수.csv"
-
     try:
-        # 멀티 헤더로 읽기 (두 줄)
+        # 멀티 헤더(2줄)로 읽기
         df_pop = pd.read_csv(POP_DATA_PATH, encoding="cp949", header=[0,1])
 
-        # 첫 번째 컬럼명 '행정구역(시군구)별'
-        # 양주시 데이터 필터링 (첫 컬럼, 첫 레벨 이름으로 필터)
-        df_pop = df_pop[df_pop.iloc[:,0].str.contains("양주시")].reset_index(drop=True)
+        # 양주시 데이터 필터링 (첫 컬럼 '행정구역(시군구)별' 포함 '양주시' 문자열)
+        df_pop = df_pop[df_pop.iloc[:, 0].str.contains("양주시")].reset_index(drop=True)
 
-        # 두 번째 컬럼부터 인구수(월별) 데이터, 다중 컬럼명 (예: ('2011.01','총인구수 (명)'))
-        # 연도별로 그룹핑해서 연평균 계산
+        # 연도별로 월별 데이터 그룹핑
         year_cols = {}
         for col in df_pop.columns[1:]:
             year = col[0][:4]
@@ -66,18 +149,18 @@ with tabs[3]:
                 year_cols[year] = []
             year_cols[year].append(col)
 
-        # 연도별 평균 인구수 계산
+        # 연도별 월별 인구수 평균 계산
         year_avg = {}
         for y, cols in year_cols.items():
-            # 해당 연도 월별 데이터 평균 (총인구수 (명) 컬럼만)
             vals = df_pop.loc[0, cols].values.astype(float)
             year_avg[int(y)] = np.mean(vals)
 
-        # 5년 단위로 필터링
+        # 5년 단위 필터링
         years = sorted(year_avg.keys())
         years_5yr = [y for y in years if y >= 2005 and (y % 5 == 0 or y == years[-1])]
         pop_5yr_avg = [year_avg[y] for y in years_5yr]
 
+        # 시각화
         fig, ax = plt.subplots(figsize=(6, 3.5))
         ax.plot(years_5yr, pop_5yr_avg, marker='o', color='tab:green', label='인구수 (연평균)')
         ax.set_title("양주시 5년 단위 연평균 인구수 변화", fontproperties=font_prop, fontsize=12)
@@ -95,9 +178,8 @@ with tabs[3]:
 
     st.markdown("---")
 
-    # --- 출생자수·사망자수 그래프 (기존 코드 재사용) ---
+    # 출생자수·사망자수 그래프 (기존 코드 재사용)
     BIRTH_DEATH_DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
-
     try:
         df = pd.read_csv(BIRTH_DEATH_DATA_PATH, encoding="cp949")
         df['행정구역별'] = df['행정구역별'].astype(str).str.strip()
