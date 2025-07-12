@@ -58,7 +58,10 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
-    # 사진 두 개를 세로로 배치!
+    # 텍스트와 이미지 사이에 여백 추가
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+
+    # 이미지 세로 배치
     st.image("회암사지.jpg", caption="회암사지 터", width=500)
     st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=500)
 
@@ -187,33 +190,25 @@ with tabs[3]:
         colnames = list(df_yg.columns)
         birth_cols = [col for col in colnames if col != "행정구역별" and "." not in col]
         death_cols = [col for col in colnames if col != "행정구역별" and "." in col]
-        birth_years = []
-        births = []
+        birth_years, births = [], []
         for col in birth_cols:
-            year_match = re.match(r"(\d{4})", col)
-            if year_match:
-                y = int(year_match.group(1))
+            m = re.match(r"(\d{4})", col)
+            if m:
+                y = int(m.group(1))
                 if y >= 2005 and (y % 5 == 0 or y == int(birth_cols[-1][:4])):
                     birth_years.append(y)
-                    try:
-                        val = int(str(df_yg.iloc[0][col]).replace(",", "").strip())
-                    except:
-                        val = 0
-                    births.append(val)
-        death_years = []
-        deaths = []
+                    try: births.append(int(str(df_yg.iloc[0][col]).replace(",", "").strip()))
+                    except: births.append(0)
+        death_years, deaths = [], []
         for col in death_cols:
-            year_match = re.match(r"(\d{4})", col)
-            if year_match:
-                y = int(year_match.group(1))
+            m = re.match(r"(\d{4})", col)
+            if m:
+                y = int(m.group(1))
                 if y >= 2005 and (y % 5 == 0 or y == int(death_cols[-1][:4])):
                     death_years.append(y)
-                    try:
-                        val = int(float(str(df_yg.iloc[0][col]).replace(",", "").strip()))
-                    except:
-                        val = 0
-                    deaths.append(val)
-        common_years = sorted(list(set(birth_years) & set(death_years)))
+                    try: deaths.append(int(float(str(df_yg.iloc[0][col]).replace(",", "").strip())))
+                    except: deaths.append(0)
+        common_years = sorted(set(birth_years) & set(death_years))
         births_aligned = [births[birth_years.index(y)] for y in common_years]
         deaths_aligned = [deaths[death_years.index(y)] for y in common_years]
         fig, ax = plt.subplots(figsize=(6, 3.5))
