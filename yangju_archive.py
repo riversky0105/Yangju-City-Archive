@@ -3,6 +3,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
+import re
 
 # ▒▒ 웹사이트 전체 폰트 크기 일괄 적용 ▒▒
 st.markdown("""
@@ -102,61 +103,56 @@ with tabs[1]:
         df['행정구역별'] = df['행정구역별'].astype(str).str.strip()
         df_yg = df[df['행정구역별'] == "양주시"].reset_index(drop=True)
 
-        # 연도 추출
-        year_cols = [col for col in df_yg.columns if not col.startswith("행정구역별")]
-
-        # 5년 단위 연도 및 최신 연도만 추출
-        base_years = []
+        births_years = []
         births = []
+        deaths_years = []
         deaths = []
-        for col in year_cols:
-            # 컬럼에서 연도 추출 (예: 2005, 2006.1 등)
-            year_str = col.split()[0]
-            year = year_str.replace('.1', '')
-            if not year.isdigit():
+
+        for col in df_yg.columns:
+            # 연도 추출
+            year_match = re.match(r"(\d{4})", col)
+            if not year_match:
                 continue
-            year = int(year)
-            if year >= 2005 and (year % 5 == 0 or year == 2023):  # 5년 단위 or 최신
-                value = df_yg[col].values[0]
+            year = int(year_match.group(1))
+            # 출생자수
+            if "출생" in col and year >= 2005 and (year % 5 == 0 or year == 2023):
+                val = df_yg[col].values[0]
                 try:
-                    # 소숫점 유무로 출생/사망자수 구분
-                    if '.' in str(value):
-                        value_float = float(str(value).replace(",", ""))
-                        deaths.append(value_float)
-                    else:
-                        value_int = int(str(value).replace(",", ""))
-                        births.append(value_int)
-                    if year not in base_years:
-                        base_years.append(year)
-                except:
-                    continue
+                    births_years.append(year)
+                    births.append(int(str(val).replace(",", "")))
+                except: continue
+            # 사망자수
+            if "사망" in col and year >= 2005 and (year % 5 == 0 or year == 2023):
+                val = df_yg[col].values[0]
+                try:
+                    deaths_years.append(year)
+                    deaths.append(int(float(str(val).replace(",", ""))))
+                except: continue
 
-        # 연도 오름차순 정렬
-        sorted_idx = sorted(range(len(base_years)), key=lambda i: base_years[i])
-        base_years = [base_years[i] for i in sorted_idx]
-        births = [births[i] for i in sorted_idx]
-        deaths = [deaths[i] for i in sorted_idx]
+        # 연도 오름차순
+        births_years, births = zip(*sorted(zip(births_years, births)))
+        deaths_years, deaths = zip(*sorted(zip(deaths_years, deaths)))
 
-        # ▒▒ 출생자수 그래프 ▒▒
-        fig1, ax1 = plt.subplots(figsize=(4.5, 2.7))
-        ax1.plot(base_years, births, marker='o', color='royalblue')
+        # 출생자수 그래프
+        fig1, ax1 = plt.subplots(figsize=(4.5, 2.5))
+        ax1.plot(births_years, births, marker='o', color='royalblue')
         ax1.set_title("양주시 5년 단위 출생자수 변화", fontproperties=font_prop, fontsize=13)
         ax1.set_xlabel("연도", fontproperties=font_prop, fontsize=11)
         ax1.set_ylabel("명", fontproperties=font_prop, fontsize=11)
-        ax1.set_xticks(base_years)
-        ax1.set_xticklabels(base_years, fontproperties=font_prop, fontsize=10)
+        ax1.set_xticks(births_years)
+        ax1.set_xticklabels(births_years, fontproperties=font_prop, fontsize=10)
         plt.yticks(fontproperties=font_prop, fontsize=10)
         plt.tight_layout()
         st.pyplot(fig1)
 
-        # ▒▒ 사망자수 그래프 ▒▒
-        fig2, ax2 = plt.subplots(figsize=(4.5, 2.7))
-        ax2.plot(base_years, deaths, marker='o', color='orangered')
+        # 사망자수 그래프
+        fig2, ax2 = plt.subplots(figsize=(4.5, 2.5))
+        ax2.plot(deaths_years, deaths, marker='o', color='orangered')
         ax2.set_title("양주시 5년 단위 사망자수 변화", fontproperties=font_prop, fontsize=13)
         ax2.set_xlabel("연도", fontproperties=font_prop, fontsize=11)
         ax2.set_ylabel("명", fontproperties=font_prop, fontsize=11)
-        ax2.set_xticks(base_years)
-        ax2.set_xticklabels(base_years, fontproperties=font_prop, fontsize=10)
+        ax2.set_xticks(deaths_years)
+        ax2.set_xticklabels(deaths_years, fontproperties=font_prop, fontsize=10)
         plt.yticks(fontproperties=font_prop, fontsize=10)
         plt.tight_layout()
         st.pyplot(fig2)
