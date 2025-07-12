@@ -58,13 +58,9 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
-    # ★ 이미지를 완전히 붙여서 배치 (공백 최소화)
-    col1, col2 = st.columns([1, 1], gap="small")  # gap="small"이 최소치입니다. "none"은 지원 안됨
-
-    with col1:
-        st.image("회암사지.jpg", caption="회암사지 터", width=500)
-    with col2:
-        st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=500)
+    # ★ 세로(위아래)로 이미지 배치
+    st.image("회암사지.jpg", caption="회암사지 터", width=500)
+    st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=500)
 
     st.markdown("""
     <div style='font-size:13pt;'>
