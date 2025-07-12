@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 
-# 1. 폰트 설정 (NanumGothicCoding.ttf는 fonts 폴더에 있어야 함)
+# 1. 한글 폰트 설정 (프로젝트에 fonts 폴더 내 NanumGothicCoding.ttf 필요)
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 if os.path.exists(FONT_PATH):
     font_prop = fm.FontProperties(fname=FONT_PATH)
@@ -99,43 +99,48 @@ with tabs[1]:
     - 다양한 커뮤니티와 라이프스타일 공존
     """)
 
-    # 🔥 여기에 최신 출생·사망자수 시각화 그래프 추가
+    # 🔥 5년 단위(2005, 2010, 2015, 2020, 2024 등)로 시각화한 출생·사망자수 그래프
     st.markdown("---")
-    st.subheader("📊 양주시 연도별 출생자수·사망자수 (2003~2024)")
-    st.markdown("양주시의 인구 구조 변화를 확인할 수 있는 통계 그래프입니다. 데이터 출처: KOSIS 국가통계포털")
+    st.subheader("📊 양주시 5년 단위 연도별 출생자수·사망자수 (2005~최신)")
+    st.markdown("양주시의 인구 구조 변화를 5년 단위로 간략하게 시각화합니다. 데이터 출처: KOSIS 국가통계포털")
 
-    # 데이터 불러오기 및 그래프 시각화
     DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
     try:
         df = pd.read_csv(DATA_PATH, encoding="cp949")
-        # '행정구역별'이 있으면 '양주시'만 추출
         if '행정구역별' in df.columns:
             df = df[df['행정구역별'] == '양주시']
 
-        # 연도/출생/사망 추출
+        # 연도, 출생, 사망 추출
         data = []
         for col in df.columns:
             if '출생건수' in col:
-                year = col.split()[0]
+                year = int(col.split()[0])
                 birth = int(df[col].values[0])
                 death_col = f"{year} 사망건수 (명)"
                 if death_col in df.columns:
                     death = int(df[death_col].values[0])
-                    data.append([int(year), birth, death])
+                    data.append([year, birth, death])
         df_plt = pd.DataFrame(data, columns=['연도', '출생자수', '사망자수'])
         df_plt = df_plt.sort_values('연도')
 
-        # 그래프
-        fig, ax = plt.subplots(figsize=(10,5))
-        ax.plot(df_plt['연도'], df_plt['출생자수'], marker='o', label='출생자수')
-        ax.plot(df_plt['연도'], df_plt['사망자수'], marker='o', label='사망자수')
-        ax.set_title("양주시 연도별 출생자수·사망자수", fontproperties=font_prop, fontsize=18)
-        ax.set_xlabel("연도", fontproperties=font_prop, fontsize=14)
-        ax.set_ylabel("명", fontproperties=font_prop, fontsize=14)
-        ax.legend(prop=font_prop, fontsize=12)
-        ax.set_xticks(df_plt['연도'])
-        ax.set_xticklabels(df_plt['연도'], fontproperties=font_prop, rotation=45)
-        ax.tick_params(axis='y', labelsize=12)
+        # 5년 단위만 필터링 (2005, 2010, 2015, 2020, 2024 등)
+        df_plt_5y = df_plt[df_plt['연도'] % 5 == 0]
+        # 만약 최신 연도가 5로 나누어 떨어지지 않으면 최신연도도 추가
+        if df_plt['연도'].max() not in df_plt_5y['연도'].values:
+            last_row = df_plt.iloc[-1]
+            df_plt_5y = pd.concat([df_plt_5y, last_row.to_frame().T], ignore_index=True)
+
+        # 컴팩트한 크기
+        fig, ax = plt.subplots(figsize=(7, 4))
+        ax.plot(df_plt_5y['연도'], df_plt_5y['출생자수'], marker='o', label='출생자수')
+        ax.plot(df_plt_5y['연도'], df_plt_5y['사망자수'], marker='o', label='사망자수')
+        ax.set_title("양주시 5년 단위 출생·사망자수", fontproperties=font_prop, fontsize=15)
+        ax.set_xlabel("연도", fontproperties=font_prop, fontsize=11)
+        ax.set_ylabel("명", fontproperties=font_prop, fontsize=11)
+        ax.legend(prop=font_prop, fontsize=11)
+        ax.set_xticks(df_plt_5y['연도'])
+        ax.set_xticklabels(df_plt_5y['연도'], fontproperties=font_prop, rotation=0)
+        ax.tick_params(axis='y', labelsize=10)
         plt.yticks(fontproperties=font_prop)
         plt.tight_layout()
         st.pyplot(fig)
@@ -174,4 +179,3 @@ with tabs[2]:
     - 지역 대학 및 평생학습 거점 마련  
     - 맞춤형 복지 설계: 고령자, 청년, 다문화 가정 대상
     """)
-
