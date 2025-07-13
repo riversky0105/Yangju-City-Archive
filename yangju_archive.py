@@ -113,7 +113,7 @@ if not st.session_state["started"]:
     st.markdown("<div class='wasd-tip'>WASD 또는 화살표 방향키로 이동하는<br>게임기를 연상하며 구경해보세요!</div>", unsafe_allow_html=True)
     if st.button("🎮 GAME START", key="gamestart1", help="아카이브 시작!", type="primary"):
         st.session_state["started"] = True
-        st.experimental_rerun()
+        st.rerun()
     st.stop()
 
 # ===== 5. 게임패드 네비게이션 =====
@@ -122,11 +122,11 @@ col1, col2, col3 = st.columns([1,6,1])
 with col1:
     if st.button("⬅️", key="left_btn", help="이전", use_container_width=True):
         st.session_state.section_idx = (st.session_state.section_idx - 1) % len(sections)
-        st.experimental_rerun()
+        st.rerun()
 with col3:
     if st.button("➡️", key="right_btn", help="다음", use_container_width=True):
         st.session_state.section_idx = (st.session_state.section_idx + 1) % len(sections)
-        st.experimental_rerun()
+        st.rerun()
 st.markdown(
     "<div style='text-align:center;margin-bottom:18px;'><span style='background:#181c2b;border-radius:10px;padding:5px 14px 5px 10px;box-shadow:0 0 9px #00f2fe55;letter-spacing:1.5px;'><b style='color:#00f2fe;'>⬅️ ➡️</b> 버튼으로 이동!</span></div>",
     unsafe_allow_html=True
