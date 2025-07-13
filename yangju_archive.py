@@ -110,13 +110,17 @@ body, .stApp { background: #232946; }
 }
 /* 이미지와 텍스트 사이 간격 추가 */
 .stImage {
-    margin-bottom: 16px !important;
+    margin-bottom: 0px !important;
+}
+.img-gap {
+    margin-bottom: 16px;
 }
 @media (max-width: 600px) {
     .arcade-frame { padding: 13vw 3vw 6vw 3vw; min-width: 0; }
     .main-title { font-size: 1.6rem; }
     .pixel-border { padding: 6vw 1vw 2vw 1vw;}
     .back-btn { font-size: 0.95rem;}
+    .img-gap { margin-bottom: 12px; }
 }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -169,17 +173,16 @@ tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변
 def get_docum_msg():
     tab = st.session_state.get('current_tab', 0)
     if tab == 0:
-        return "아카이브 과거 도감 달성!"
+        return "🗂️ 아카이브 과거 도감 달성!"
     elif tab == 1:
-        return "아카이브 현재 도감 달성!"
+        return "🗂️ 아카이브 현재 도감 달성!"
     elif tab == 2:
-        return "아카이브 미래 도감 달성!"
+        return "🗂️ 아카이브 미래 도감 달성!"
     elif tab == 3:
-        return "아카이브 인구 도감 달성!"
-    return "아카이브 도감 달성!"
+        return "🗂️ 아카이브 인구 도감 달성!"
+    return "🗂️ 아카이브 도감 달성!"
 
 def show_back_button():
-    # 버튼 위에 레벨업/도감 문구 + 간격 추가
     st.markdown(
         f"""
         <div style="text-align:center; margin-top:26px; margin-bottom:16px;">
@@ -194,6 +197,10 @@ def show_back_button():
         if st.button("⏪ 처음으로", key=f"backtohome_{st.session_state.get('current_tab',0)}", help="아카이브 시작화면으로", use_container_width=True):
             reset_to_start()
 
+def img_gap():
+    # 텍스트-이미지 사이 여백을 위한 함수(16px)
+    st.markdown('<div class="img-gap"></div>', unsafe_allow_html=True)
+
 with tabs[0]:
     st.session_state.current_tab = 0
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
@@ -206,6 +213,7 @@ with tabs[0]:
     - 현재의 의정부, 동두천, 포천, 남양주 일대가 관할 지역<br>
     </div>
     """, unsafe_allow_html=True)
+    img_gap()
     st.image("양주 관야지.jpg", caption="양주 관아지(양주목 관아터)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
@@ -216,7 +224,9 @@ with tabs[0]:
     - 현재는 회암사지 및 국립 회암사지박물관으로 보존
     </div>
     """, unsafe_allow_html=True)
+    img_gap()
     st.image("회암사지.jpg", caption="회암사지 터", width=700)
+    img_gap()
     st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
@@ -226,6 +236,7 @@ with tabs[0]:
     - 장흥면에 순교 기념비, 성지 조성<br>
     </div>
     """, unsafe_allow_html=True)
+    img_gap()
     st.image("양주 장흥 순교성지.jpg", caption="양주 장흥 순교성지", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
@@ -234,7 +245,9 @@ with tabs[0]:
     - 읍내 장터는 한양 상인과의 활발한 교역지
     </div>
     """, unsafe_allow_html=True)
+    img_gap()
     st.image("양주 농촌.jpg", caption="1950~1980년대 논 모내기 풍경(경기북부, 양주 일대)", width=700)
+    img_gap()
     st.image("양주 장터.jpg", caption="1970~1980년대 시골 장터(경기북부, 양주 일대)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
@@ -244,6 +257,7 @@ with tabs[0]:
     - 전쟁 후 장기 복구 과정<br>
     </div>
     """, unsafe_allow_html=True)
+    img_gap()
     st.image("양주 1.4후퇴.jpg", caption="1951년 1.4후퇴 당시 경기북부(양주 일대) 피난민 행렬", width=700)
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
@@ -259,6 +273,7 @@ with tabs[1]:
     - 초중고대학 67교, 약 2,800여 개의 공장 및 산업시설이 위치.<br>
     </div>
     """, unsafe_allow_html=True)
+    img_gap()
     st.image("양주시 면적.jpg", caption="양주시 행정구역도", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
@@ -267,6 +282,7 @@ with tabs[1]:
     - 7호선 연장, GTX-C 개통 등 서울 접근성 좋은 광역교통망 빠르게 확장.<br>
     </div>
     """, unsafe_allow_html=True)
+    img_gap()
     st.image("양주 옥정신도시.jpg", caption="양주 옥정 신도시 전경", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
@@ -275,6 +291,7 @@ with tabs[1]:
     - 의료·바이오·IT 기업 유치 및 고용 창출, 세수 확대<br>
     </div>
     """, unsafe_allow_html=True)
+    img_gap()
     st.image("양주 산업단지.jpg", caption="양주 은남일반산업단지(조감도)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
@@ -283,6 +300,7 @@ with tabs[1]:
     - 전통+현대예술 융합, 청년예술가 지원<br>
     </div>
     """, unsafe_allow_html=True)
+    img_gap()
     st.image("양주시 나리농원 천일홍 축제.jpg", caption="양주시 나리농원 천일홍 축제", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
@@ -292,6 +310,7 @@ with tabs[1]:
     - 쾌적한 공원, 녹지, 생활체육 환경 조성
     </div>
     """, unsafe_allow_html=True)
+    img_gap()
     st.image("양주 옥정 호수공원.jpg", caption="양주 옥정 호수공원", width=700)
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
@@ -308,6 +327,7 @@ with tabs[2]:
     - 광역교통망 중심축으로 기대<br>
     </div>
     """, unsafe_allow_html=True)
+    img_gap()
     st.image("양주 GTX 노선도.jpg", caption="양주를 지나는 GTX-C(예정) 노선", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
@@ -317,6 +337,7 @@ with tabs[2]:
     - 4차 산업 기반의 경제 체질 개선<br>
     </div>
     """, unsafe_allow_html=True)
+    img_gap()
     st.image("양주 테크노벨리.png", caption="양주 테크노밸리(조감도)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
@@ -326,6 +347,7 @@ with tabs[2]:
     - 회암사지 등 역사와 콘텐츠 결합한 스토리텔링<br>
     </div>
     """, unsafe_allow_html=True)
+    img_gap()
     st.image("양주 문화 예술.jpg", caption="양주 장흥문화예술촌(실내/전시)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
@@ -335,6 +357,7 @@ with tabs[2]:
     - 생태공원, 도시숲, 스마트팜 확장<br>
     </div>
     """, unsafe_allow_html=True)
+    img_gap()
     st.image("양주 탄소중립 스마트시티.jpg", caption="양주 생태공원 및 친환경 스마트시티", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
@@ -344,6 +367,7 @@ with tabs[2]:
     - 맞춤형 복지 설계: 고령자, 청년, 다문화 가정 대상
     </div>
     """, unsafe_allow_html=True)
+    img_gap()
     st.image("양주시 청년센터.jpg", caption="양주시 청년센터(옥정동)", width=700)
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
