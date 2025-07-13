@@ -23,46 +23,82 @@ body, .stApp { background: #232946; }
     background: #232946ee;
     border: 4px solid #393e46;
     box-shadow: 0 0 15px #00f2fe80;
+    z-index: 2;
 }
-.game-btn {
-    background: #f44336;
-    color: white;
-    border-radius: 20px;
-    font-family: 'Press Start 2P', 'NanumGothicCoding', monospace;
+.arcade-frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(35, 41, 70, 0.92);
+    border: 6px solid #00f2fe;
+    border-radius: 32px;
+    box-shadow: 0 0 40px #00f2fe44, 0 0 2px #232946;
+    padding: 60px 48px 42px 48px;
+    margin: 90px auto 0 auto;
+    max-width: 560px;
+    min-width: 370px;
+    z-index: 2;
+}
+.arcade-frame .subtitle {
+    font-family: 'Press Start 2P', monospace;
+    color: #ffd6e0;
+    font-size: 15pt;
+    background: #232946f2;
+    padding: 13px 32px;
+    border-radius: 18px;
+    margin-bottom: 36px;
+    margin-top: 12px;
+    text-align: center;
+    box-shadow: 0 0 18px #00f2fe50;
+    letter-spacing: 1px;
+    border: 3px solid #393e46;
+}
+.arcade-btn {
+    background: linear-gradient(90deg, #f44336 70%, #ffadad 100%);
+    color: #fff;
+    border-radius: 28px;
+    font-family: 'Press Start 2P', monospace;
     border: 3px solid #232946;
-    box-shadow: 0 0 7px #ffadad;
-    margin: 30px 0 36px 0;
-    font-size: 1.4rem;
-    padding: 18px 50px;
-    transition: background 0.2s;
+    box-shadow: 0 0 16px #ffadad80;
+    margin: 28px 0 20px 0;
+    font-size: 1.5rem;
+    padding: 24px 70px 20px 70px;
+    letter-spacing: 1px;
+    transition: background 0.16s, color 0.16s;
+    cursor: pointer;
 }
-.game-btn:hover {
+.arcade-btn:hover {
     background: #232946;
     color: #ffadad;
     border: 3px solid #f44336;
 }
-.pixel-border {
-    border: 5px solid #393e46;
-    border-radius: 20px;
-    background: #232946cc;
-    box-shadow: 0 0 20px #00f2fe99;
-    padding: 20px 35px 25px 35px;
-    margin-bottom: 32px;
-}
-.stTabs [role="tab"] {
+.blink {
+    animation: blink 1.3s steps(1) infinite;
     font-family: 'Press Start 2P', monospace;
-    font-size: 1.1rem;
-    background: #232946;
-    color: #f2f2f2;
-    border: 2px solid #393e46;
-    border-radius: 12px 12px 0 0;
-    margin-right: 3px;
-}
-.stTabs [role="tab"][aria-selected="true"] {
-    background: #393e46;
     color: #ffd6e0;
-    border-bottom: 4px solid #00f2fe;
-    text-shadow: 0 0 10px #00f2fe90;
+    font-size: 1.18rem;
+    margin-bottom: 6px;
+    margin-top: 14px;
+    text-shadow: 0 0 8px #00f2fe;
+}
+@keyframes blink {
+    0%, 55% { opacity: 1; }
+    56%, 100% { opacity: 0.2; }
+}
+.pixel-stars {
+    text-align: center;
+    font-size: 1.3rem;
+    color: #ffd6e0;
+    letter-spacing: 10px;
+    margin-top: 0px;
+    margin-bottom: 12px;
+    text-shadow: 0 0 8px #00f2fe70;
+    font-family: 'Press Start 2P', monospace;
+}
+@media (max-width: 500px) {
+    .arcade-frame { padding: 18px 6vw 18px 6vw; min-width: 0; }
+    .main-title { font-size: 1.3rem; }
 }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -87,14 +123,21 @@ if "archive_started" not in st.session_state:
     st.session_state.archive_started = False
 
 if not st.session_state.archive_started:
-    # ---- [시작 화면] ----
-    st.markdown(
-        "<div style='text-align:center; margin-top:55px;'><span style='font-family: Press Start 2P, monospace; font-size:15pt; color:#fff; background:#232946cc; padding:9px 22px; border-radius:14px;'>경기도 양주시의 역사와 미래 비전을 구경하세요!</span></div>",
-        unsafe_allow_html=True
-    )
-    st.markdown("<div style='height:35px'></div>", unsafe_allow_html=True)
-    if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=False):
-        st.session_state.archive_started = True
+    # ---- [스타트 화면] ----
+    st.markdown("""
+    <div class="arcade-frame">
+        <div class="pixel-stars">★&nbsp;◀&nbsp;WELCOME&nbsp;▶&nbsp;★</div>
+        <div class="subtitle">
+            경기도 양주시의<br>역사와 미래 비전을<br>구경하세요!
+        </div>
+        <div class="blink">PRESS START</div>
+    """, unsafe_allow_html=True)
+    # 버튼은 Streamlit 컴포넌트
+    col1, col2, col3 = st.columns([2,3,2])
+    with col2:
+        if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=True):
+            st.session_state.archive_started = True
+    st.markdown("</div>", unsafe_allow_html=True)
     st.stop()
 
 # --------- [본문] ---------
