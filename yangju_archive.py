@@ -253,7 +253,7 @@ with tabs[3]:
 
     st.markdown("---")
 
-    # 출생자수·사망자수 그래프
+       # 출생자수·사망자수 그래프
     BIRTH_DEATH_DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
     try:
         df = pd.read_csv(BIRTH_DEATH_DATA_PATH, encoding="cp949")
@@ -296,4 +296,6 @@ with tabs[3]:
         ax.legend(prop=font_prop, fontsize=10)
         plt.tight_layout()
         st.pyplot(fig, use_container_width=False)
-        st.caption("양주시 인구 구조 변화를 5년 단위로 시
+        st.caption("양주시 인구 구조 변화를 5년 단위로 시각화. 데이터 출처: KOSIS 국가통계포털")
+    except Exception as e:
+        st.error(f"출생자수·사망자수 그래프 로드 중 오류가 발생했습니다: {e}")
