@@ -370,22 +370,66 @@ with tabs[2]:
 with tabs[3]:
     st.session_state.current_tab = 3
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
-    st.header("📊 양주시의의 인구 변화")
+    st.header("📊 양주시의 인구 변화")
     st.markdown("""
-    <span style='color:#fff;'>양주시의 인구 구조와 출생·사망자 수의 변화를 5년 단위로 시각화합니다. 데이터 출처: KOSIS 국가통계포털</span>
+    <span style='color:#fff;'>양주시의 인구 구조와 출생·사망자 수의 변화를 5년 단위로 시각화합니다. (출처: KOSIS 국가통계포털)</span>
     """, unsafe_allow_html=True)
+
     POP_DATA_PATH = "양주시_연도별_인구수.csv"
     try:
         df_pop = pd.read_csv(POP_DATA_PATH, encoding="cp949", header=[0,1])
         df_pop = df_pop[df_pop.iloc[:, 0].str.contains("양주시")].reset_index(drop=True)
+
         year_cols = {}
         for col in df_pop.columns[1:]:
             year = col[0][:4]
             if year not in year_cols:
                 year_cols[year] = []
             year_cols[year].append(col)
+
         year_avg = {}
-        for y, 의 지도")
+        for year, cols in year_cols.items():
+            total = 0
+            count = 0
+            for col in cols:
+                try:
+                    total += int(df_pop[col].values[0])
+                    count += 1
+                except:
+                    continue
+            if count > 0:
+                year_avg[year] = total // count
+
+        # 시각화
+        if year_avg:
+            df_plot = pd.DataFrame({
+                "연도": list(year_avg.keys()),
+                "평균 인구수": list(year_avg.values())
+            })
+            df_plot["연도"] = df_plot["연도"].astype(int)
+            df_plot = df_plot.sort_values("연도")
+
+            fig, ax = plt.subplots()
+            ax.plot(df_plot["연도"], df_plot["평균 인구수"], marker="o", linestyle="-", color="skyblue")
+            ax.set_title("양주시 연도별 평균 인구 변화", fontsize=14)
+            ax.set_xlabel("연도")
+            ax.set_ylabel("인구수")
+            ax.grid(True)
+            st.pyplot(fig)
+        else:
+            st.warning("인구 데이터를 시각화할 수 없습니다.")
+
+    except Exception as e:
+        st.error(f"인구 데이터를 불러오는 중 오류가 발생했습니다: {e}")
+
+    show_back_button()
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# --- 탭[4] 지도 ---
+with tabs[4]:
+    st.session_state.current_tab = 4
+    st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
+    st.header("🏙️ 양주시 지도")
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     경기도 양주시의 위치와 각 행정 구역(읍·면·동)을 일반 지도로 확인할 수 있습니다.
@@ -426,3 +470,4 @@ with tabs[3]:
 
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
+
