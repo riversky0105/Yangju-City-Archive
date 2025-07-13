@@ -7,6 +7,11 @@ import re
 import numpy as np
 import pydeck as pdk  # 지도 시각화를 위한 pydeck 추가
 
+# Mapbox API 토큰 입력(본인 토큰으로 교체 가능)
+MAPBOX_API_TOKEN = os.getenv("MAPBOX_API_TOKEN", "pk.eyJ1Ijoic3RyaW1saXQiLCJhIjoiY2t2OGNna2U4MGZ0dzJxcG5vY3c5b3FkcCJ9.VgLNKFSkvZ5K0no3AeFqfQ")
+
+pdk.settings.mapbox_api_key = MAPBOX_API_TOKEN
+
 # --------- 스타일/폰트 ---------
 st.markdown("""
 <style>
@@ -201,9 +206,9 @@ def show_back_button():
             reset_to_start()
 
 def img_gap():
-    # 텍스트-이미지 사이 여백을 위한 함수(16px)
     st.markdown('<div class="img-gap"></div>', unsafe_allow_html=True)
 
+# --- 탭[0] 과거 ---
 with tabs[0]:
     st.session_state.current_tab = 0
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
@@ -265,6 +270,7 @@ with tabs[0]:
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
 
+# --- 탭[1] 현재 ---
 with tabs[1]:
     st.session_state.current_tab = 1
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
@@ -318,6 +324,7 @@ with tabs[1]:
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
 
+# --- 탭[2] 미래 ---
 with tabs[2]:
     st.session_state.current_tab = 2
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
@@ -375,6 +382,7 @@ with tabs[2]:
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
 
+# --- 탭[3] 인구 변화 ---
 with tabs[3]:
     st.session_state.current_tab = 3
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
@@ -382,7 +390,6 @@ with tabs[3]:
     st.markdown("""
     <span style='color:#fff;'>양주시 인구 구조 변화를 월별/연도별 및 5년 단위 출생자수·사망자수와 함께 시각화합니다. 데이터 출처: KOSIS 국가통계포털</span>
     """, unsafe_allow_html=True)
-    # --------- 인구수 변화 그래프 ---------
     POP_DATA_PATH = "양주시_연도별_인구수.csv"
     try:
         df_pop = pd.read_csv(POP_DATA_PATH, encoding="cp949", header=[0,1])
@@ -426,7 +433,6 @@ with tabs[3]:
 
     st.markdown("---")
 
-    # --------- 출생자수·사망자수 그래프 ---------
     BIRTH_DEATH_DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
     try:
         df = pd.read_csv(BIRTH_DEATH_DATA_PATH, encoding="cp949")
@@ -485,6 +491,7 @@ with tabs[3]:
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
 
+# --- 탭[4] 지도 ---
 with tabs[4]:
     st.session_state.current_tab = 4
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
@@ -499,10 +506,8 @@ with tabs[4]:
         horizontal=True,
     )
 
-    # 양주시 중심 좌표 (옥정신도시 기준)
     YANGJU_CENTER = [37.7855, 127.0454]
 
-    # pydeck 지도
     if map_type == "일반 지도 (Map)":
         st.pydeck_chart(
             pdk.Deck(
@@ -522,9 +527,10 @@ with tabs[4]:
                         get_radius=1200,
                     ),
                 ],
-            )
+            ),
+            use_container_width=True,
         )
-    else:  # 위성지도
+    else:
         st.pydeck_chart(
             pdk.Deck(
                 map_style="mapbox://styles/mapbox/satellite-v9",
@@ -543,7 +549,8 @@ with tabs[4]:
                         get_radius=1200,
                     ),
                 ],
-            )
+            ),
+            use_container_width=True,
         )
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
