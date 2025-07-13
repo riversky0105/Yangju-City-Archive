@@ -103,7 +103,7 @@ body, .stApp { background: #232946; }
     border: 3px solid #393e46;
     border-radius: 18px;
     padding: 12px 0;
-    margin-top: 36px;
+    margin-top: 12px;
     margin-bottom: 4px;
     width: 100%;
     box-shadow: 0 0 16px #00f2fe50;
@@ -157,7 +157,6 @@ if not st.session_state.archive_started:
         with col2:
             if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=True):
                 st.session_state.archive_started = True
-                st.experimental_rerun()
         st.stop()
 
 # --------- [본문] ---------
@@ -165,14 +164,7 @@ tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변
 
 # 각 탭 하단에 "처음으로" 버튼
 def show_back_button():
-    col1, col2, col3 = st.columns([2,3,2])
-    with col2:
-        if st.button("⏪ 처음으로", key=f"backtohome_{st.session_state.get('current_tab',0)}", help="아카이브 시작화면으로", use_container_width=True):
-            reset_to_start()
-            st.experimental_rerun()
-
-# 각 탭 하단에 게임 UI 요소
-def game_ui_elements():
+    # 버튼 위에 레벨업/도감 문구
     st.markdown(
         """
         <div style="text-align:center; margin-top:26px;">
@@ -182,6 +174,10 @@ def game_ui_elements():
         </div>
         """, unsafe_allow_html=True
     )
+    col1, col2, col3 = st.columns([2,3,2])
+    with col2:
+        if st.button("⏪ 처음으로", key=f"backtohome_{st.session_state.get('current_tab',0)}", help="아카이브 시작화면으로", use_container_width=True):
+            reset_to_start()
 
 with tabs[0]:
     st.session_state.current_tab = 0
@@ -235,7 +231,6 @@ with tabs[0]:
     """, unsafe_allow_html=True)
     st.image("양주 1.4후퇴.jpg", caption="1951년 1.4후퇴 당시 경기북부(양주 일대) 피난민 행렬", width=700)
     show_back_button()
-    game_ui_elements()
     st.markdown('</div>', unsafe_allow_html=True)
 
 with tabs[1]:
@@ -284,7 +279,6 @@ with tabs[1]:
     """, unsafe_allow_html=True)
     st.image("양주 옥정 호수공원.jpg", caption="양주 옥정 호수공원", width=700)
     show_back_button()
-    game_ui_elements()
     st.markdown('</div>', unsafe_allow_html=True)
 
 with tabs[2]:
@@ -337,7 +331,6 @@ with tabs[2]:
     """, unsafe_allow_html=True)
     st.image("양주시 청년센터.jpg", caption="양주시 청년센터(옥정동)", width=700)
     show_back_button()
-    game_ui_elements()
     st.markdown('</div>', unsafe_allow_html=True)
 
 with tabs[3]:
@@ -448,5 +441,4 @@ with tabs[3]:
         st.error(f"출생자수·사망자수 그래프 로드 중 오류가 발생했습니다: {e}")
 
     show_back_button()
-    game_ui_elements()
     st.markdown('</div>', unsafe_allow_html=True)
