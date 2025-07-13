@@ -1,12 +1,15 @@
-import os
 import streamlit as st
+st.set_page_config(page_title="양주시 아카이브 - GAMEBOY ADVANCE 스타일", layout="centered")
+
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
-import numpy as np
 import re
+import numpy as np
 
-st.set_page_config(page_title="양주시 아카이브 - GAMEBOY ADVANCE", layout="centered")
+# --- 이후 나머지 코드 계속 ---
+
 
 # ---------- 1. CSS: GBA 본체+화면+버튼 ----------
 st.markdown("""
