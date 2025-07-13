@@ -64,31 +64,11 @@ body, .stApp { background: #232946; }
     border-bottom: 4px solid #00f2fe;
     text-shadow: 0 0 10px #00f2fe90;
 }
-.reset-btn {
-    display: block;
-    margin: 36px auto 0 auto;
-    font-family: 'Press Start 2P', monospace;
-    font-size: 1.05rem;
-    background: #222636;
-    color: #fff;
-    border: 3px solid #00f2fe;
-    border-radius: 14px;
-    box-shadow: 0 0 14px #00f2fe60;
-    padding: 13px 0px;
-    width: 280px;
-    text-align: center;
-    transition: background 0.2s, color 0.2s;
-}
-.reset-btn:hover {
-    background: #232946;
-    color: #ffd6e0;
-    border: 3px solid #a6e3e9;
-}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
 
-# --------- 플롯 한글 폰트 ----------
+# --------- 폰트(플롯용) ----------
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 if os.path.exists(FONT_PATH):
     font_prop = fm.FontProperties(fname=FONT_PATH)
@@ -99,53 +79,27 @@ else:
 
 st.set_page_config(page_title="양주시 아카이브 GAME", layout="wide")
 
-# --------- 세션 상태로 시작화면/본문 분기 (절대 본문 자동 진입X) ---------
+# --------- 세션 상태로 시작화면/본문 분기 ---------
 if "archive_started" not in st.session_state:
     st.session_state.archive_started = False
-if "reset_clicked" not in st.session_state:
-    st.session_state.reset_clicked = False
 
-# --------- [시작 화면] ---------
-if not st.session_state.archive_started or st.session_state.reset_clicked:
-    # 시작 화면 디자인 요소 추가
-    st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
-    st.markdown("""
-        <div style='
-            text-align:center;
-            margin-top: 45px;
-            margin-bottom: 18px;
-        '>
-            <span style='
-                font-family: Press Start 2P, monospace;
-                font-size:15pt; color:#fff;
-                background:#232946cc;
-                padding:15px 28px;
-                border-radius:17px;
-                display:inline-block;
-                margin-bottom:15px;
-                box-shadow: 0 0 16px #00f2fe70;
-            '>
-                경기도 양주시의 역사와 미래 비전을 구경하세요!
-            </span>
-        </div>
-        <div style="text-align:center; margin-bottom:12px;">
-            <span style="display:inline-block; width:22px; height:22px; border-radius:50%; background:#00f2fe; margin:0 9px; box-shadow: 0 0 11px #00f2fe88;"></span>
-            <span style="display:inline-block; width:22px; height:22px; border-radius:50%; background:#ffee64; margin:0 9px; box-shadow: 0 0 11px #ffee6488;"></span>
-            <span style="display:inline-block; width:22px; height:22px; border-radius:50%; background:#ffadad; margin:0 9px; box-shadow: 0 0 11px #ffadad88;"></span>
-        </div>
-        """, unsafe_allow_html=True
+# --------- 상단 고정 타이틀 ---------
+st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
+
+if not st.session_state.archive_started:
+    # ---- [시작 화면] ----
+    st.markdown("<div style='height:25px'></div>", unsafe_allow_html=True)
+    st.markdown(
+        "<div style='text-align:center;'><span style='font-family: Press Start 2P, monospace; font-size:15pt; color:#fff; background:#232946cc; padding:14px 22px; border-radius:16px;'>경기도 양주시의 역사와 미래 비전을 구경하세요!</span></div>",
+        unsafe_allow_html=True
     )
-    st.markdown("<div style='height:18px'></div>", unsafe_allow_html=True)
-    # 가운데 정렬 버튼
-    start_col1, start_col2, start_col3 = st.columns([2,3,2])
-    with start_col2:
-        if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=True):
-            st.session_state.archive_started = True
-            st.session_state.reset_clicked = False
-            st.experimental_rerun()
+    st.markdown("<div style='height:48px'></div>", unsafe_allow_html=True)
+    if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=False):
+        st.session_state.archive_started = True
+        st.experimental_rerun()
     st.stop()
 
-# --------- [본문] (탭/아카이브) ---------
+# --------- [본문] ---------
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
 
 with tabs[0]:
@@ -400,4 +354,12 @@ with tabs[3]:
         st.pyplot(fig, use_container_width=False)
         st.caption("양주시 인구 구조 변화를 5년 단위로 시각화. 데이터 출처: KOSIS 국가통계포털")
     except Exception as e:
-        st.error(f"출생자수·사망자수 그래프 로드
+        st.error(f"출생자수·사망자수 그래프 로드 중 오류가 발생했습니다: {e}")
+
+    st.markdown('</div>', unsafe_allow_html=True)
+
+# --------- 맨 아래 "처음으로" 버튼 1개만 ---------
+st.markdown("<div style='height:22px'></div>", unsafe_allow_html=True)
+if st.button("🕹 처음으로", key="back_to_start", help="시작 화면으로 돌아가기", use_container_width=False):
+    st.session_state.archive_started = False
+    st.experimental_rerun()
