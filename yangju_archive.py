@@ -44,7 +44,7 @@ tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변
 with tabs[0]:
     st.header("📜 양주시의 과거")
     st.markdown("""
-    <div style='font-size:13pt;'>
+    <div style='font-size:14pt;'>
     <b>1. 고려~조선 시대, 북방의 행정·군사 중심지</b><br>
     - 양주목 설치: 경기 북부 광역 행정 단위<br>
     - 조선시대 서울 외곽 방어선 역할<br>
@@ -52,12 +52,11 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
     
-    # 공백 추가
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
-    st.image("양주 관야지.jpg", caption="양주 관아지(양주목 관아터)", width=500)
+    st.image("양주 관야지.jpg", caption="양주 관아지(양주목 관아터)", width=600)
 
     st.markdown("""
-    <div style='font-size:13pt;'>
+    <div style='font-size:14pt;'>
     <b>2. 회암사: 왕실의 불교 수행처</b><br>
     - 태조 이성계 퇴위 후 회암사 중건<br>
     - 세종 시대까지 국가 불교 중심지로 기능<br>
@@ -66,13 +65,12 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
-    # 기존 회암사지 텍스트-이미지 간 공백(유지)
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
-    st.image("회암사지.jpg", caption="회암사지 터", width=500)
-    st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=500)
+    st.image("회암사지.jpg", caption="회암사지 터", width=600)
+    st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=600)
 
     st.markdown("""
-    <div style='font-size:13pt;'>
+    <div style='font-size:14pt;'>
     <b>3. 조선 후기 천주교 박해의 현장</b><br>
     - 신유박해(1801) 시기 여성 신자 다수 순교<br>
     - 강완숙, 이순이 등 순교자 기록<br>
@@ -80,12 +78,11 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
-    # 공백 추가
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
-    st.image("양주 장흥 순교성지.jpg", caption="양주 장흥 순교성지", width=500)
+    st.image("양주 장흥 순교성지.jpg", caption="양주 장흥 순교성지", width=600)
 
     st.markdown("""
-    <div style='font-size:13pt;'>
+    <div style='font-size:14pt;'>
     <b>4. 한국전쟁과 양주</b><br>
     - 1·4 후퇴 시 주요 격전지<br>
     - 1951년 대규모 민간인 피해<br>
@@ -100,7 +97,7 @@ with tabs[0]:
 with tabs[1]:
     st.header("🏙️ 양주시의 현재")
     st.markdown("""
-    <div style='font-size:13pt;'>
+    <div style='font-size:14pt;'>
     <b>1. 인구와 행정</b><br>
     - 2025년 인구 약 29만 명, 면적 310.4㎢, 1읍 4면 7동.<br>
     - 초중고대학 67교, 약 2,800여 개의 공장 및 산업시설이 위치.<br>
@@ -126,7 +123,7 @@ with tabs[1]:
 with tabs[2]:
     st.header("🌐 양주시의 미래")
     st.markdown("""
-    <div style='font-size:13pt;'>
+    <div style='font-size:14pt;'>
     <b>1. 경기북부 중심도시 성장</b><br>
     - 수도권 동북부 거점도시로 발전<br>
     - 주거 중심에서 산업·문화·교육 복합도시로 전환<br>
