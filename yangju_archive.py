@@ -132,7 +132,7 @@ with tabs[1]:
     </div>
     """, unsafe_allow_html=True)
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
-    st.image("양주 산업단지.jpg", caption="양주테크노밸리(조감도)", width=700)
+    st.image("양주 산업단지.jpg", caption="양주 은남일반산업단지(조감도)", width=700)  # ← 여기만 변경
 
     st.markdown("""
     <div style='font-size:14pt;'>
