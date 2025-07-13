@@ -13,7 +13,7 @@ st.set_page_config(page_title="양주시 아카이브 GAMEBOY ADVANCE", layout="
 
 st.markdown(f"""
 <style>
-body, .stApp {{
+body, .stApp {
     background: #232946;
     display: flex;
     justify-content: center;
@@ -22,7 +22,7 @@ body, .stApp {{
     margin: 0;
     overflow-x: hidden;
     font-family: 'NanumGothicCoding', monospace;
-}}
+}
 .gba-container {{
     position: relative;
     width: 750px;
