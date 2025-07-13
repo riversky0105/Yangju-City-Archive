@@ -273,7 +273,6 @@ with tabs[3]:
         pop_5yr_avg = [year_avg[y] for y in years_5yr]
         fig, ax = plt.subplots(figsize=(6, 3.5))
         ax.plot(years_5yr, pop_5yr_avg, marker='o', color='tab:green', label='인구수 (연평균)')
-        # ★★★ x축: 인덱스 문제 완전 해결 (set_xticks/set_xticklabels) ★★★
         ax.set_xticks(years_5yr)
         if font_prop:
             ax.set_title("양주시 연평균 인구수 변화", fontproperties=font_prop, fontsize=12)
