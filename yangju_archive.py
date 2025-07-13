@@ -488,18 +488,14 @@ with tabs[4]:
     </div>
     """, unsafe_allow_html=True)
 
-    import json
-    import folium
-    from streamlit_folium import st_folium
-
-    # 지도 생성
+    # folium 지도 생성
     m = folium.Map(location=[37.7855, 127.0454], zoom_start=11, tiles="OpenStreetMap")
 
     try:
         with open("yangju_only_fixed.geojson", "r", encoding="utf-8") as f:
             yangju_geo = json.load(f)
 
-        # 각 구역별로 테두리와 이름 표시
+        # 각 구역별 테두리 및 이름 표시
         for feature in yangju_geo["features"]:
             name = feature["properties"].get("읍면동명") or feature["properties"].get("adm_nm") or "양주시"
             folium.GeoJson(
@@ -514,8 +510,21 @@ with tabs[4]:
             ).add_to(m)
 
         folium.LayerControl().add_to(m)
-        # 지도 크기 넉넉하게 설정
-        st_folium(m, width=900, height=600)
+
+        # ✅ 지도 여백 제거 및 배경 투명 처리
+        st.markdown("""
+            <style>
+            .folium-map {
+                width: 100% !important;
+                height: 600px !important;
+            }
+            iframe {
+                background-color: transparent !important;
+            }
+            </style>
+        """, unsafe_allow_html=True)
+
+        st_folium(m, width=1000, height=600)
 
     except Exception as e:
         st.error(f"양주시 경계 데이터를 불러오는 데 실패했습니다: {e}")
