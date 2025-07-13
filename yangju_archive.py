@@ -482,33 +482,12 @@ with tabs[4]:
     st.header("📍 양주시 지도")
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
-    경기도 양주시의 위치와 지형을 위성 지도와 일반 지도로 확인할 수 있습니다.<br><br>
-    지도 유형을 선택하세요.
+    경기도 양주시의 위치와 지형을 일반 지도로 확인할 수 있습니다.
     </div>
     """, unsafe_allow_html=True)
 
-    map_type = st.radio(
-        label="",
-        options=["일반 지도 (Map)", "위성 지도 (Satellite)"],
-        index=0,
-        horizontal=True,
-        label_visibility="collapsed"
-    )
-
-    # 지도 스타일
-    if "위성" in map_type:
-        tile_url = "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"  # 위성 스타일은 제한적이므로 대체 사용
-        attr = "© OpenTopoMap contributors"
-    else:
-        tile_url = "OpenStreetMap"
-        attr = None
-
-    m = folium.Map(
-        location=[37.7855, 127.0454],
-        zoom_start=11,
-        tiles=tile_url if isinstance(tile_url, str) and tile_url.startswith("http") else tile_url,
-        attr=attr if tile_url.startswith("http") else None
-    )
+    # 일반 지도만 표시 (OpenStreetMap)
+    m = folium.Map(location=[37.7855, 127.0454], zoom_start=11, tiles="OpenStreetMap")
 
     try:
         with open("yangju_only_boundary.geojson", "r", encoding="utf-8") as f:
@@ -518,8 +497,8 @@ with tabs[4]:
             yangju_geo,
             name="양주시 경계",
             style_function=lambda feature: {
-                "fillColor": "#00000000",   # 투명
-                "color": "#000000",         # 검정색 선
+                "fillColor": "#00000000",  # 내부는 투명
+                "color": "#000000",        # 테두리 검정
                 "weight": 3,
                 "dashArray": "5, 5"
             },
@@ -530,6 +509,10 @@ with tabs[4]:
         st_folium(m, width=750, height=520)
     except Exception as e:
         st.error(f"양주시 경계 데이터를 불러오는 데 실패했습니다: {e}")
+
+    show_back_button()
+    st.markdown('</div>', unsafe_allow_html=True)
+
 
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
