@@ -5,12 +5,11 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import re
 import numpy as np
-import pydeck as pdk  # 지도 시각화를 위한 pydeck 추가
+import json
+import folium
+from streamlit_folium import st_folium
 
-# Mapbox API 토큰 입력(본인 토큰으로 교체 가능)
-MAPBOX_API_TOKEN = os.getenv("MAPBOX_API_TOKEN", "pk.eyJ1Ijoic3RyaW1saXQiLCJhIjoiY2t2OGNna2U4MGZ0dzJxcG5vY3c5b3FkcCJ9.VgLNKFSkvZ5K0no3AeFqfQ")
-
-pdk.settings.mapbox_api_key = MAPBOX_API_TOKEN
+# Mapbox 토큰 설정 (이전 pydeck 코드 사용 흔적이 남아있을 수 있으나 folium으로 대체됨)
 
 # --------- 스타일/폰트 ---------
 st.markdown("""
@@ -114,13 +113,7 @@ body, .stApp { background: #232946; }
     width: 100%;
     box-shadow: 0 0 16px #00f2fe50;
 }
-/* 이미지와 텍스트 사이 간격 추가 */
-.stImage {
-    margin-bottom: 0px !important;
-}
-.img-gap {
-    margin-bottom: 16px;
-}
+.img-gap { margin-bottom: 16px; }
 @media (max-width: 600px) {
     .arcade-frame { padding: 13vw 3vw 6vw 3vw; min-width: 0; }
     .main-title { font-size: 1.6rem; }
@@ -132,7 +125,7 @@ body, .stApp { background: #232946; }
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
 
-# --------- 폰트(플롯용) ----------
+# --------- 폰트 설정 ----------
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 if os.path.exists(FONT_PATH):
     font_prop = fm.FontProperties(fname=FONT_PATH)
@@ -142,11 +135,9 @@ else:
     font_prop = None
 
 st.set_page_config(page_title="양주시 아카이브 GAME", layout="wide")
-
-# --------- 항상 상단에 타이틀 고정 ---------
 st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
 
-# --------- 세션 상태로 시작화면/본문 분기 ---------
+# 시작 화면 상태
 if "archive_started" not in st.session_state:
     st.session_state.archive_started = False
 
@@ -154,11 +145,10 @@ def reset_to_start():
     st.session_state.archive_started = False
     st.session_state.current_tab = 0
 
-# --------- [스타트 화면] ---------
+# 시작 화면 표시
 if not st.session_state.archive_started:
     with st.container():
-        st.markdown(
-            """
+        st.markdown("""
             <div class="arcade-frame">
                 <div class="pixel-stars">★&nbsp;◀&nbsp;WELCOME&nbsp;▶&nbsp;★</div>
                 <div class="subtitle">
@@ -166,48 +156,42 @@ if not st.session_state.archive_started:
                 </div>
                 <div class="blink">PRESS START</div>
             </div>
-            """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
         col1, col2, col3 = st.columns([2,3,2])
         with col2:
-            if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=True):
+            if st.button("🎮 GAME START", key="gamestart", use_container_width=True):
                 st.session_state.archive_started = True
         st.stop()
 
-# --------- [본문] ---------
-tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화", "🗺️ 지도"])
+# 탭 생성
+tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화", "📍 지도"])
 
 def get_docum_msg():
     tab = st.session_state.get('current_tab', 0)
-    if tab == 0:
-        return "🗂️ 아카이브 과거 도감 달성!"
-    elif tab == 1:
-        return "🗂️ 아카이브 현재 도감 달성!"
-    elif tab == 2:
-        return "🗂️ 아카이브 미래 도감 달성!"
-    elif tab == 3:
-        return "🗂️ 아카이브 인구 도감 달성!"
-    elif tab == 4:
-        return "🗂️ 아카이브 지도 도감 달성!"
-    return "🗂️ 아카이브 도감 달성!"
+    return [
+        "🗂️ 아카이브 과거 도감 달성!",
+        "🗂️ 아카이브 현재 도감 달성!",
+        "🗂️ 아카이브 미래 도감 달성!",
+        "🗂️ 아카이브 인구 도감 달성!",
+        "🗂️ 아카이브 지도 도감 달성!"
+    ][tab]
 
 def show_back_button():
-    st.markdown(
-        f"""
+    st.markdown(f"""
         <div style="text-align:center; margin-top:26px; margin-bottom:16px;">
             <span class="game-item">LEVEL UP!</span>
             <span class="game-item">+50 XP</span>
             <span class="game-item">{get_docum_msg()}</span>
         </div>
-        """, unsafe_allow_html=True
-    )
+    """, unsafe_allow_html=True)
     col1, col2, col3 = st.columns([2,3,2])
     with col2:
-        if st.button("⏪ 처음으로", key=f"backtohome_{st.session_state.get('current_tab',0)}", help="아카이브 시작화면으로", use_container_width=True):
+        if st.button("⏪ 처음으로", key=f"backtohome_{st.session_state.get('current_tab',0)}", use_container_width=True):
             reset_to_start()
 
 def img_gap():
     st.markdown('<div class="img-gap"></div>', unsafe_allow_html=True)
-
+    
 # --- 탭[0] 과거 ---
 with tabs[0]:
     st.session_state.current_tab = 0
@@ -511,7 +495,6 @@ with tabs[4]:
         label_visibility="collapsed"
     )
 
-    # 지도 생성
     tile = "OpenStreetMap" if "일반" in map_type else "Stamen Terrain"
     m = folium.Map(location=[37.7855, 127.0454], zoom_start=11, tiles=tile)
 
@@ -537,6 +520,4 @@ with tabs[4]:
         st.error(f"양주시 경계 데이터를 불러오는 데 실패했습니다: {e}")
 
     show_back_button()
-    st.markdown('</div>', unsafe_allow_html=True)
-
     st.markdown('</div>', unsafe_allow_html=True)
