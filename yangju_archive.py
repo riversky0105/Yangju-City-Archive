@@ -6,114 +6,127 @@ import matplotlib.font_manager as fm
 import re
 import numpy as np
 
-# 1. GBA 스타일 CSS 및 배경 이미지
-GBA_FRAME_IMG = "https://i.imgur.com/6hzvEBK.png"  # 게임보이 어드밴스 투명 배경 PNG
+# 1. 게임보이 어드밴스 스타일 CSS 및 배경 이미지
+GBA_BG_IMG = "https://i.imgur.com/hD7Uqzi.png"  # 게임보이 어드밴스 이미지(투명 배경)
 
-st.set_page_config(page_title="양주시 아카이브 GAME", layout="wide")
+st.set_page_config(page_title="양주시 아카이브 GAMEBOY ADVANCE", layout="wide")
 
 st.markdown(f"""
 <style>
 body, .stApp {{
     background: #232946;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
+    font-family: 'NanumGothicCoding', monospace;
 }}
-
-.gba-wrap {{
+.gba-container {{
     position: relative;
-    width: 640px;
-    height: 420px;
-    margin: 40px auto 0 auto;
-    background: transparent;
+    width: 750px;
+    height: 350px;
+    margin-top: 20px;
+    background: url({GBA_BG_IMG}) no-repeat center;
+    background-size: contain;
+    box-shadow: 0 0 30px #00f2fe99;
+    border-radius: 20px;
+    user-select:none;
 }}
-
-.gba-frame {{
-    position: absolute;
-    width: 640px;
-    height: 420px;
-    left: 0; top: 0;
-    z-index: 1;
-    pointer-events: none;
-}}
-
 .gba-screen {{
     position: absolute;
-    left: 102px;
-    top: 68px;
-    width: 434px;
-    height: 210px;
-    background: #181c2b;
-    border-radius: 22px;
-    border: 6px solid #262b3a;
-    z-index: 2;
-    overflow: auto;
-    box-shadow: 0 0 24px #00f2fe55;
-    padding: 14px 18px 10px 18px;
-    color: #e0fcff;
-    font-family: 'NanumGothicCoding', monospace;
+    top: 70px;
+    left: 138px;
+    width: 460px;
+    height: 220px;
+    background-color: #181c2b;
+    border-radius: 18px;
+    border: 5px solid #222a41;
+    box-shadow: 0 0 20px #00f2feaa inset;
+    overflow-y: auto;
+    padding: 14px 20px 20px 20px;
+    color: #a6e3e9;
     font-size: 0.9rem;
+    line-height: 1.4;
+    text-shadow: 0 0 4px #00f2feaa;
+}
+.gba-logo {{
+    position: absolute;
+    top: 20px;
+    left: 310px;
+    color: #00f2fe;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    text-shadow: 0 0 6px #00f2fecc;
+    user-select:none;
 }}
-
 .gba-btn {{
     position: absolute;
-    z-index: 10;
-    background: #fff8;
-    border: 2px solid #232946cc;
+    background: #222a41cc;
+    color: #00f2fe;
+    border: 3px solid #00f2fe;
     border-radius: 50%;
-    width: 38px;
-    height: 38px;
-    display: flex; align-items: center; justify-content: center;
+    width: 46px;
+    height: 46px;
+    font-family: 'Press Start 2P', monospace;
     font-size: 1.7rem;
-    color: #222a41;
-    font-family: 'Press Start 2P', monospace;
-    box-shadow: 0 0 5px #00f2fe33;
+    text-align: center;
+    line-height: 46px;
     cursor: pointer;
-    transition: background 0.12s;
+    user-select:none;
+    box-shadow: 0 0 12px #00f2feaa;
+    transition: background-color 0.15s ease;
+    outline:none;
+}
+.gba-btn:hover {{
+    background-color: #00f2fe22;
 }}
-.gba-btn:active {{ background: #00f2fe66; }}
-
-.gba-btn-left {{ left: 32px;  top: 178px; }}
-.gba-btn-right {{ left: 570px; top: 178px; }}
+.gba-btn:active {{
+    background-color: #00f2fe66;
+}}
+.gba-btn-left {{
+    top: 185px;
+    left: 40px;
+}}
+.gba-btn-right {{
+    top: 185px;
+    left: 660px;
+}}
 .gba-btn-start {{
-    left: 307px; top: 340px;
-    width: 54px;
-    border-radius: 18px;
-    height: 29px;
-    font-size:1.2rem;
-    pointer-events:auto;
-    color:#00f2fe;
-    background: #111a2dcc;
-    border: 2px solid #00f2feaa;
-    box-shadow: 0 0 15px #00f2fecc;
-}}
-
-.gba-logo {{
-    font-family: 'Press Start 2P', monospace;
-    color: #fff;
-    font-size: 1.08rem;
-    letter-spacing: 2px;
-    position: absolute;
-    left: 200px; top: 32px; z-index:12;
-    text-shadow: 0 0 8px #000, 0 0 4px #3af2ff;
+    top: 265px;
+    left: 330px;
+    border-radius: 12px;
+    width: 82px;
+    height: 30px;
+    font-size: 1.1rem;
+    line-height: 30px;
+    user-select:none;
 }}
 .gba-tip {{
-    position:absolute;
-    left:50%;
-    transform:translateX(-50%);
-    top:395px;
-    color:#a6e3e9;
-    font-family:'Press Start 2P',monospace;
-    font-size:0.9rem;
-    z-index:13;
-    background:rgba(24,28,43,0.6);
-    padding:2px 18px;
-    border-radius:13px;
-    border:1.5px solid #a6e3e9;
-    box-shadow:0 0 4px #00f2fe99;
+    position: absolute;
+    bottom: 6px;
+    width: 100%;
+    text-align: center;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.9rem;
+    color: #a6e3e9;
+    text-shadow: 0 0 6px #00f2fe99;
+    user-select:none;
+}}
+::-webkit-scrollbar {{
+    width: 6px;
+}}
+::-webkit-scrollbar-thumb {{
+    background: #00f2fecc;
+    border-radius: 3px;
 }}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
 
-# 2. 한글 플롯 폰트 (옵션)
+# 2. 한글 플롯 폰트 설정
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 if os.path.exists(FONT_PATH):
     font_prop = fm.FontProperties(fname=FONT_PATH)
@@ -122,49 +135,49 @@ if os.path.exists(FONT_PATH):
 else:
     font_prop = None
 
-# 3. 섹션 상태 관리
+# 3. 아카이브 상태 관리
 sections = ["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"]
 if "section_idx" not in st.session_state:
     st.session_state["section_idx"] = 0
 if "started" not in st.session_state:
     st.session_state["started"] = False
 
-# 4. GBA 프레임 + 화면 구조 시작
-st.markdown('<div class="gba-wrap">', unsafe_allow_html=True)
-st.markdown(f'<img class="gba-frame" src="{GBA_FRAME_IMG}">', unsafe_allow_html=True)
+# 4. GBA 컨테이너 시작
+st.markdown('<div class="gba-container">', unsafe_allow_html=True)
+st.markdown('<div class="gba-logo">YANGJU ARCHIVE GAME</div>', unsafe_allow_html=True)
 
 # 5. 시작 화면
 if not st.session_state["started"]:
     st.markdown(f'''
-    <div class="gba-logo">YANGJU ARCHIVE GAME</div>
-    <div class="gba-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:center; font-size:1.3rem; color:#00f2fe; text-shadow: 0 0 15px #00f2feaa;">
-        양주시 아카이브<br>
-        경기도 양주시의 역사와 미래 비전을<br>게임보이 어드밴스 화면처럼 구경하세요!
-        <br><br><span style="font-size:1.0rem; color:#a6e3e9; text-shadow:none;">START 버튼을 눌러 시작</span>
+    <div class="gba-screen" style="display:flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; font-size:1.1rem; user-select:none;">
+        양주시 아카이브<br><br>
+        경기도 양주시의 역사와 미래 비전을<br>게임보이 어드밴스 화면처럼 구경하세요!<br><br>
+        <span style="font-size:0.9rem; color:#5df7ff;">START 버튼을 눌러 시작</span>
     </div>
     ''', unsafe_allow_html=True)
     st.markdown(f'''
-        <button class="gba-btn gba-btn-start" onclick="window.parent.postMessage({{type:'streamlit:buttonClick', buttonId:'start_btn'}},'*');">START</button>
-        <div class="gba-tip">Start 버튼 또는 아래 버튼 클릭!</div>
+        <button class="gba-btn gba-btn-start" onclick="window.parent.postMessage({{type:'streamlit:buttonClick', buttonId:'start_btn'}}, '*');">START</button>
+        <div class="gba-tip">START 버튼 또는 아래 버튼을 눌러 시작하세요</div>
     ''', unsafe_allow_html=True)
-    if st.button("START", key="start_btn", help="게임 시작", type="primary"):
+
+    if st.button("START", key="start_btn"):
         st.session_state["started"] = True
         st.session_state["section_idx"] = 0
         st.experimental_rerun()
+
     st.markdown('</div>', unsafe_allow_html=True)
     st.stop()
 
-# 6. 실제 아카이브 화면 + 좌/우 버튼
+# 6. 콘텐츠 화면 + 버튼 배치
 st.markdown(f'''
-<button class="gba-btn gba-btn-left" onclick="window.parent.postMessage({{type:'streamlit:buttonClick', buttonId:'left_btn'}},'*');">◀</button>
-<button class="gba-btn gba-btn-right" onclick="window.parent.postMessage({{type:'streamlit:buttonClick', buttonId:'right_btn'}},'*');">▶</button>
-<div class="gba-btn gba-btn-start" style="pointer-events:none;opacity:0.4;">START</div>
-<div class="gba-logo">YANGJU ARCHIVE GAME</div>
-<div class="gba-tip">{sections[st.session_state.section_idx]} &nbsp;&nbsp; | &nbsp; 좌/우 버튼으로 이동</div>
+<button class="gba-btn gba-btn-left" onclick="window.parent.postMessage({{type:'streamlit:buttonClick', buttonId:'left_btn'}}, '*');">◀</button>
+<button class="gba-btn gba-btn-right" onclick="window.parent.postMessage({{type:'streamlit:buttonClick', buttonId:'right_btn'}}, '*');">▶</button>
+<button class="gba-btn gba-btn-start" style="pointer-events:none;opacity:0.5;">START</button>
+<div class="gba-tip">{sections[st.session_state.section_idx]} &nbsp;|&nbsp; 좌/우 버튼으로 이동</div>
 <div class="gba-screen">
 ''', unsafe_allow_html=True)
 
-col1, col2, col3 = st.columns([1,8,1])
+col1, col2, col3 = st.columns([1, 8, 1])
 with col1:
     if st.button("◀", key="left_btn"):
         st.session_state.section_idx = (st.session_state.section_idx - 1) % len(sections)
@@ -174,12 +187,12 @@ with col3:
         st.session_state.section_idx = (st.session_state.section_idx + 1) % len(sections)
         st.experimental_rerun()
 
-st.markdown(f"<div style='font-family:Press Start 2P, monospace; color:#e0fcff;text-align:center;font-size:1.1rem;margin:7px 0;'>{sections[st.session_state.section_idx]}</div>", unsafe_allow_html=True)
+st.markdown(f"<div style='font-family:Press Start 2P, monospace; color:#5df7ff; text-align:center; font-size:1.2rem; margin-bottom:12px;'>{sections[st.session_state.section_idx]}</div>", unsafe_allow_html=True)
 
-# 7. 섹션별 콘텐츠
+# 7. 섹션별 콘텐츠 (내용 및 이미지)
 
 if st.session_state.section_idx == 0:
-    st.markdown('<div style="color:#fff;font-size:0.85rem;">', unsafe_allow_html=True)
+    st.markdown('<div style="color:#a6e3e9; font-size:0.9rem;">', unsafe_allow_html=True)
     st.header("📜 양주시의 과거")
     st.markdown("""
     <b>1. 고려~조선 시대, 북방의 행정·군사 중심지</b><br>
@@ -213,7 +226,7 @@ if st.session_state.section_idx == 0:
     st.markdown('</div>', unsafe_allow_html=True)
 
 elif st.session_state.section_idx == 1:
-    st.markdown('<div style="color:#fff;font-size:0.85rem;">', unsafe_allow_html=True)
+    st.markdown('<div style="color:#a6e3e9; font-size:0.9rem;">', unsafe_allow_html=True)
     st.header("🏙️ 양주시의 현재")
     st.markdown("""
     <b>1. 인구와 행정</b><br>
@@ -241,7 +254,7 @@ elif st.session_state.section_idx == 1:
     st.markdown('</div>', unsafe_allow_html=True)
 
 elif st.session_state.section_idx == 2:
-    st.markdown('<div style="color:#fff;font-size:0.85rem;">', unsafe_allow_html=True)
+    st.markdown('<div style="color:#a6e3e9; font-size:0.9rem;">', unsafe_allow_html=True)
     st.header("🌐 양주시의 미래")
     st.markdown("""
     <b>1. 경기북부 중심도시 성장</b><br>
@@ -273,12 +286,11 @@ elif st.session_state.section_idx == 2:
     st.markdown('</div>', unsafe_allow_html=True)
 
 elif st.session_state.section_idx == 3:
-    st.markdown('<div style="color:#fff;font-size:0.85rem;">', unsafe_allow_html=True)
+    st.markdown('<div style="color:#a6e3e9; font-size:0.9rem;">', unsafe_allow_html=True)
     st.header("📊 양주시 인구 변화")
     st.markdown("""
-    <span style='color:#fff;'>양주시 인구 구조 변화를 월별/연도별 및 5년 단위 출생자수·사망자수와 함께 시각화합니다. 데이터 출처: KOSIS 국가통계포털</span>
+    <span style='color:#a6e3e9;'>양주시 인구 구조 변화를 월별/연도별 및 5년 단위 출생자수·사망자수와 함께 시각화합니다. 데이터 출처: KOSIS 국가통계포털</span>
     """, unsafe_allow_html=True)
-    # 인구수 변화 그래프
     POP_DATA_PATH = "양주시_연도별_인구수.csv"
     try:
         df_pop = pd.read_csv(POP_DATA_PATH, encoding="cp949", header=[0,1])
@@ -321,7 +333,6 @@ elif st.session_state.section_idx == 3:
 
     st.markdown("---")
 
-    # 출생자수·사망자수 그래프
     BIRTH_DEATH_DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
     try:
         df = pd.read_csv(BIRTH_DEATH_DATA_PATH, encoding="cp949")
@@ -375,8 +386,7 @@ elif st.session_state.section_idx == 3:
         st.caption("양주시 인구 구조 변화를 5년 단위로 시각화. 데이터 출처: KOSIS 국가통계포털")
     except Exception as e:
         st.error(f"출생자수·사망자수 그래프 로드 중 오류가 발생했습니다: {e}")
-
     st.markdown('</div>', unsafe_allow_html=True)
 
-# 8. 닫기 div (GBA wrap)
+# 8. 닫기 div (GBA 컨테이너)
 st.markdown('</div>', unsafe_allow_html=True)
