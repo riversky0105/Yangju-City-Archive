@@ -24,6 +24,12 @@ body, .stApp { background: #232946; }
     border: 4px solid #393e46;
     box-shadow: 0 0 15px #00f2fe80;
 }
+.center-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 .game-btn {
     background: #f44336;
     color: white;
@@ -31,10 +37,12 @@ body, .stApp { background: #232946; }
     font-family: 'Press Start 2P', 'NanumGothicCoding', monospace;
     border: 3px solid #232946;
     box-shadow: 0 0 7px #ffadad;
-    margin: 30px 0 36px 0;
+    margin: 35px 0 40px 0;
     font-size: 1.4rem;
     padding: 18px 50px;
     transition: background 0.2s;
+    text-align: center;
+    display: inline-block;
 }
 .game-btn:hover {
     background: #232946;
@@ -90,10 +98,17 @@ if not st.session_state.archive_started:
         "<div style='text-align:center;'><span style='font-family: Press Start 2P, monospace; font-size:15pt; color:#fff; background:#232946cc; padding:9px 22px; border-radius:14px;'>경기도 양주시의 역사와 미래 비전을 구경하세요!</span></div>",
         unsafe_allow_html=True
     )
-    st.markdown("<div style='height:35px'></div>", unsafe_allow_html=True)
-    if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=False):
+    st.markdown("""
+    <div class="center-area">
+        <form action="" method="post">
+            <button class="game-btn" name="gamestart" type="submit">🎮 GAME START</button>
+        </form>
+    </div>
+    """, unsafe_allow_html=True)
+    # 버튼 동작 - Streamlit에서 POST/GET 없이도 아래처럼 처리
+    if st.session_state.get("gamestart") or st.query_params.get("gamestart"):
         st.session_state.archive_started = True
-        st.experimental_rerun()
+        st.rerun()
     st.stop()
 
 # --------- [본문] ---------
@@ -273,7 +288,7 @@ with tabs[3]:
         pop_5yr_avg = [year_avg[y] for y in years_5yr]
         fig, ax = plt.subplots(figsize=(6, 3.5))
         ax.plot(years_5yr, pop_5yr_avg, marker='o', color='tab:green', label='인구수 (연평균)')
-        # ★★★ x축: 인덱스 문제 완전 해결 (set_xticks/set_xticklabels) ★★★
+        # x축 인덱스 문제 해결
         ax.set_xticks(years_5yr)
         if font_prop:
             ax.set_title("양주시 연평균 인구수 변화", fontproperties=font_prop, fontsize=12)
