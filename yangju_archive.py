@@ -486,23 +486,25 @@ with tabs[4]:
     </div>
     """, unsafe_allow_html=True)
 
-    # folium 지도 생성
     import json
     import folium
     from streamlit_folium import st_folium
 
+    # 기본 지도 생성
     m = folium.Map(location=[37.7855, 127.0454], zoom_start=11, tiles="OpenStreetMap")
 
     try:
-        with open("yangju_only_boundary (2).geojson", "r", encoding="utf-8") as f:
+        # 최종 확정된 경계 파일 로드
+        with open("yangju_only_fixed.geojson", "r", encoding="utf-8") as f:
             yangju_geo = json.load(f)
 
+        # GeoJSON 계층 추가
         folium.GeoJson(
             yangju_geo,
             name="양주시 경계",
             style_function=lambda feature: {
-                "fillColor": "#00000000",      # 투명 배경
-                "color": "#000000",            # 경계선 색상: 검정
+                "fillColor": "#00000000",  # 투명 채우기
+                "color": "#000000",        # 검정색 테두리
                 "weight": 3,
                 "dashArray": "5, 5"
             },
