@@ -6,7 +6,8 @@ import matplotlib.font_manager as fm
 import re
 import numpy as np
 
-# --------- CSS 스타일 ---------
+# --- 스타일/폰트 ---
+st.set_page_config(page_title="양주시 아카이브 GAME", layout="wide")
 st.markdown("""
 <style>
 body, .stApp { background: #232946; }
@@ -70,7 +71,7 @@ body, .stApp { background: #232946; }
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
 
-# --------- 플롯용 폰트 ----------
+# --- 플롯용 폰트 ---
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 if os.path.exists(FONT_PATH):
     font_prop = fm.FontProperties(fname=FONT_PATH)
@@ -79,29 +80,26 @@ if os.path.exists(FONT_PATH):
 else:
     font_prop = None
 
-st.set_page_config(page_title="양주시 아카이브 GAME", layout="wide")
+# --- 세션 상태로 전환 제어 ---
+if "started" not in st.session_state:
+    st.session_state["started"] = False
 
-# --------- 세션 상태 관리 ---------
-if "archive_started" not in st.session_state:
-    st.session_state.archive_started = False
-
-if not st.session_state.archive_started:
-    # [시작 화면]
+if not st.session_state["started"]:
     st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
     st.markdown(
         "<div style='text-align:center;'><span style='font-family: Press Start 2P, monospace; font-size:15pt; color:#fff; background:#232946cc; padding:9px 22px; border-radius:14px;'>경기도 양주시의 역사와 미래 비전을 구경하세요!</span></div>",
         unsafe_allow_html=True
     )
     st.markdown("<br>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns([3,2,3])
-    with col2:
-        btn = st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=True)
-        if btn:
-            st.session_state.archive_started = True
-            st.rerun()
-    st.stop()
+    c1, c2, c3 = st.columns([3,2,3])
+    with c2:
+        # 반드시 use_container_width=True
+        if st.button("🎮 GAME START", key="start", use_container_width=True):
+            st.session_state["started"] = True
+            st.experimental_rerun()
+    st.stop()  # 여기서 종료해야 아래 코드 실행 X
 
-# --------- 본문(아카이브) ---------
+# --- 실제 아카이브 본문 내용 (전체 생략 없이!) ---
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
 
 with tabs[0]:
@@ -258,6 +256,7 @@ with tabs[3]:
     st.markdown("""
     <span style='color:#fff;'>양주시 인구 구조 변화를 월별/연도별 및 5년 단위 출생자수·사망자수와 함께 시각화합니다. 데이터 출처: KOSIS 국가통계포털</span>
     """, unsafe_allow_html=True)
+
     # --------- 인구수 변화 그래프 ---------
     POP_DATA_PATH = "양주시_연도별_인구수.csv"
     try:
