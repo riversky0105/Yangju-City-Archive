@@ -371,7 +371,7 @@ with tabs[3]:
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
     st.header("📊 양주시의 인구 변화")
     st.markdown("""
-    <span style='color:#fff;'>양주시 인구 구조 변화를 월별/연도별 및 5년 단위 출생자수·사망자수와 함께 시각화합니다. 데이터 출처: KOSIS 국가통계포털</span>
+    <span style='color:#fff;'>양주시의 인구 구조와 출생·사망자 수의 변화 5년 단위로 시각화합니다. 데이터 출처: KOSIS 국가통계포털</span>
     """, unsafe_allow_html=True)
     
     # --------- 인구수 변화 그래프 ---------
