@@ -481,10 +481,10 @@ with tabs[3]:
 with tabs[4]:
     st.session_state.current_tab = 4
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
-    st.header("🏙️ 양주시 지도")
+    st.header("🏙️ 양주시의 지도")
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
-    경기도 양주시의 위치와 각 행정 구역(읍·면·동)을 일반 지도로 확인할 수 있습니다.
+    경기도 양주시의 위치와 각 행정 구역(읍·면·동)을 지도로 확인할 수 있습니다.
     </div>
     """, unsafe_allow_html=True)
 
