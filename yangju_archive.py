@@ -183,14 +183,9 @@ def game_ui_elements():
         """, unsafe_allow_html=True
     )
 
-# 픽셀 이미지 (로컬 파일 사용 예시)
-AVATAR_PATH = "/mnt/data/13f83545-fbd7-4afb-9296-66b8ef889c67.png"
-
 with tabs[0]:
     st.session_state.current_tab = 0
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
-    # 픽셀 이미지(업로드 파일 사용)
-    st.image(AVATAR_PATH, width=72, caption="Retro Pixel Avatar")
     st.header("📜 양주시의 과거")
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
@@ -246,7 +241,6 @@ with tabs[0]:
 with tabs[1]:
     st.session_state.current_tab = 1
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
-    st.image(AVATAR_PATH, width=72, caption="Retro Pixel Avatar")
     st.header("🏙️ 양주시의 현재")
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
@@ -296,7 +290,6 @@ with tabs[1]:
 with tabs[2]:
     st.session_state.current_tab = 2
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
-    st.image(AVATAR_PATH, width=72, caption="Retro Pixel Avatar")
     st.header("🌐 양주시의 미래")
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
@@ -350,7 +343,6 @@ with tabs[2]:
 with tabs[3]:
     st.session_state.current_tab = 3
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
-    st.image(AVATAR_PATH, width=72, caption="Retro Pixel Avatar")
     st.header("📊 양주시 인구 변화")
     st.markdown("""
     <span style='color:#fff;'>양주시 인구 구조 변화를 월별/연도별 및 5년 단위 출생자수·사망자수와 함께 시각화합니다. 데이터 출처: KOSIS 국가통계포털</span>
