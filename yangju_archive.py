@@ -6,12 +6,10 @@ import matplotlib.font_manager as fm
 import re
 import numpy as np
 
-# --------- 0. 레트로 게임기 스타일용 CSS 삽입 ----------
+# --------- 0. 게임기 스타일 CSS+폰트 ---------
 st.markdown("""
 <style>
-body, .stApp {
-    background: #232946;
-}
+body, .stApp { background: #232946; }
 .main-title {
     font-family: 'Press Start 2P', 'NanumGothicCoding', monospace;
     color: #a6e3e9;
@@ -67,11 +65,10 @@ body, .stApp {
     text-shadow: 0 0 10px #00f2fe90;
 }
 </style>
-<!-- Google Fonts for pixel font -->
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
 
-# --------- 1. 한글 폰트 적용 (NanumGothicCoding.ttf) ----------
+# --------- 1. 한글 폰트(플롯용) ----------
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 if os.path.exists(FONT_PATH):
     font_prop = fm.FontProperties(fname=FONT_PATH)
@@ -83,7 +80,7 @@ else:
 # --------- 2. 페이지 환경 ----------
 st.set_page_config(page_title="양주시 아카이브 GAME", layout="wide")
 
-# --------- 3. 게임기 타이틀 & GAME START 버튼 ----------
+# --------- 3. 타이틀+스타트 버튼 ----------
 st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
 st.markdown(
     "<div style='text-align:center;'><span style='font-family: Press Start 2P, monospace; font-size:15pt; color:#fff; background:#232946cc; padding:7px 18px; border-radius:12px;'>경기도 양주시의 역사와 미래 비전을 구경하세요!</span></div>",
@@ -92,7 +89,7 @@ st.markdown(
 if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!"):
     st.toast("아카이브 접속! 탐험을 시작하세요 🚀", icon="🎮")
 
-# --------- 4. 탭 메뉴 & 픽셀 테두리 섹션 ----------
+# --------- 4. 탭+내용 (픽셀 테두리) ----------
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
 
 with tabs[0]:
@@ -108,7 +105,6 @@ with tabs[0]:
     """, unsafe_allow_html=True)
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주 관야지.jpg", caption="양주 관아지(양주목 관아터)", width=700)
-
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>2. 회암사: 왕실의 불교 수행처</b><br>
@@ -121,7 +117,6 @@ with tabs[0]:
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("회암사지.jpg", caption="회암사지 터", width=700)
     st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=700)
-
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>3. 조선 후기 천주교 박해의 현장</b><br>
@@ -132,7 +127,6 @@ with tabs[0]:
     """, unsafe_allow_html=True)
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주 장흥 순교성지.jpg", caption="양주 장흥 순교성지", width=700)
-
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>4. 농업과 장터</b><br>
@@ -144,7 +138,6 @@ with tabs[0]:
     st.image("양주 농촌.jpg", caption="1950~1980년대 논 모내기 풍경(경기북부, 양주 일대)", width=700)
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주 장터.jpg", caption="1970~1980년대 시골 장터(경기북부, 양주 일대)", width=700)
-
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>5. 한국전쟁과 양주</b><br>
@@ -169,7 +162,6 @@ with tabs[1]:
     """, unsafe_allow_html=True)
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주시 면적.jpg", caption="양주시 행정구역도", width=700)
-
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>2. 신도시 개발 및 교통</b><br>
@@ -179,7 +171,6 @@ with tabs[1]:
     """, unsafe_allow_html=True)
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주 옥정신도시.jpg", caption="양주 옥정 신도시 전경", width=700)
-
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>3. 산업기반 확충</b><br>
@@ -189,7 +180,6 @@ with tabs[1]:
     """, unsafe_allow_html=True)
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주 산업단지.jpg", caption="양주 은남일반산업단지(조감도)", width=700)
-
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>4. 문화·관광 자원 리브랜딩</b><br>
@@ -199,7 +189,6 @@ with tabs[1]:
     """, unsafe_allow_html=True)
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주시 나리농원 천일홍 축제.jpg", caption="양주시 나리농원 천일홍 축제", width=700)
-
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>5. 삶의 질을 높이는 복지와 생활환경</b><br>
@@ -225,7 +214,6 @@ with tabs[2]:
     """, unsafe_allow_html=True)
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주 GTX 노선도.jpg", caption="양주를 지나는 GTX-C(예정) 노선", width=700)
-
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>2. 첨단산업과 창업도시</b><br>
@@ -236,7 +224,6 @@ with tabs[2]:
     """, unsafe_allow_html=True)
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주 테크노벨리.png", caption="양주 테크노밸리(조감도)", width=700)
-
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>3. 문화예술 중심도시</b><br>
@@ -247,7 +234,6 @@ with tabs[2]:
     """, unsafe_allow_html=True)
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주 문화 예술.jpg", caption="양주 장흥문화예술촌(실내/전시)", width=700)
-
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>4. 탄소중립 스마트시티</b><br>
@@ -258,7 +244,6 @@ with tabs[2]:
     """, unsafe_allow_html=True)
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주 탄소중립 스마트시티.jpg", caption="양주 생태공원 및 친환경 스마트시티", width=700)
-
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>5. 교육·복지 인프라</b><br>
@@ -278,7 +263,7 @@ with tabs[3]:
     <span style='color:#fff;'>양주시 인구 구조 변화를 월별/연도별 및 5년 단위 출생자수·사망자수와 함께 시각화합니다. 데이터 출처: KOSIS 국가통계포털</span>
     """, unsafe_allow_html=True)
 
-    # --------- 인구 변화 그래프 ---------
+    # --------- 인구수 변화 그래프 ---------
     POP_DATA_PATH = "양주시_연도별_인구수.csv"
     try:
         df_pop = pd.read_csv(POP_DATA_PATH, encoding="cp949", header=[0,1])
@@ -299,3 +284,4 @@ with tabs[3]:
         fig, ax = plt.subplots(figsize=(6, 3.5))
         ax.plot(years_5yr, pop_5yr_avg, marker='o', color='tab:green', label='인구수 (연평균)')
         if font_prop:
+            ax.set_title("양주시 연평균 인구수 변화", fontproperties=
