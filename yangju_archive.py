@@ -76,6 +76,25 @@ body, .stApp { background: #232946; }
     text-shadow: 0 0 8px #00f2fe70;
     font-family: 'Press Start 2P', monospace;
 }
+.reset-btn {
+    background: linear-gradient(90deg, #393e46 85%, #00f2fe 100%);
+    color: #fff;
+    border-radius: 16px;
+    font-family: 'Press Start 2P', monospace;
+    border: 2.5px solid #00f2fe;
+    box-shadow: 0 0 9px #00f2fe88;
+    margin: 8px 0 20px 0;
+    font-size: 1.07rem;
+    padding: 10px 38px 9px 38px;
+    letter-spacing: 1px;
+    transition: background 0.15s, color 0.15s;
+    cursor: pointer;
+}
+.reset-btn:hover {
+    background: #ffd6e0;
+    color: #232946;
+    border: 2.5px solid #00f2fe;
+}
 @media (max-width: 600px) {
     .arcade-frame { padding: 13vw 3vw 6vw 3vw; min-width: 0; }
     .main-title { font-size: 1.6rem; }
@@ -115,7 +134,6 @@ if not st.session_state.archive_started:
                 <div class="blink">PRESS START</div>
             </div>
             """, unsafe_allow_html=True)
-        # 버튼은 Streamlit에서 중앙에 나오도록 배치
         col1, col2, col3 = st.columns([2,3,2])
         with col2:
             if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=True):
@@ -123,6 +141,13 @@ if not st.session_state.archive_started:
         st.stop()
 
 # --------- [본문] ---------
+# "처음으로" 버튼 (RESET) 타이틀 아래 표시
+reset_col1, reset_col2, reset_col3 = st.columns([5,2,5])
+with reset_col2:
+    if st.button("🕹️ 처음으로", key="reset", help="시작화면으로 돌아가기", use_container_width=True):
+        st.session_state.archive_started = False
+        st.experimental_rerun()
+
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
 
 with tabs[0]:
