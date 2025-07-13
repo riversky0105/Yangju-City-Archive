@@ -6,7 +6,7 @@ import matplotlib.font_manager as fm
 import re
 import numpy as np
 
-# ===== 1. 게임기 스타일 CSS+픽셀폰트 =====
+# 1. 게임기 스타일 CSS+픽셀폰트
 st.markdown("""
 <style>
 body, .stApp { background: #232946; }
@@ -78,7 +78,22 @@ body, .stApp { background: #232946; }
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
 
-# ===== 2. 한글 폰트(플롯용) =====
+# 2. WASD/화살표 키(좌/우) 탭 이동 지원 (실험적)
+st.markdown("""
+<script>
+document.addEventListener('keydown', function(event) {
+    let key = event.key.toLowerCase();
+    if(key === 'arrowleft' || key === 'a') {
+        window.parent.postMessage({type: 'streamlit:buttonClick', buttonId: 'left_btn'}, '*');
+    }
+    if(key === 'arrowright' || key === 'd') {
+        window.parent.postMessage({type: 'streamlit:buttonClick', buttonId: 'right_btn'}, '*');
+    }
+});
+</script>
+""", unsafe_allow_html=True)
+
+# 3. 한글 플롯 폰트
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 if os.path.exists(FONT_PATH):
     font_prop = fm.FontProperties(fname=FONT_PATH)
@@ -89,7 +104,7 @@ else:
 
 st.set_page_config(page_title="양주시 아카이브 GAME", layout="wide")
 
-# ===== 3. 섹션/페이지 상태 =====
+# 4. 섹션 상태
 sections = [
     "📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"
 ]
@@ -98,7 +113,7 @@ if "section_idx" not in st.session_state:
 if "started" not in st.session_state:
     st.session_state["started"] = False
 
-# ===== 4. 메인(게임 시작화면) =====
+# 5. 아카이브 타이틀(게임 시작) 화면
 if not st.session_state["started"]:
     st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
     st.markdown(
@@ -110,13 +125,14 @@ if not st.session_state["started"]:
         "<img src='https://cdn-icons-png.flaticon.com/128/2736/2736127.png' height='80' style='margin-right:13px;filter:drop-shadow(0 0 7px #00f2fe77);'><img src='https://cdn-icons-png.flaticon.com/128/1404/1404945.png' height='80' style='filter:drop-shadow(0 0 7px #00f2fe77);'>"
         "</div>", unsafe_allow_html=True
     )
-    st.markdown("<div class='wasd-tip'>WASD 또는 화살표 방향키로 이동하는<br>게임기를 연상하며 구경해보세요!</div>", unsafe_allow_html=True)
+    st.markdown("<div class='wasd-tip'>⬅️➡️ 화살표나 W/A/S/D 키로 탭을 이동할 수 있습니다!<br>GAME START를 클릭하세요!</div>", unsafe_allow_html=True)
     if st.button("🎮 GAME START", key="gamestart1", help="아카이브 시작!", type="primary"):
         st.session_state["started"] = True
+        st.session_state["section_idx"] = 0
         st.rerun()
     st.stop()
 
-# ===== 5. 게임패드 네비게이션 =====
+# 6. 게임패드 네비게이션(⬅️/➡️ 버튼 & 키 연동)
 st.markdown(f"<div class='section-label'>🕹️ {sections[st.session_state.section_idx]}</div>", unsafe_allow_html=True)
 col1, col2, col3 = st.columns([1,6,1])
 with col1:
@@ -128,12 +144,11 @@ with col3:
         st.session_state.section_idx = (st.session_state.section_idx + 1) % len(sections)
         st.rerun()
 st.markdown(
-    "<div style='text-align:center;margin-bottom:18px;'><span style='background:#181c2b;border-radius:10px;padding:5px 14px 5px 10px;box-shadow:0 0 9px #00f2fe55;letter-spacing:1.5px;'><b style='color:#00f2fe;'>⬅️ ➡️</b> 버튼으로 이동!</span></div>",
+    "<div style='text-align:center;margin-bottom:18px;'><span style='background:#181c2b;border-radius:10px;padding:5px 14px 5px 10px;box-shadow:0 0 9px #00f2fe55;letter-spacing:1.5px;'><b style='color:#00f2fe;'>⬅️ ➡️</b> 또는 <b style='color:#fdadad;'>W/A/S/D</b>로 이동!</span></div>",
     unsafe_allow_html=True
 )
 
-# ===== 6. 각 섹션(탭)별 콘텐츠 =====
-
+# 7. 각 섹션별 콘텐츠 (전체)
 if st.session_state.section_idx == 0:
     st.markdown('<div class="pixel-box">', unsafe_allow_html=True)
     st.header("📜 양주시의 과거")
