@@ -79,15 +79,17 @@ else:
 
 st.set_page_config(page_title="양주시 아카이브 GAME", layout="wide")
 
+# --------- 항상 상단에 타이틀 고정 ---------
+st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
+
 # --------- 세션 상태로 시작화면/본문 분기 ---------
 if "archive_started" not in st.session_state:
     st.session_state.archive_started = False
 
 if not st.session_state.archive_started:
     # ---- [시작 화면] ----
-    st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
     st.markdown(
-        "<div style='text-align:center;'><span style='font-family: Press Start 2P, monospace; font-size:15pt; color:#fff; background:#232946cc; padding:9px 22px; border-radius:14px;'>경기도 양주시의 역사와 미래 비전을 구경하세요!</span></div>",
+        "<div style='text-align:center; margin-top:55px;'><span style='font-family: Press Start 2P, monospace; font-size:15pt; color:#fff; background:#232946cc; padding:9px 22px; border-radius:14px;'>경기도 양주시의 역사와 미래 비전을 구경하세요!</span></div>",
         unsafe_allow_html=True
     )
     st.markdown("<div style='height:35px'></div>", unsafe_allow_html=True)
