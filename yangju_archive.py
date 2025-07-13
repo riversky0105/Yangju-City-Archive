@@ -206,7 +206,7 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주 관야지.jpg", caption="양주 관아지(양주목 관아터)", width=700)
+    st.image("양주 관야지.jpg", caption="양주 관아지(양주목 관아터) (출처: 양주시청)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>2. 회암사: 왕실의 불교 수행처</b><br>
@@ -217,9 +217,9 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("회암사지.jpg", caption="회암사지 터", width=700)
+    st.image("회암사지.jpg", caption="회암사지 터 (출처: 국립회암사지박물관)", width=700)
     img_gap()
-    st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=700)
+    st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도 (출처: 국립회암사지박물관)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>3. 조선 후기 천주교 박해의 현장</b><br>
@@ -229,7 +229,7 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주 장흥 순교성지.jpg", caption="양주 장흥 순교성지", width=700)
+    st.image("양주 장흥 순교성지.jpg", caption="양주 장흥 순교성지 (출처: 양주 장흥 순교성지 공식)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>4. 농업과 장터</b><br>
@@ -238,9 +238,9 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주 농촌.jpg", caption="1950~1980년대 논 모내기 풍경(경기북부, 양주 일대)", width=700)
+    st.image("양주 농촌.jpg", caption="1950~1980년대 논 모내기 풍경(경기북부, 양주 일대) (출처: 한국민속촌/옛 농촌사진)", width=700)
     img_gap()
-    st.image("양주 장터.jpg", caption="1970~1980년대 시골 장터(경기북부, 양주 일대)", width=700)
+    st.image("양주 장터.jpg", caption="1970~1980년대 시골 장터(경기북부, 양주 일대) (출처: 농업박물관/옛날사진)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>5. 한국전쟁과 양주</b><br>
@@ -250,7 +250,7 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주 1.4후퇴.jpg", caption="1951년 1.4후퇴 당시 경기북부(양주 일대) 피난민 행렬", width=700)
+    st.image("양주 1.4후퇴.jpg", caption="1951년 1.4후퇴 당시 경기북부(양주 일대) 피난민 행렬 (출처: 국가기록원/국방부)", width=700)
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -267,7 +267,7 @@ with tabs[1]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주시 면적.jpg", caption="양주시 행정구역도", width=700)
+    st.image("양주시 면적.jpg", caption="양주시 행정구역도 (출처: 양주시청)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>2. 신도시 개발 및 교통</b><br>
@@ -276,7 +276,7 @@ with tabs[1]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주 옥정신도시.jpg", caption="양주 옥정 신도시 전경", width=700)
+    st.image("양주 옥정신도시.jpg", caption="양주 옥정 신도시 전경 (출처: 양주시청/시정소식)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>3. 산업기반 확충</b><br>
@@ -285,7 +285,7 @@ with tabs[1]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주 산업단지.jpg", caption="양주 은남일반산업단지(조감도)", width=700)
+    st.image("양주 산업단지.jpg", caption="양주 은남일반산업단지(조감도) (출처: 양주시청/언론공개)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>4. 문화·관광 자원 리브랜딩</b><br>
@@ -294,7 +294,7 @@ with tabs[1]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주시 나리농원 천일홍 축제.jpg", caption="양주시 나리농원 천일홍 축제", width=700)
+    st.image("양주시 나리농원 천일홍 축제.jpg", caption="양주시 나리농원 천일홍 축제 (출처: 양주시청/공식 블로그)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>5. 삶의 질을 높이는 복지와 생활환경</b><br>
@@ -304,7 +304,7 @@ with tabs[1]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주 옥정 호수공원.jpg", caption="양주 옥정 호수공원", width=700)
+    st.image("양주 옥정 호수공원.jpg", caption="양주 옥정 호수공원 (출처: 양주시청/블로그)", width=700)
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -322,7 +322,7 @@ with tabs[2]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주 GTX 노선도.jpg", caption="양주를 지나는 GTX-C(예정) 노선", width=700)
+    st.image("양주 GTX 노선도.jpg", caption="양주를 지나는 GTX-C(예정) 노선 (출처: 연합뉴스/국토교통부)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>2. 첨단산업과 창업도시</b><br>
@@ -332,7 +332,7 @@ with tabs[2]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주 테크노벨리.png", caption="양주 테크노밸리(조감도)", width=700)
+    st.image("양주 테크노벨리.png", caption="양주 테크노밸리(조감도) (출처: 양주시청/언론공개)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>3. 문화예술 중심도시</b><br>
@@ -342,7 +342,7 @@ with tabs[2]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주 문화 예술.jpg", caption="양주 장흥문화예술촌(실내/전시)", width=700)
+    st.image("양주 문화 예술.jpg", caption="양주 장흥문화예술촌(실내/전시) (출처: 장흥문화예술촌/공식)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>4. 탄소중립 스마트시티</b><br>
@@ -352,7 +352,7 @@ with tabs[2]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주 탄소중립 스마트시티.jpg", caption="양주 생태공원 및 친환경 스마트시티", width=700)
+    st.image("양주 탄소중립 스마트시티.jpg", caption="양주 생태공원 및 친환경 스마트시티 (출처: 양주시청/블로그)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>5. 교육·복지 인프라</b><br>
@@ -362,7 +362,7 @@ with tabs[2]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주시 청년센터.jpg", caption="양주시 청년센터(옥정동)", width=700)
+    st.image("양주시 청년센터.jpg", caption="양주시 청년센터(옥정동) (출처: 양주시청/청년센터)", width=700)
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -522,4 +522,3 @@ with tabs[4]:
 
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
-
