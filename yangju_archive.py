@@ -76,9 +76,50 @@ body, .stApp { background: #232946; }
     text-shadow: 0 0 8px #00f2fe70;
     font-family: 'Press Start 2P', monospace;
 }
+.pixel-border {
+    border: 4px dashed #00f2fe;
+    border-radius: 18px;
+    padding: 24px 12px 6px 12px;
+    margin-bottom: 18px;
+    background: rgba(35,41,70,0.6);
+    box-shadow: 0 0 18px #00f2fe30;
+}
+.pixel-avatar {
+    margin: 10px auto 18px auto;
+    display: block;
+    width: 64px; height: 64px;
+    image-rendering: pixelated;
+    filter: drop-shadow(0 0 7px #00f2fe66);
+}
+.game-item {
+    display: inline-block;
+    background: #a6e3e9;
+    color: #232946;
+    font-family: 'Press Start 2P', monospace;
+    border-radius: 9px;
+    padding: 3px 12px;
+    margin: 3px 4px;
+    font-size: 0.94rem;
+    box-shadow: 0 0 9px #00f2fe55;
+}
+.back-btn {
+    font-family: 'Press Start 2P', monospace;
+    background: linear-gradient(90deg, #00f2fe 60%, #232946 100%);
+    color: #232946;
+    font-size: 1.09rem;
+    border: 3px solid #393e46;
+    border-radius: 18px;
+    padding: 12px 0;
+    margin-top: 36px;
+    margin-bottom: 4px;
+    width: 100%;
+    box-shadow: 0 0 16px #00f2fe50;
+}
 @media (max-width: 600px) {
     .arcade-frame { padding: 13vw 3vw 6vw 3vw; min-width: 0; }
     .main-title { font-size: 1.6rem; }
+    .pixel-border { padding: 6vw 1vw 2vw 1vw;}
+    .back-btn { font-size: 0.95rem;}
 }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -102,12 +143,17 @@ st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_
 if "archive_started" not in st.session_state:
     st.session_state.archive_started = False
 
+def reset_to_start():
+    st.session_state.archive_started = False
+    st.experimental_rerun()
+
+# --------- [스타트 화면] ---------
 if not st.session_state.archive_started:
-    # ---- [스타트 화면] ----
     with st.container():
         st.markdown(
             """
             <div class="arcade-frame">
+                <img class="pixel-avatar" src="https://static.thenounproject.com/png/1019366-200.png"/>
                 <div class="pixel-stars">★&nbsp;◀&nbsp;WELCOME&nbsp;▶&nbsp;★</div>
                 <div class="subtitle">
                     경기도 양주시의<br>역사와 미래 비전을<br>구경하세요!
@@ -115,19 +161,41 @@ if not st.session_state.archive_started:
                 <div class="blink">PRESS START</div>
             </div>
             """, unsafe_allow_html=True)
-        # 버튼은 Streamlit에서 중앙에 나오도록 배치
         col1, col2, col3 = st.columns([2,3,2])
         with col2:
             if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=True):
                 st.session_state.archive_started = True
+                st.experimental_rerun()
         st.stop()
 
 # --------- [본문] ---------
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
 
+# 각 탭에 공통적으로 넣는 게임 UI 요소
+def game_ui_elements():
+    st.markdown(
+        """
+        <div style="text-align:center;">
+            <span class="game-item">LEVEL UP!</span>
+            <span class="game-item">+50 XP</span>
+            <span class="game-item">🏆 아카이브 도감 달성!</span>
+        </div>
+        """, unsafe_allow_html=True
+    )
+
+# 각 탭 하단에 "처음으로" 버튼
+def show_back_button():
+    col1, col2, col3 = st.columns([2,3,2])
+    with col2:
+        if st.button("⏪ 처음으로", key=f"backtohome_{st.session_state.get('current_tab',0)}", help="아카이브 시작화면으로", use_container_width=True):
+            reset_to_start()
+
 with tabs[0]:
+    st.session_state.current_tab = 0
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
+    st.markdown('<img class="pixel-avatar" src="https://cdn.pixabay.com/photo/2014/04/03/11/50/alien-314307_1280.png"/>', unsafe_allow_html=True)
     st.header("📜 양주시의 과거")
+    game_ui_elements()
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>1. 고려~조선 시대, 북방의 행정·군사 중심지</b><br>
@@ -175,11 +243,15 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
     st.image("양주 1.4후퇴.jpg", caption="1951년 1.4후퇴 당시 경기북부(양주 일대) 피난민 행렬", width=700)
+    show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
 
 with tabs[1]:
+    st.session_state.current_tab = 1
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
+    st.markdown('<img class="pixel-avatar" src="https://cdn.pixabay.com/photo/2014/04/03/11/52/alien-314324_1280.png"/>', unsafe_allow_html=True)
     st.header("🏙️ 양주시의 현재")
+    game_ui_elements()
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>1. 인구와 행정</b><br>
@@ -221,11 +293,15 @@ with tabs[1]:
     </div>
     """, unsafe_allow_html=True)
     st.image("양주 옥정 호수공원.jpg", caption="양주 옥정 호수공원", width=700)
+    show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
 
 with tabs[2]:
+    st.session_state.current_tab = 2
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
+    st.markdown('<img class="pixel-avatar" src="https://cdn.pixabay.com/photo/2016/03/31/20/11/game-1292493_1280.png"/>', unsafe_allow_html=True)
     st.header("🌐 양주시의 미래")
+    game_ui_elements()
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>1. 경기북부 중심도시 성장</b><br>
@@ -271,11 +347,15 @@ with tabs[2]:
     </div>
     """, unsafe_allow_html=True)
     st.image("양주시 청년센터.jpg", caption="양주시 청년센터(옥정동)", width=700)
+    show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
 
 with tabs[3]:
+    st.session_state.current_tab = 3
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
+    st.markdown('<img class="pixel-avatar" src="https://cdn.pixabay.com/photo/2016/03/31/20/11/game-1292497_1280.png"/>', unsafe_allow_html=True)
     st.header("📊 양주시 인구 변화")
+    game_ui_elements()
     st.markdown("""
     <span style='color:#fff;'>양주시 인구 구조 변화를 월별/연도별 및 5년 단위 출생자수·사망자수와 함께 시각화합니다. 데이터 출처: KOSIS 국가통계포털</span>
     """, unsafe_allow_html=True)
@@ -379,4 +459,5 @@ with tabs[3]:
     except Exception as e:
         st.error(f"출생자수·사망자수 그래프 로드 중 오류가 발생했습니다: {e}")
 
+    show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
