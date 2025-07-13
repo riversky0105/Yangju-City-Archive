@@ -108,6 +108,10 @@ body, .stApp { background: #232946; }
     width: 100%;
     box-shadow: 0 0 16px #00f2fe50;
 }
+/* 이미지와 텍스트 사이 간격 추가 */
+.stImage {
+    margin-bottom: 16px !important;
+}
 @media (max-width: 600px) {
     .arcade-frame { padding: 13vw 3vw 6vw 3vw; min-width: 0; }
     .main-title { font-size: 1.6rem; }
@@ -162,15 +166,26 @@ if not st.session_state.archive_started:
 # --------- [본문] ---------
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
 
-# 각 탭 하단에 "처음으로" 버튼
+def get_docum_msg():
+    tab = st.session_state.get('current_tab', 0)
+    if tab == 0:
+        return "아카이브 과거 도감 달성!"
+    elif tab == 1:
+        return "아카이브 현재 도감 달성!"
+    elif tab == 2:
+        return "아카이브 미래 도감 달성!"
+    elif tab == 3:
+        return "아카이브 인구 도감 달성!"
+    return "아카이브 도감 달성!"
+
 def show_back_button():
     # 버튼 위에 레벨업/도감 문구 + 간격 추가
     st.markdown(
-        """
+        f"""
         <div style="text-align:center; margin-top:26px; margin-bottom:16px;">
             <span class="game-item">LEVEL UP!</span>
             <span class="game-item">+50 XP</span>
-            <span class="game-item">🗂️ 아카이브 도감 달성!</span>
+            <span class="game-item">{get_docum_msg()}</span>
         </div>
         """, unsafe_allow_html=True
     )
