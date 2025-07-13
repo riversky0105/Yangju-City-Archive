@@ -24,86 +24,71 @@ body, .stApp { background: #232946; }
     border: 4px solid #393e46;
     box-shadow: 0 0 15px #00f2fe80;
 }
-.arcade-frame {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: rgba(35, 41, 70, 0.92);
-    border: 6px solid #00f2fe;
-    border-radius: 32px;
-    box-shadow: 0 0 40px #00f2fe44, 0 0 2px #232946;
-    padding: 60px 48px 36px 48px;
-    margin: 70px auto 40px auto;
-    max-width: 540px;
-    min-width: 330px;
-    z-index: 2;
+.game-btn {
+    background: #f44336;
+    color: white;
+    border-radius: 20px;
+    font-family: 'Press Start 2P', 'NanumGothicCoding', monospace;
+    border: 3px solid #232946;
+    box-shadow: 0 0 7px #ffadad;
+    margin: 30px 0 36px 0;
+    font-size: 1.4rem;
+    padding: 18px 50px;
+    transition: background 0.2s;
 }
-.arcade-frame .subtitle {
+.game-btn:hover {
+    background: #232946;
+    color: #ffadad;
+    border: 3px solid #f44336;
+}
+.pixel-border {
+    border: 5px solid #393e46;
+    border-radius: 20px;
+    background: #232946cc;
+    box-shadow: 0 0 20px #00f2fe99;
+    padding: 20px 35px 25px 35px;
+    margin-bottom: 32px;
+}
+.stTabs [role="tab"] {
     font-family: 'Press Start 2P', monospace;
-    color: #ffd6e0;
-    font-size: 15pt;
-    background: #232946f2;
-    padding: 15px 24px 13px 24px;
-    border-radius: 18px;
-    margin-bottom: 36px;
-    margin-top: 12px;
-    text-align: center;
-    box-shadow: 0 0 18px #00f2fe50;
-    letter-spacing: 1px;
-    border: 3px solid #393e46;
+    font-size: 1.1rem;
+    background: #232946;
+    color: #f2f2f2;
+    border: 2px solid #393e46;
+    border-radius: 12px 12px 0 0;
+    margin-right: 3px;
 }
-.blink {
-    animation: blink 1.15s steps(1) infinite;
-    font-family: 'Press Start 2P', monospace;
+.stTabs [role="tab"][aria-selected="true"] {
+    background: #393e46;
     color: #ffd6e0;
-    font-size: 1.10rem;
-    margin-bottom: 8px;
-    margin-top: 18px;
-    text-shadow: 0 0 8px #00f2fe;
-}
-@keyframes blink {
-    0%, 55% { opacity: 1; }
-    56%, 100% { opacity: 0.22; }
-}
-.pixel-stars {
-    text-align: center;
-    font-size: 1.3rem;
-    color: #ffd6e0;
-    letter-spacing: 9px;
-    margin-top: 0px;
-    margin-bottom: 13px;
-    text-shadow: 0 0 8px #00f2fe70;
-    font-family: 'Press Start 2P', monospace;
+    border-bottom: 4px solid #00f2fe;
+    text-shadow: 0 0 10px #00f2fe90;
 }
 .reset-btn {
-    background: linear-gradient(90deg, #393e46 85%, #00f2fe 100%);
-    color: #fff;
-    border-radius: 16px;
+    display: block;
+    margin: 36px auto 0 auto;
     font-family: 'Press Start 2P', monospace;
-    border: 2.5px solid #00f2fe;
-    box-shadow: 0 0 9px #00f2fe88;
-    margin: 32px 0 16px 0;
-    font-size: 1.07rem;
-    padding: 10px 38px 9px 38px;
-    letter-spacing: 1px;
-    transition: background 0.15s, color 0.15s;
-    cursor: pointer;
+    font-size: 1.05rem;
+    background: #222636;
+    color: #fff;
+    border: 3px solid #00f2fe;
+    border-radius: 14px;
+    box-shadow: 0 0 14px #00f2fe60;
+    padding: 13px 0px;
+    width: 280px;
+    text-align: center;
+    transition: background 0.2s, color 0.2s;
 }
 .reset-btn:hover {
-    background: #ffd6e0;
-    color: #232946;
-    border: 2.5px solid #00f2fe;
-}
-@media (max-width: 600px) {
-    .arcade-frame { padding: 13vw 3vw 6vw 3vw; min-width: 0; }
-    .main-title { font-size: 1.6rem; }
+    background: #232946;
+    color: #ffd6e0;
+    border: 3px solid #a6e3e9;
 }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
 
-# --------- 폰트(플롯용) ----------
+# --------- 플롯 한글 폰트 ----------
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 if os.path.exists(FONT_PATH):
     font_prop = fm.FontProperties(fname=FONT_PATH)
@@ -114,40 +99,53 @@ else:
 
 st.set_page_config(page_title="양주시 아카이브 GAME", layout="wide")
 
-# --------- 항상 상단에 타이틀 고정 ---------
-st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
-
-# --------- 세션 상태로 시작화면/본문 분기 ---------
+# --------- 세션 상태로 시작화면/본문 분기 (절대 본문 자동 진입X) ---------
 if "archive_started" not in st.session_state:
     st.session_state.archive_started = False
-
-# --------- RESET 버튼 클릭시 세션 리셋 & 즉시 정지 (오류 방지) ---------
-if "reset_clicked" in st.session_state and st.session_state.reset_clicked:
-    st.session_state.archive_started = False
+if "reset_clicked" not in st.session_state:
     st.session_state.reset_clicked = False
-    st.stop()  # 이 시점에 즉시 렌더링 중지 (에러 없이 돌아감)
 
-# --------- 아카이브 시작화면 ---------
-if not st.session_state.archive_started:
-    with st.container():
-        st.markdown(
-            """
-            <div class="arcade-frame">
-                <div class="pixel-stars">★&nbsp;◀&nbsp;WELCOME&nbsp;▶&nbsp;★</div>
-                <div class="subtitle">
-                    경기도 양주시의<br>역사와 미래 비전을<br>구경하세요!
-                </div>
-                <div class="blink">PRESS START</div>
-            </div>
-            """, unsafe_allow_html=True)
-        col1, col2, col3 = st.columns([2,3,2])
-        with col2:
-            if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=True):
-                st.session_state.archive_started = True
-                st.experimental_rerun()
-        st.stop()
+# --------- [시작 화면] ---------
+if not st.session_state.archive_started or st.session_state.reset_clicked:
+    # 시작 화면 디자인 요소 추가
+    st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
+    st.markdown("""
+        <div style='
+            text-align:center;
+            margin-top: 45px;
+            margin-bottom: 18px;
+        '>
+            <span style='
+                font-family: Press Start 2P, monospace;
+                font-size:15pt; color:#fff;
+                background:#232946cc;
+                padding:15px 28px;
+                border-radius:17px;
+                display:inline-block;
+                margin-bottom:15px;
+                box-shadow: 0 0 16px #00f2fe70;
+            '>
+                경기도 양주시의 역사와 미래 비전을 구경하세요!
+            </span>
+        </div>
+        <div style="text-align:center; margin-bottom:12px;">
+            <span style="display:inline-block; width:22px; height:22px; border-radius:50%; background:#00f2fe; margin:0 9px; box-shadow: 0 0 11px #00f2fe88;"></span>
+            <span style="display:inline-block; width:22px; height:22px; border-radius:50%; background:#ffee64; margin:0 9px; box-shadow: 0 0 11px #ffee6488;"></span>
+            <span style="display:inline-block; width:22px; height:22px; border-radius:50%; background:#ffadad; margin:0 9px; box-shadow: 0 0 11px #ffadad88;"></span>
+        </div>
+        """, unsafe_allow_html=True
+    )
+    st.markdown("<div style='height:18px'></div>", unsafe_allow_html=True)
+    # 가운데 정렬 버튼
+    start_col1, start_col2, start_col3 = st.columns([2,3,2])
+    with start_col2:
+        if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=True):
+            st.session_state.archive_started = True
+            st.session_state.reset_clicked = False
+            st.experimental_rerun()
+    st.stop()
 
-# --------- [본문] ---------
+# --------- [본문] (탭/아카이브) ---------
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
 
 with tabs[0]:
@@ -402,18 +400,4 @@ with tabs[3]:
         st.pyplot(fig, use_container_width=False)
         st.caption("양주시 인구 구조 변화를 5년 단위로 시각화. 데이터 출처: KOSIS 국가통계포털")
     except Exception as e:
-        st.error(f"출생자수·사망자수 그래프 로드 중 오류가 발생했습니다: {e}")
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-# --------- [모든 아카이브 탭 아래 '처음으로'] ---------
-st.markdown(
-    '<div style="display: flex; justify-content: center;">'
-    '<button class="reset-btn" onclick="window.location.reload();">🕹️ 처음으로</button>'
-    '</div>',
-    unsafe_allow_html=True,
-)
-if st.button("🕹️ 처음으로", key="reset_btn_last", help="시작화면으로 돌아가기", use_container_width=True):
-    # 버튼 클릭 시 세션 상태만 바꿔주고 바로 멈춘다
-    st.session_state.reset_clicked = True
-    st.experimental_rerun()
+        st.error(f"출생자수·사망자수 그래프 로드
