@@ -51,8 +51,9 @@ with tabs[0]:
     - 현재의 의정부, 동두천, 포천, 남양주 일대가 관할 지역<br>
     </div>
     """, unsafe_allow_html=True)
-
-    # 👉 관아지 이미지 추가
+    
+    # 공백 추가
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주 관야지.jpg", caption="양주 관아지(양주목 관아터)", width=500)
 
     st.markdown("""
@@ -65,9 +66,8 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
+    # 기존 회암사지 텍스트-이미지 간 공백(유지)
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
-
-    # 회암사지 이미지 세로 배치 (기존 코드 유지)
     st.image("회암사지.jpg", caption="회암사지 터", width=500)
     st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=500)
 
@@ -80,7 +80,8 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
-    # 👉 양주 장흥 순교성지 이미지 추가
+    # 공백 추가
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주 장흥 순교성지.jpg", caption="양주 장흥 순교성지", width=500)
 
     st.markdown("""
