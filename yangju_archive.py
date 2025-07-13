@@ -229,7 +229,7 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주 장흥 순교성지.jpg", caption="양주 장흥 순교성지 (출처: 네이버 블로그그)", width=700)
+    st.image("양주 장흥 순교성지.jpg", caption="양주 장흥 순교성지 (출처: 네이버 블로그)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>4. 농업과 장터</b><br>
