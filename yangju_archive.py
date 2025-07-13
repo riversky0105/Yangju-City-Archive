@@ -6,7 +6,7 @@ import matplotlib.font_manager as fm
 import re
 import numpy as np
 
-# 1. 게임기 스타일 CSS+픽셀폰트
+# ===== 1. 게임기 스타일 CSS+픽셀폰트 =====
 st.markdown("""
 <style>
 body, .stApp { background: #232946; }
@@ -32,19 +32,6 @@ body, .stApp { background: #232946; }
     padding: 18px 30px 22px 30px;
     margin-bottom: 20px;
 }
-.arrow-btn {
-    font-family: 'Press Start 2P', monospace;
-    background: #222a41;
-    color: #e0fcff;
-    font-size: 2.1rem !important;
-    border-radius: 18px;
-    border: 3px solid #00f2fe;
-    margin: 7px 20px 7px 20px;
-    padding: 9px 26px 9px 26px;
-    box-shadow: 0 0 11px #00f2fe99;
-    transition: background 0.13s;
-}
-.arrow-btn:hover { background: #181c2b; color:#fdadad; border-color:#fdadad; }
 .section-label {
     font-family: 'Press Start 2P', monospace;
     font-size: 1.2rem;
@@ -74,11 +61,24 @@ body, .stApp { background: #232946; }
     transition: background 0.17s;
 }
 .game-start-btn:hover { background: #232946; color: #fdadad; border: 3px solid #f44336; }
+.arrow-btn {
+    font-family: 'Press Start 2P', monospace;
+    background: #222a41;
+    color: #e0fcff;
+    font-size: 2.1rem !important;
+    border-radius: 18px;
+    border: 3px solid #00f2fe;
+    margin: 7px 20px 7px 20px;
+    padding: 9px 26px 9px 26px;
+    box-shadow: 0 0 11px #00f2fe99;
+    transition: background 0.13s;
+}
+.arrow-btn:hover { background: #181c2b; color:#fdadad; border-color:#fdadad; }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
 
-# 2. 한글 폰트(플롯용)
+# ===== 2. 한글 폰트(플롯용) =====
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 if os.path.exists(FONT_PATH):
     font_prop = fm.FontProperties(fname=FONT_PATH)
@@ -89,7 +89,7 @@ else:
 
 st.set_page_config(page_title="양주시 아카이브 GAME", layout="wide")
 
-# 3. 섹션 정보
+# ===== 3. 섹션/페이지 상태 =====
 sections = [
     "📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"
 ]
@@ -98,7 +98,7 @@ if "section_idx" not in st.session_state:
 if "started" not in st.session_state:
     st.session_state["started"] = False
 
-# 4. 메인 화면 or GAME
+# ===== 4. 메인(게임 시작화면) =====
 if not st.session_state["started"]:
     st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
     st.markdown(
@@ -116,7 +116,7 @@ if not st.session_state["started"]:
         st.experimental_rerun()
     st.stop()
 
-# 5. "게임패드" 스타일 네비게이션 바
+# ===== 5. 게임패드 네비게이션 =====
 st.markdown(f"<div class='section-label'>🕹️ {sections[st.session_state.section_idx]}</div>", unsafe_allow_html=True)
 col1, col2, col3 = st.columns([1,6,1])
 with col1:
@@ -131,7 +131,9 @@ st.markdown(
     "<div style='text-align:center;margin-bottom:18px;'><span style='background:#181c2b;border-radius:10px;padding:5px 14px 5px 10px;box-shadow:0 0 9px #00f2fe55;letter-spacing:1.5px;'><b style='color:#00f2fe;'>⬅️ ➡️</b> 버튼으로 이동!</span></div>",
     unsafe_allow_html=True
 )
-# 6. 각 섹션(탭)별 콘텐츠
+
+# ===== 6. 각 섹션(탭)별 콘텐츠 =====
+
 if st.session_state.section_idx == 0:
     st.markdown('<div class="pixel-box">', unsafe_allow_html=True)
     st.header("📜 양주시의 과거")
@@ -277,7 +279,7 @@ elif st.session_state.section_idx == 2:
     - 맞춤형 복지 설계: 고령자, 청년, 다문화 가정 대상
     </div>
     """, unsafe_allow_html=True)
-       st.image("양주시 청년센터.jpg", caption="양주시 청년센터(옥정동)", width=700)
+    st.image("양주시 청년센터.jpg", caption="양주시 청년센터(옥정동)", width=700)
     st.markdown('</div>', unsafe_allow_html=True)
 
 elif st.session_state.section_idx == 3:
@@ -287,7 +289,7 @@ elif st.session_state.section_idx == 3:
     <span style='color:#fff;'>양주시 인구 구조 변화를 월별/연도별 및 5년 단위 출생자수·사망자수와 함께 시각화합니다. 데이터 출처: KOSIS 국가통계포털</span>
     """, unsafe_allow_html=True)
 
-    # --------- 인구수 변화 그래프 ---------
+    # 인구수 변화 그래프
     POP_DATA_PATH = "양주시_연도별_인구수.csv"
     try:
         df_pop = pd.read_csv(POP_DATA_PATH, encoding="cp949", header=[0,1])
@@ -330,7 +332,7 @@ elif st.session_state.section_idx == 3:
 
     st.markdown("---")
 
-    # --------- 출생자수·사망자수 그래프 ---------
+    # 출생자수·사망자수 그래프
     BIRTH_DEATH_DATA_PATH = "양주시_연도별_출생자수_사망자수.csv"
     try:
         df = pd.read_csv(BIRTH_DEATH_DATA_PATH, encoding="cp949")
@@ -386,4 +388,3 @@ elif st.session_state.section_idx == 3:
         st.error(f"출생자수·사망자수 그래프 로드 중 오류가 발생했습니다: {e}")
 
     st.markdown('</div>', unsafe_allow_html=True)
-
