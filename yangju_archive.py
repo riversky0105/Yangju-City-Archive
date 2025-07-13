@@ -486,20 +486,23 @@ with tabs[4]:
     </div>
     """, unsafe_allow_html=True)
 
-    # 지도 생성 (일반 지도 - OpenStreetMap)
+    # folium 지도 생성
+    import json
+    import folium
+    from streamlit_folium import st_folium
+
     m = folium.Map(location=[37.7855, 127.0454], zoom_start=11, tiles="OpenStreetMap")
 
     try:
-        # 최신 경계 데이터 파일 적용
-        with open("yangju_only_boundary (1).geojson", "r", encoding="utf-8") as f:
+        with open("yangju_only_boundary (2).geojson", "r", encoding="utf-8") as f:
             yangju_geo = json.load(f)
 
         folium.GeoJson(
             yangju_geo,
             name="양주시 경계",
             style_function=lambda feature: {
-                "fillColor": "#00000000",  # 내부는 투명
-                "color": "#000000",        # 검정색 테두리
+                "fillColor": "#00000000",      # 투명 배경
+                "color": "#000000",            # 경계선 색상: 검정
                 "weight": 3,
                 "dashArray": "5, 5"
             },
@@ -507,7 +510,8 @@ with tabs[4]:
         ).add_to(m)
 
         folium.LayerControl().add_to(m)
-        st_folium(m, width=750, height=520)
+        st_folium(m, width=700, height=500)
+
     except Exception as e:
         st.error(f"양주시 경계 데이터를 불러오는 데 실패했습니다: {e}")
 
