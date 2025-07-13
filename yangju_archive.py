@@ -495,19 +495,31 @@ with tabs[4]:
         label_visibility="collapsed"
     )
 
-    tile = "OpenStreetMap" if "일반" in map_type else "Stamen Terrain"
-    m = folium.Map(location=[37.7855, 127.0454], zoom_start=11, tiles=tile)
+    # 지도 스타일
+    if "위성" in map_type:
+        tile_url = "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png"  # 위성 스타일은 제한적이므로 대체 사용
+        attr = "© OpenTopoMap contributors"
+    else:
+        tile_url = "OpenStreetMap"
+        attr = None
+
+    m = folium.Map(
+        location=[37.7855, 127.0454],
+        zoom_start=11,
+        tiles=tile_url if isinstance(tile_url, str) and tile_url.startswith("http") else tile_url,
+        attr=attr if tile_url.startswith("http") else None
+    )
 
     try:
-        with open("yangju_boundary.geojson", "r", encoding="utf-8") as f:
+        with open("yangju_only_boundary.geojson", "r", encoding="utf-8") as f:
             yangju_geo = json.load(f)
 
         folium.GeoJson(
             yangju_geo,
             name="양주시 경계",
             style_function=lambda feature: {
-                "fillColor": "#00000000",
-                "color": "#00f2fe",
+                "fillColor": "#00000000",   # 투명
+                "color": "#000000",         # 검정색 선
                 "weight": 3,
                 "dashArray": "5, 5"
             },
@@ -515,7 +527,7 @@ with tabs[4]:
         ).add_to(m)
 
         folium.LayerControl().add_to(m)
-        st_folium(m, width=700, height=500)
+        st_folium(m, width=750, height=520)
     except Exception as e:
         st.error(f"양주시 경계 데이터를 불러오는 데 실패했습니다: {e}")
 
