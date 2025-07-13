@@ -495,62 +495,48 @@ with tabs[3]:
 with tabs[4]:
     st.session_state.current_tab = 4
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
-    st.header("🗺️ 양주시 지도")
+    st.header("📍 양주시 지도")
     st.markdown("""
-    <span style='color:#fff; font-size:14pt;'>경기도 양주시의 위치와 지형을 위성 지도와 일반 지도로 확인할 수 있습니다.</span>
+    <div style='font-size:14pt; color:#fff;'>
+    경기도 양주시의 위치와 지형을 위성 지도와 일반 지도로 확인할 수 있습니다.<br><br>
+    지도 유형을 선택하세요.
+    </div>
     """, unsafe_allow_html=True)
-    img_gap()
+
     map_type = st.radio(
-        "지도의 유형을 선택하세요.",
+        label="",
         options=["일반 지도 (Map)", "위성 지도 (Satellite)"],
+        index=0,
         horizontal=True,
+        label_visibility="collapsed"
     )
 
-    YANGJU_CENTER = [37.7855, 127.0454]
+    # 지도 생성
+    tile = "OpenStreetMap" if "일반" in map_type else "Stamen Terrain"
+    m = folium.Map(location=[37.7855, 127.0454], zoom_start=11, tiles=tile)
 
-    if map_type == "일반 지도 (Map)":
-        st.pydeck_chart(
-            pdk.Deck(
-                map_style="mapbox://styles/mapbox/streets-v11",
-                initial_view_state=pdk.ViewState(
-                    latitude=YANGJU_CENTER[0],
-                    longitude=YANGJU_CENTER[1],
-                    zoom=11,
-                    pitch=0,
-                ),
-                layers=[
-                    pdk.Layer(
-                        "ScatterplotLayer",
-                        data=[{"lat": YANGJU_CENTER[0], "lon": YANGJU_CENTER[1]}],
-                        get_position='[lon, lat]',
-                        get_color='[180, 0, 200, 140]',
-                        get_radius=1200,
-                    ),
-                ],
-            ),
-            use_container_width=True,
-        )
-    else:
-        st.pydeck_chart(
-            pdk.Deck(
-                map_style="mapbox://styles/mapbox/satellite-v9",
-                initial_view_state=pdk.ViewState(
-                    latitude=YANGJU_CENTER[0],
-                    longitude=YANGJU_CENTER[1],
-                    zoom=11,
-                    pitch=0,
-                ),
-                layers=[
-                    pdk.Layer(
-                        "ScatterplotLayer",
-                        data=[{"lat": YANGJU_CENTER[0], "lon": YANGJU_CENTER[1]}],
-                        get_position='[lon, lat]',
-                        get_color='[40, 150, 255, 140]',
-                        get_radius=1200,
-                    ),
-                ],
-            ),
-            use_container_width=True,
-        )
+    try:
+        with open("yangju_boundary.geojson", "r", encoding="utf-8") as f:
+            yangju_geo = json.load(f)
+
+        folium.GeoJson(
+            yangju_geo,
+            name="양주시 경계",
+            style_function=lambda feature: {
+                "fillColor": "#00000000",
+                "color": "#00f2fe",
+                "weight": 3,
+                "dashArray": "5, 5"
+            },
+            tooltip="양주시 경계"
+        ).add_to(m)
+
+        folium.LayerControl().add_to(m)
+        st_folium(m, width=700, height=500)
+    except Exception as e:
+        st.error(f"양주시 경계 데이터를 불러오는 데 실패했습니다: {e}")
+
     show_back_button()
+    st.markdown('</div>', unsafe_allow_html=True)
+
     st.markdown('</div>', unsafe_allow_html=True)
