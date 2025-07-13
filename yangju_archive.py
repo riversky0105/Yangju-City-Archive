@@ -87,12 +87,28 @@ with tabs[0]:
     - 1·4 후퇴 시 주요 격전지<br>
     - 1951년 대규모 민간인 피해<br>
     - 전쟁 후 장기 복구 과정<br>
-    <br>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # 1.4후퇴 이미지 추가
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.image("양주 1.4후퇴.jpg", caption="1951년 1.4후퇴 당시 경기북부(양주 일대) 피난민 행렬", width=700)
+
+    st.markdown("""
+    <div style='font-size:14pt;'>
     <b>5. 농업과 장터</b><br>
     - 장흥, 은현, 남면은 조선시대 곡창지대<br>
     - 읍내 장터는 한양 상인과의 활발한 교역지
     </div>
     """, unsafe_allow_html=True)
+    
+    # 양주 농촌 이미지 추가
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.image("양주 농촌.jpg", caption="1950~1980년대 논 모내기 풍경(경기북부, 양주 일대)", width=700)
+    
+    # 양주 장터 이미지 추가
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.image("양주 장터.jpg", caption="1970~1980년대 시골 장터(경기북부, 양주 일대)", width=700)
 
 with tabs[1]:
     st.header("🏙️ 양주시의 현재")
