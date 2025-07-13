@@ -6,7 +6,7 @@ import matplotlib.font_manager as fm
 import re
 import numpy as np
 
-# --------- 0. 게임기 스타일 CSS+폰트 ---------
+# --------- 스타일/폰트 ---------
 st.markdown("""
 <style>
 body, .stApp { background: #232946; }
@@ -31,9 +31,9 @@ body, .stApp { background: #232946; }
     font-family: 'Press Start 2P', 'NanumGothicCoding', monospace;
     border: 3px solid #232946;
     box-shadow: 0 0 7px #ffadad;
-    margin: 12px 0 30px 0;
-    font-size: 1.3rem;
-    padding: 18px 42px;
+    margin: 30px 0 36px 0;
+    font-size: 1.4rem;
+    padding: 18px 50px;
     transition: background 0.2s;
 }
 .game-btn:hover {
@@ -68,7 +68,7 @@ body, .stApp { background: #232946; }
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
 
-# --------- 1. 한글 폰트(플롯용) ----------
+# --------- 폰트(플롯용) ----------
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 if os.path.exists(FONT_PATH):
     font_prop = fm.FontProperties(fname=FONT_PATH)
@@ -77,20 +77,26 @@ if os.path.exists(FONT_PATH):
 else:
     font_prop = None
 
-# --------- 2. 페이지 환경 ----------
 st.set_page_config(page_title="양주시 아카이브 GAME", layout="wide")
 
-# --------- 3. 타이틀+스타트 버튼 ----------
-st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
-st.markdown(
-    "<div style='text-align:center;'><span style='font-family: Press Start 2P, monospace; font-size:15pt; color:#fff; background:#232946cc; padding:7px 18px; border-radius:12px;'>경기도 양주시의 역사와 미래 비전을 구경하세요!</span></div>",
-    unsafe_allow_html=True
-)
-# ★★★★★ GAME START 버튼 (여기 추가) ★★★★★
-if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!"):
-    st.toast("아카이브 접속! 탐험을 시작하세요 🚀", icon="🎮")
+# --------- 세션 상태로 시작화면/본문 분기 ---------
+if "archive_started" not in st.session_state:
+    st.session_state.archive_started = False
 
-# --------- 4. 탭+내용 (픽셀 테두리) ----------
+if not st.session_state.archive_started:
+    # ---- [시작 화면] ----
+    st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
+    st.markdown(
+        "<div style='text-align:center;'><span style='font-family: Press Start 2P, monospace; font-size:15pt; color:#fff; background:#232946cc; padding:9px 22px; border-radius:14px;'>경기도 양주시의 역사와 미래 비전을 구경하세요!</span></div>",
+        unsafe_allow_html=True
+    )
+    st.markdown("<div style='height:35px'></div>", unsafe_allow_html=True)
+    if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=False):
+        st.session_state.archive_started = True
+        st.experimental_rerun()
+    st.stop()
+
+# --------- [본문] ---------
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
 
 with tabs[0]:
@@ -247,7 +253,6 @@ with tabs[3]:
     st.markdown("""
     <span style='color:#fff;'>양주시 인구 구조 변화를 월별/연도별 및 5년 단위 출생자수·사망자수와 함께 시각화합니다. 데이터 출처: KOSIS 국가통계포털</span>
     """, unsafe_allow_html=True)
-
     # --------- 인구수 변화 그래프 ---------
     POP_DATA_PATH = "양주시_연도별_인구수.csv"
     try:
@@ -268,12 +273,13 @@ with tabs[3]:
         pop_5yr_avg = [year_avg[y] for y in years_5yr]
         fig, ax = plt.subplots(figsize=(6, 3.5))
         ax.plot(years_5yr, pop_5yr_avg, marker='o', color='tab:green', label='인구수 (연평균)')
-        # 제목/라벨/폰트(조건별)
+        # ★★★ x축: 인덱스 문제 완전 해결 (set_xticks/set_xticklabels) ★★★
+        ax.set_xticks(years_5yr)
         if font_prop:
             ax.set_title("양주시 연평균 인구수 변화", fontproperties=font_prop, fontsize=12)
             ax.set_xlabel("연도", fontproperties=font_prop, fontsize=10)
             ax.set_ylabel("명", fontproperties=font_prop, fontsize=10)
-            ax.set_xticklabels(years_5yr, fontproperties=font_prop, fontsize=9)
+            ax.set_xticklabels([str(x) for x in years_5yr], fontproperties=font_prop, fontsize=9)
             plt.yticks(fontproperties=font_prop, fontsize=9)
             plt.xticks(fontproperties=font_prop, fontsize=9)
             ax.legend(prop=font_prop, fontsize=10)
@@ -281,7 +287,7 @@ with tabs[3]:
             ax.set_title("양주시 연평균 인구수 변화", fontsize=12)
             ax.set_xlabel("연도", fontsize=10)
             ax.set_ylabel("명", fontsize=10)
-            ax.set_xticklabels(years_5yr, fontsize=9)
+            ax.set_xticklabels([str(x) for x in years_5yr], fontsize=9)
             plt.yticks(fontsize=9)
             plt.xticks(fontsize=9)
             ax.legend(fontsize=10)
@@ -325,11 +331,12 @@ with tabs[3]:
         fig, ax = plt.subplots(figsize=(6, 3.5))
         ax.plot(common_years, births_aligned, marker='o', color='tab:blue', label='출생자수')
         ax.plot(common_years, deaths_aligned, marker='o', color='tab:orange', label='사망자수')
+        ax.set_xticks(common_years)
         if font_prop:
             ax.set_title("양주시 출생자수·사망자수 변화", fontproperties=font_prop, fontsize=12)
             ax.set_xlabel("연도", fontproperties=font_prop, fontsize=10)
             ax.set_ylabel("명", fontproperties=font_prop, fontsize=10)
-            ax.set_xticklabels(common_years, fontproperties=font_prop, fontsize=9)
+            ax.set_xticklabels([str(x) for x in common_years], fontproperties=font_prop, fontsize=9)
             plt.yticks(fontproperties=font_prop, fontsize=9)
             plt.xticks(fontproperties=font_prop, fontsize=9)
             ax.legend(prop=font_prop, fontsize=10)
@@ -337,7 +344,7 @@ with tabs[3]:
             ax.set_title("양주시 출생자수·사망자수 변화", fontsize=12)
             ax.set_xlabel("연도", fontsize=10)
             ax.set_ylabel("명", fontsize=10)
-            ax.set_xticklabels(common_years, fontsize=9)
+            ax.set_xticklabels([str(x) for x in common_years], fontsize=9)
             plt.yticks(fontsize=9)
             plt.xticks(fontsize=9)
             ax.legend(fontsize=10)
