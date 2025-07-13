@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import re
 import numpy as np
+import pydeck as pdk  # 지도 시각화를 위한 pydeck 추가
 
 # --------- 스타일/폰트 ---------
 st.markdown("""
@@ -168,7 +169,7 @@ if not st.session_state.archive_started:
         st.stop()
 
 # --------- [본문] ---------
-tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
+tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화", "🗺️ 지도"])
 
 def get_docum_msg():
     tab = st.session_state.get('current_tab', 0)
@@ -180,6 +181,8 @@ def get_docum_msg():
         return "🗂️ 아카이브 미래 도감 달성!"
     elif tab == 3:
         return "🗂️ 아카이브 인구 도감 달성!"
+    elif tab == 4:
+        return "🗂️ 아카이브 지도 도감 달성!"
     return "🗂️ 아카이브 도감 달성!"
 
 def show_back_button():
@@ -479,5 +482,68 @@ with tabs[3]:
     except Exception as e:
         st.error(f"출생자수·사망자수 그래프 로드 중 오류가 발생했습니다: {e}")
 
+    show_back_button()
+    st.markdown('</div>', unsafe_allow_html=True)
+
+with tabs[4]:
+    st.session_state.current_tab = 4
+    st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
+    st.header("🗺️ 양주시 지도")
+    st.markdown("""
+    <span style='color:#fff; font-size:14pt;'>경기도 양주시의 위치와 지형을 위성 지도와 일반 지도로 확인할 수 있습니다.</span>
+    """, unsafe_allow_html=True)
+    img_gap()
+    map_type = st.radio(
+        "지도의 유형을 선택하세요.",
+        options=["일반 지도 (Map)", "위성 지도 (Satellite)"],
+        horizontal=True,
+    )
+
+    # 양주시 중심 좌표 (옥정신도시 기준)
+    YANGJU_CENTER = [37.7855, 127.0454]
+
+    # pydeck 지도
+    if map_type == "일반 지도 (Map)":
+        st.pydeck_chart(
+            pdk.Deck(
+                map_style="mapbox://styles/mapbox/streets-v11",
+                initial_view_state=pdk.ViewState(
+                    latitude=YANGJU_CENTER[0],
+                    longitude=YANGJU_CENTER[1],
+                    zoom=11,
+                    pitch=0,
+                ),
+                layers=[
+                    pdk.Layer(
+                        "ScatterplotLayer",
+                        data=[{"lat": YANGJU_CENTER[0], "lon": YANGJU_CENTER[1]}],
+                        get_position='[lon, lat]',
+                        get_color='[180, 0, 200, 140]',
+                        get_radius=1200,
+                    ),
+                ],
+            )
+        )
+    else:  # 위성지도
+        st.pydeck_chart(
+            pdk.Deck(
+                map_style="mapbox://styles/mapbox/satellite-v9",
+                initial_view_state=pdk.ViewState(
+                    latitude=YANGJU_CENTER[0],
+                    longitude=YANGJU_CENTER[1],
+                    zoom=11,
+                    pitch=0,
+                ),
+                layers=[
+                    pdk.Layer(
+                        "ScatterplotLayer",
+                        data=[{"lat": YANGJU_CENTER[0], "lon": YANGJU_CENTER[1]}],
+                        get_position='[lon, lat]',
+                        get_color='[40, 150, 255, 140]',
+                        get_radius=1200,
+                    ),
+                ],
+            )
+        )
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
