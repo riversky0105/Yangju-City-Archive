@@ -23,7 +23,6 @@ body, .stApp { background: #232946; }
     background: #232946ee;
     border: 4px solid #393e46;
     box-shadow: 0 0 15px #00f2fe80;
-    z-index: 2;
 }
 .arcade-frame {
     display: flex;
@@ -34,10 +33,10 @@ body, .stApp { background: #232946; }
     border: 6px solid #00f2fe;
     border-radius: 32px;
     box-shadow: 0 0 40px #00f2fe44, 0 0 2px #232946;
-    padding: 60px 48px 42px 48px;
-    margin: 90px auto 0 auto;
-    max-width: 560px;
-    min-width: 370px;
+    padding: 60px 48px 36px 48px;
+    margin: 70px auto 40px auto;
+    max-width: 540px;
+    min-width: 330px;
     z-index: 2;
 }
 .arcade-frame .subtitle {
@@ -45,7 +44,7 @@ body, .stApp { background: #232946; }
     color: #ffd6e0;
     font-size: 15pt;
     background: #232946f2;
-    padding: 13px 32px;
+    padding: 15px 24px 13px 24px;
     border-radius: 18px;
     margin-bottom: 36px;
     margin-top: 12px;
@@ -54,51 +53,32 @@ body, .stApp { background: #232946; }
     letter-spacing: 1px;
     border: 3px solid #393e46;
 }
-.arcade-btn {
-    background: linear-gradient(90deg, #f44336 70%, #ffadad 100%);
-    color: #fff;
-    border-radius: 28px;
-    font-family: 'Press Start 2P', monospace;
-    border: 3px solid #232946;
-    box-shadow: 0 0 16px #ffadad80;
-    margin: 28px 0 20px 0;
-    font-size: 1.5rem;
-    padding: 24px 70px 20px 70px;
-    letter-spacing: 1px;
-    transition: background 0.16s, color 0.16s;
-    cursor: pointer;
-}
-.arcade-btn:hover {
-    background: #232946;
-    color: #ffadad;
-    border: 3px solid #f44336;
-}
 .blink {
-    animation: blink 1.3s steps(1) infinite;
+    animation: blink 1.15s steps(1) infinite;
     font-family: 'Press Start 2P', monospace;
     color: #ffd6e0;
-    font-size: 1.18rem;
-    margin-bottom: 6px;
-    margin-top: 14px;
+    font-size: 1.10rem;
+    margin-bottom: 8px;
+    margin-top: 18px;
     text-shadow: 0 0 8px #00f2fe;
 }
 @keyframes blink {
     0%, 55% { opacity: 1; }
-    56%, 100% { opacity: 0.2; }
+    56%, 100% { opacity: 0.22; }
 }
 .pixel-stars {
     text-align: center;
     font-size: 1.3rem;
     color: #ffd6e0;
-    letter-spacing: 10px;
+    letter-spacing: 9px;
     margin-top: 0px;
-    margin-bottom: 12px;
+    margin-bottom: 13px;
     text-shadow: 0 0 8px #00f2fe70;
     font-family: 'Press Start 2P', monospace;
 }
-@media (max-width: 500px) {
-    .arcade-frame { padding: 18px 6vw 18px 6vw; min-width: 0; }
-    .main-title { font-size: 1.3rem; }
+@media (max-width: 600px) {
+    .arcade-frame { padding: 13vw 3vw 6vw 3vw; min-width: 0; }
+    .main-title { font-size: 1.6rem; }
 }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -124,21 +104,23 @@ if "archive_started" not in st.session_state:
 
 if not st.session_state.archive_started:
     # ---- [스타트 화면] ----
-    st.markdown("""
-    <div class="arcade-frame">
-        <div class="pixel-stars">★&nbsp;◀&nbsp;WELCOME&nbsp;▶&nbsp;★</div>
-        <div class="subtitle">
-            경기도 양주시의<br>역사와 미래 비전을<br>구경하세요!
-        </div>
-        <div class="blink">PRESS START</div>
-    """, unsafe_allow_html=True)
-    # 버튼은 Streamlit 컴포넌트
-    col1, col2, col3 = st.columns([2,3,2])
-    with col2:
-        if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=True):
-            st.session_state.archive_started = True
-    st.markdown("</div>", unsafe_allow_html=True)
-    st.stop()
+    with st.container():
+        st.markdown(
+            """
+            <div class="arcade-frame">
+                <div class="pixel-stars">★&nbsp;◀&nbsp;WELCOME&nbsp;▶&nbsp;★</div>
+                <div class="subtitle">
+                    경기도 양주시의<br>역사와 미래 비전을<br>구경하세요!
+                </div>
+                <div class="blink">PRESS START</div>
+            </div>
+            """, unsafe_allow_html=True)
+        # 버튼은 Streamlit에서 중앙에 나오도록 배치
+        col1, col2, col3 = st.columns([2,3,2])
+        with col2:
+            if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=True):
+                st.session_state.archive_started = True
+        st.stop()
 
 # --------- [본문] ---------
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
