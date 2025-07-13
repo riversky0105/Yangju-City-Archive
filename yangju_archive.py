@@ -84,13 +84,6 @@ body, .stApp { background: #232946; }
     background: rgba(35,41,70,0.6);
     box-shadow: 0 0 18px #00f2fe30;
 }
-.pixel-avatar {
-    margin: 10px auto 18px auto;
-    display: block;
-    width: 64px; height: 64px;
-    image-rendering: pixelated;
-    filter: drop-shadow(0 0 7px #00f2fe66);
-}
 .game-item {
     display: inline-block;
     background: #a6e3e9;
@@ -145,7 +138,7 @@ if "archive_started" not in st.session_state:
 
 def reset_to_start():
     st.session_state.archive_started = False
-    st.experimental_rerun()
+    st.session_state.current_tab = 0
 
 # --------- [스타트 화면] ---------
 if not st.session_state.archive_started:
@@ -153,7 +146,6 @@ if not st.session_state.archive_started:
         st.markdown(
             """
             <div class="arcade-frame">
-                <img class="pixel-avatar" src="https://static.thenounproject.com/png/1019366-200.png"/>
                 <div class="pixel-stars">★&nbsp;◀&nbsp;WELCOME&nbsp;▶&nbsp;★</div>
                 <div class="subtitle">
                     경기도 양주시의<br>역사와 미래 비전을<br>구경하세요!
@@ -171,31 +163,35 @@ if not st.session_state.archive_started:
 # --------- [본문] ---------
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
 
-# 각 탭에 공통적으로 넣는 게임 UI 요소
-def game_ui_elements():
-    st.markdown(
-        """
-        <div style="text-align:center;">
-            <span class="game-item">LEVEL UP!</span>
-            <span class="game-item">+50 XP</span>
-            <span class="game-item">🏆 아카이브 도감 달성!</span>
-        </div>
-        """, unsafe_allow_html=True
-    )
-
 # 각 탭 하단에 "처음으로" 버튼
 def show_back_button():
     col1, col2, col3 = st.columns([2,3,2])
     with col2:
         if st.button("⏪ 처음으로", key=f"backtohome_{st.session_state.get('current_tab',0)}", help="아카이브 시작화면으로", use_container_width=True):
             reset_to_start()
+            st.experimental_rerun()
+
+# 각 탭 하단에 게임 UI 요소
+def game_ui_elements():
+    st.markdown(
+        """
+        <div style="text-align:center; margin-top:26px;">
+            <span class="game-item">LEVEL UP!</span>
+            <span class="game-item">+50 XP</span>
+            <span class="game-item">🗂️ 아카이브 도감 달성!</span>
+        </div>
+        """, unsafe_allow_html=True
+    )
+
+# 픽셀 이미지 (로컬 파일 사용 예시)
+AVATAR_PATH = "/mnt/data/13f83545-fbd7-4afb-9296-66b8ef889c67.png"
 
 with tabs[0]:
     st.session_state.current_tab = 0
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
-    st.markdown('<img class="pixel-avatar" src="https://cdn.pixabay.com/photo/2014/04/03/11/50/alien-314307_1280.png"/>', unsafe_allow_html=True)
+    # 픽셀 이미지(업로드 파일 사용)
+    st.image(AVATAR_PATH, width=72, caption="Retro Pixel Avatar")
     st.header("📜 양주시의 과거")
-    game_ui_elements()
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>1. 고려~조선 시대, 북방의 행정·군사 중심지</b><br>
@@ -244,14 +240,14 @@ with tabs[0]:
     """, unsafe_allow_html=True)
     st.image("양주 1.4후퇴.jpg", caption="1951년 1.4후퇴 당시 경기북부(양주 일대) 피난민 행렬", width=700)
     show_back_button()
+    game_ui_elements()
     st.markdown('</div>', unsafe_allow_html=True)
 
 with tabs[1]:
     st.session_state.current_tab = 1
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
-    st.markdown('<img class="pixel-avatar" src="https://cdn.pixabay.com/photo/2014/04/03/11/52/alien-314324_1280.png"/>', unsafe_allow_html=True)
+    st.image(AVATAR_PATH, width=72, caption="Retro Pixel Avatar")
     st.header("🏙️ 양주시의 현재")
-    game_ui_elements()
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>1. 인구와 행정</b><br>
@@ -294,14 +290,14 @@ with tabs[1]:
     """, unsafe_allow_html=True)
     st.image("양주 옥정 호수공원.jpg", caption="양주 옥정 호수공원", width=700)
     show_back_button()
+    game_ui_elements()
     st.markdown('</div>', unsafe_allow_html=True)
 
 with tabs[2]:
     st.session_state.current_tab = 2
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
-    st.markdown('<img class="pixel-avatar" src="https://cdn.pixabay.com/photo/2016/03/31/20/11/game-1292493_1280.png"/>', unsafe_allow_html=True)
+    st.image(AVATAR_PATH, width=72, caption="Retro Pixel Avatar")
     st.header("🌐 양주시의 미래")
-    game_ui_elements()
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>1. 경기북부 중심도시 성장</b><br>
@@ -348,14 +344,14 @@ with tabs[2]:
     """, unsafe_allow_html=True)
     st.image("양주시 청년센터.jpg", caption="양주시 청년센터(옥정동)", width=700)
     show_back_button()
+    game_ui_elements()
     st.markdown('</div>', unsafe_allow_html=True)
 
 with tabs[3]:
     st.session_state.current_tab = 3
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
-    st.markdown('<img class="pixel-avatar" src="https://cdn.pixabay.com/photo/2016/03/31/20/11/game-1292497_1280.png"/>', unsafe_allow_html=True)
+    st.image(AVATAR_PATH, width=72, caption="Retro Pixel Avatar")
     st.header("📊 양주시 인구 변화")
-    game_ui_elements()
     st.markdown("""
     <span style='color:#fff;'>양주시 인구 구조 변화를 월별/연도별 및 5년 단위 출생자수·사망자수와 함께 시각화합니다. 데이터 출처: KOSIS 국가통계포털</span>
     """, unsafe_allow_html=True)
@@ -460,4 +456,5 @@ with tabs[3]:
         st.error(f"출생자수·사망자수 그래프 로드 중 오류가 발생했습니다: {e}")
 
     show_back_button()
+    game_ui_elements()
     st.markdown('</div>', unsafe_allow_html=True)
