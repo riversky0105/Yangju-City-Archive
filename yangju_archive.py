@@ -6,23 +6,76 @@ import matplotlib.font_manager as fm
 import re
 import numpy as np
 
-# --------- 0. 게임기 스타일 CSS+폰트 ---------
+# --------- 0. 아케이드 프레임 CSS + 폰트 ---------
 st.markdown("""
 <style>
-body, .stApp { background: #232946; }
-.main-title {
-    font-family: 'Press Start 2P', 'NanumGothicCoding', monospace;
-    color: #a6e3e9;
-    font-size: 2.8rem;
-    text-shadow: 0 0 10px #00f2fe, 0 0 15px #232946;
-    letter-spacing: 2px;
-    padding: 20px;
+body, .stApp { background: #17181c; }
+.arcade-cabinet {
+    width: 900px;
+    margin: 32px auto 16px auto;
+    border-radius: 42px 42px 60px 60px;
+    background: linear-gradient(180deg,#292d36 80%,#20232a 100%);
+    box-shadow: 0 0 60px #00f2fe60, 0 8px 32px #222;
+    padding: 0 0 48px 0;
+    border: 7px solid #393e46;
+    position: relative;
+    overflow: visible;
+}
+.arcade-top {
+    width: 100%;
+    height: 82px;
+    background: linear-gradient(90deg,#00f2fecc 20%,#e6e6fa 60%,#00f2fecc 100%);
+    border-radius: 35px 35px 12px 12px;
     text-align: center;
-    border-radius: 20px;
-    margin-bottom: 10px;
-    background: #232946ee;
-    border: 4px solid #393e46;
-    box-shadow: 0 0 15px #00f2fe80;
+    padding: 20px 0 12px 0;
+    font-family: 'Press Start 2P', 'NanumGothicCoding', monospace;
+    font-size: 2.2rem;
+    letter-spacing: 4px;
+    color: #222;
+    text-shadow: 0 0 16px #00f2fecc, 0 0 8px #fff;
+    border-bottom: 4px solid #232946;
+    margin-bottom: -12px;
+}
+.arcade-screen {
+    margin: 0 auto;
+    width: 830px;
+    min-height: 680px;
+    border-radius: 26px;
+    background: linear-gradient(160deg,#171a22 85%,#272a36 100%);
+    box-shadow: 0 0 40px #00f2fe55, 0 0 32px #232946cc;
+    border: 7px solid #0099b4;
+    padding: 32px 38px 36px 38px;
+    position: relative;
+    z-index: 2;
+}
+.arcade-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 36px;
+    margin-top: 30px;
+    margin-bottom: -25px;
+}
+.arcade-btn {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #ff5f57 70%, #b01512 100%);
+    box-shadow: 0 0 16px #ff6f91cc, 0 3px 7px #333;
+    border: 4px solid #800910;
+    display: inline-block;
+}
+.arcade-btn.blue {
+    background: radial-gradient(circle at 30% 30%, #5fcaff 70%, #125e80 100%);
+    box-shadow: 0 0 16px #6fcfffcc, 0 3px 7px #333;
+    border: 4px solid #094c80;
+}
+.arcade-btn.yellow {
+    background: radial-gradient(circle at 30% 30%, #ffe95f 70%, #948012 100%);
+    box-shadow: 0 0 16px #fffa6fcc, 0 3px 7px #333;
+    border: 4px solid #807109;
+}
+.main-title {
+    display: none; /* arcade-top에서 이미 대체 */
 }
 .game-btn {
     background: #f44336;
@@ -68,7 +121,7 @@ body, .stApp { background: #232946; }
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
 
-# --------- 1. 한글 폰트(플롯용) ----------
+# --------- 1. 한글 폰트(그래프용) ----------
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 if os.path.exists(FONT_PATH):
     font_prop = fm.FontProperties(fname=FONT_PATH)
@@ -80,16 +133,20 @@ else:
 # --------- 2. 페이지 환경 ----------
 st.set_page_config(page_title="양주시 아카이브 GAME", layout="wide")
 
-# --------- 3. 타이틀+스타트 버튼 ----------
-st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
+# --------- 3. 아케이드 프레임 시작 ---------
+st.markdown('<div class="arcade-cabinet">', unsafe_allow_html=True)
+st.markdown('<div class="arcade-top">양주시 아카이브</div>', unsafe_allow_html=True)
+st.markdown('<div class="arcade-screen">', unsafe_allow_html=True)
+
+# --------- 4. GAME START 버튼 + 안내문 ---------
 st.markdown(
-    "<div style='text-align:center;'><span style='font-family: Press Start 2P, monospace; font-size:15pt; color:#fff; background:#232946cc; padding:7px 18px; border-radius:12px;'>경기도 양주시의 역사와 미래 비전을 구경하세요!</span></div>",
+    "<div style='text-align:center; margin-bottom:16px;'><span style='font-family: Press Start 2P, monospace; font-size:16pt; color:#fff; background:#232946dd; padding:8px 24px; border-radius:16px;'>경기도 양주시의 역사와 미래 비전을 구경하세요!</span></div>",
     unsafe_allow_html=True
 )
 if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!"):
     st.toast("아카이브 접속! 탐험을 시작하세요 🚀", icon="🎮")
 
-# --------- 4. 탭+내용 (픽셀 테두리) ----------
+# --------- 5. 탭/콘텐츠 영역 ---------
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
 
 with tabs[0]:
@@ -363,3 +420,15 @@ with tabs[3]:
         st.error(f"출생자수·사망자수 그래프 로드 중 오류가 발생했습니다: {e}")
 
     st.markdown('</div>', unsafe_allow_html=True)
+
+# --------- 6. 아케이드 프레임 하단 버튼 장식 ---------
+st.markdown('</div>', unsafe_allow_html=True)  # arcade-screen 끝
+st.markdown("""
+<div class="arcade-buttons">
+    <div class="arcade-btn"></div>
+    <div class="arcade-btn blue"></div>
+    <div class="arcade-btn yellow"></div>
+    <div class="arcade-btn"></div>
+</div>
+""", unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)  # arcade-cabinet 끝
