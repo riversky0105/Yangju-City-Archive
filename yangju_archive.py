@@ -132,7 +132,7 @@ with tabs[1]:
     </div>
     """, unsafe_allow_html=True)
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
-    st.image("양주 산업단지.jpg", caption="양주 은남일반산업단지(조감도)", width=700)  # ← 여기만 변경
+    st.image("양주 산업단지.jpg", caption="양주 은남일반산업단지(조감도)", width=700)
 
     st.markdown("""
     <div style='font-size:14pt;'>
@@ -163,28 +163,54 @@ with tabs[2]:
     - 수도권 동북부 거점도시로 발전<br>
     - 주거 중심에서 산업·문화·교육 복합도시로 전환<br>
     - 광역교통망 중심축으로 기대<br>
-    <br>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.image("양주 GTX 노선도.jpg", caption="양주를 지나는 GTX-C(예정) 노선", width=700)
+
+    st.markdown("""
+    <div style='font-size:14pt;'>
     <b>2. 첨단산업과 창업도시</b><br>
     - 테크노밸리, 산업단지 중심 개발<br>
     - 청년 창업 및 스타트업 인큐베이팅<br>
     - 4차 산업 기반의 경제 체질 개선<br>
-    <br>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.image("양주 테크노벨리.png", caption="양주 테크노밸리(조감도)", width=700)
+
+    st.markdown("""
+    <div style='font-size:14pt;'>
     <b>3. 문화예술 중심도시</b><br>
     - 장흥문화예술촌 레지던시 확대<br>
     - 청년 예술가 정착 유도<br>
     - 회암사지 등 역사와 콘텐츠 결합한 스토리텔링<br>
-    <br>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.image("양주 문화 예술.jpg", caption="양주 장흥문화예술촌(실내/전시)", width=700)
+
+    st.markdown("""
+    <div style='font-size:14pt;'>
     <b>4. 탄소중립 스마트시티</b><br>
     - 스마트 교통, AI 행정 도입<br>
     - 공공건물 태양광 등 에너지 절감 도시계획<br>
     - 생태공원, 도시숲, 스마트팜 확장<br>
-    <br>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.image("양주 탄소중립 스마트시티.jpg", caption="양주 생태공원 및 친환경 스마트시티", width=700)
+
+    st.markdown("""
+    <div style='font-size:14pt;'>
     <b>5. 교육·복지 인프라</b><br>
     - 국공립 유치원 및 학교 확충<br>
     - 지역 대학 및 평생학습 거점 마련<br>
     - 맞춤형 복지 설계: 고령자, 청년, 다문화 가정 대상
     </div>
     """, unsafe_allow_html=True)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.image("양주시 청년센터.jpg", caption="양주시 청년센터(옥정동)", width=700)
 
 with tabs[3]:
     st.header("📊 양주시 인구 변화")
@@ -270,6 +296,4 @@ with tabs[3]:
         ax.legend(prop=font_prop, fontsize=10)
         plt.tight_layout()
         st.pyplot(fig, use_container_width=False)
-        st.caption("양주시 인구 구조 변화를 5년 단위로 시각화. 데이터 출처: KOSIS 국가통계포털")
-    except Exception as e:
-        st.error(f"출생자수·사망자수 그래프 로드 중 오류가 발생했습니다: {e}")
+        st.caption("양주시 인구 구조 변화를 5년 단위로 시
