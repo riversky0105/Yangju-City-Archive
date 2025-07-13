@@ -9,8 +9,6 @@ import json
 import folium
 from streamlit_folium import st_folium
 
-# Mapbox 토큰 설정 (이전 pydeck 코드 사용 흔적이 남아있을 수 있으나 folium으로 대체됨)
-
 # --------- 스타일/폰트 ---------
 st.markdown("""
 <style>
@@ -18,16 +16,16 @@ body, .stApp { background: #232946; }
 .main-title {
     font-family: 'Press Start 2P', 'NanumGothicCoding', monospace;
     color: #a6e3e9;
-    font-size: 2.8rem;
+    font-size: 2.4rem;
     text-shadow: 0 0 10px #00f2fe, 0 0 15px #232946;
     letter-spacing: 2px;
-    padding: 20px;
+    padding: 10px 20px;
     text-align: center;
-    border-radius: 20px;
-    margin-bottom: 10px;
+    border-radius: 16px;
+    margin: 16px auto 6px auto;
     background: #232946ee;
-    border: 4px solid #393e46;
-    box-shadow: 0 0 15px #00f2fe80;
+    border: 3px solid #393e46;
+    box-shadow: 0 0 12px #00f2fe70;
 }
 .arcade-frame {
     display: flex;
@@ -114,6 +112,13 @@ body, .stApp { background: #232946; }
     box-shadow: 0 0 16px #00f2fe50;
 }
 .img-gap { margin-bottom: 16px; }
+.folium-map {
+    width: 100% !important;
+    height: 600px !important;
+}
+iframe {
+    background-color: transparent !important;
+}
 @media (max-width: 600px) {
     .arcade-frame { padding: 13vw 3vw 6vw 3vw; min-width: 0; }
     .main-title { font-size: 1.6rem; }
@@ -124,6 +129,7 @@ body, .stApp { background: #232946; }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
+
 
 # --------- 폰트 설정 ----------
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
