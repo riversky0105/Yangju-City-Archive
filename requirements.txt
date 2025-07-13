@@ -1,4 +1,4 @@
 streamlit
 matplotlib
 pandas
-git+https://github.com/bogdan-kulynych/streamlit-keyup.git
+streamlit-keyup==0.2.2
