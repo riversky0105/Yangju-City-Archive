@@ -49,7 +49,14 @@ with tabs[0]:
     - 양주목 설치: 경기 북부 광역 행정 단위<br>
     - 조선시대 서울 외곽 방어선 역할<br>
     - 현재의 의정부, 동두천, 포천, 남양주 일대가 관할 지역<br>
-    <br>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # 👉 관아지 이미지 추가
+    st.image("양주 관야지.jpg", caption="양주 관아지(양주목 관아터)", width=500)
+
+    st.markdown("""
+    <div style='font-size:13pt;'>
     <b>2. 회암사: 왕실의 불교 수행처</b><br>
     - 태조 이성계 퇴위 후 회암사 중건<br>
     - 세종 시대까지 국가 불교 중심지로 기능<br>
@@ -58,10 +65,9 @@ with tabs[0]:
     </div>
     """, unsafe_allow_html=True)
 
-    # 텍스트와 이미지 사이에 여백 추가
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
 
-    # 이미지 세로 배치
+    # 회암사지 이미지 세로 배치 (기존 코드 유지)
     st.image("회암사지.jpg", caption="회암사지 터", width=500)
     st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=500)
 
@@ -71,7 +77,14 @@ with tabs[0]:
     - 신유박해(1801) 시기 여성 신자 다수 순교<br>
     - 강완숙, 이순이 등 순교자 기록<br>
     - 장흥면에 순교 기념비, 성지 조성<br>
-    <br>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # 👉 양주 장흥 순교성지 이미지 추가
+    st.image("양주 장흥 순교성지.jpg", caption="양주 장흥 순교성지", width=500)
+
+    st.markdown("""
+    <div style='font-size:13pt;'>
     <b>4. 한국전쟁과 양주</b><br>
     - 1·4 후퇴 시 주요 격전지<br>
     - 1951년 대규모 민간인 피해<br>
