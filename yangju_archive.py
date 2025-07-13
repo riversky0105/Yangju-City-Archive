@@ -486,11 +486,12 @@ with tabs[4]:
     </div>
     """, unsafe_allow_html=True)
 
-    # 일반 지도만 표시 (OpenStreetMap)
+    # 지도 생성 (일반 지도 - OpenStreetMap)
     m = folium.Map(location=[37.7855, 127.0454], zoom_start=11, tiles="OpenStreetMap")
 
     try:
-        with open("yangju_only_boundary.geojson", "r", encoding="utf-8") as f:
+        # 최신 경계 데이터 파일 적용
+        with open("yangju_only_boundary (1).geojson", "r", encoding="utf-8") as f:
             yangju_geo = json.load(f)
 
         folium.GeoJson(
@@ -498,7 +499,7 @@ with tabs[4]:
             name="양주시 경계",
             style_function=lambda feature: {
                 "fillColor": "#00000000",  # 내부는 투명
-                "color": "#000000",        # 테두리 검정
+                "color": "#000000",        # 검정색 테두리
                 "weight": 3,
                 "dashArray": "5, 5"
             },
@@ -509,10 +510,6 @@ with tabs[4]:
         st_folium(m, width=750, height=520)
     except Exception as e:
         st.error(f"양주시 경계 데이터를 불러오는 데 실패했습니다: {e}")
-
-    show_back_button()
-    st.markdown('</div>', unsafe_allow_html=True)
-
 
     show_back_button()
     st.markdown('</div>', unsafe_allow_html=True)
