@@ -294,7 +294,7 @@ with tabs[1]:
     </div>
     """, unsafe_allow_html=True)
     img_gap()
-    st.image("양주시 나리농원 천일홍 축제.jpg", caption="양주시 나리농원 천일홍 축제 (출처: 네이버 블로그그)", width=700)
+    st.image("양주시 나리농원 천일홍 축제.jpg", caption="양주시 나리농원 천일홍 축제 (출처: 네이버 블로그)", width=700)
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
     <b>5. 삶의 질을 높이는 복지와 생활환경</b><br>
