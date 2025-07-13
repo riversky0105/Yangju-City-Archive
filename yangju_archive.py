@@ -93,7 +93,6 @@ if not st.session_state.archive_started:
     st.markdown("<div style='height:35px'></div>", unsafe_allow_html=True)
     if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=False):
         st.session_state.archive_started = True
-        st.experimental_rerun()
     st.stop()
 
 # --------- [본문] ---------
