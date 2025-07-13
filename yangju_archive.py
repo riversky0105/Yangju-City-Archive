@@ -76,24 +76,31 @@ body, .stApp { background: #232946; }
     text-shadow: 0 0 8px #00f2fe70;
     font-family: 'Press Start 2P', monospace;
 }
-.reset-btn {
+.reset-btn2 {
     background: linear-gradient(90deg, #393e46 85%, #00f2fe 100%);
     color: #fff;
-    border-radius: 16px;
+    border-radius: 12px;
     font-family: 'Press Start 2P', monospace;
     border: 2.5px solid #00f2fe;
-    box-shadow: 0 0 9px #00f2fe88;
-    margin: 8px 0 20px 0;
-    font-size: 1.07rem;
-    padding: 10px 38px 9px 38px;
+    box-shadow: 0 0 8px #00f2fe88;
+    margin: 0 0 0 8px;
+    font-size: 1.01rem;
+    padding: 7px 22px 7px 22px;
     letter-spacing: 1px;
     transition: background 0.15s, color 0.15s;
     cursor: pointer;
+    display: inline-block;
 }
-.reset-btn:hover {
+.reset-btn2:hover {
     background: #ffd6e0;
     color: #232946;
     border: 2.5px solid #00f2fe;
+}
+.tab-bar-flex {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: -8px;
 }
 @media (max-width: 600px) {
     .arcade-frame { padding: 13vw 3vw 6vw 3vw; min-width: 0; }
@@ -121,8 +128,8 @@ st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_
 if "archive_started" not in st.session_state:
     st.session_state.archive_started = False
 
+# 반드시 시작화면부터 보여주도록 코드 상단에서 분기!  
 if not st.session_state.archive_started:
-    # ---- [스타트 화면] ----
     with st.container():
         st.markdown(
             """
@@ -138,17 +145,27 @@ if not st.session_state.archive_started:
         with col2:
             if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=True):
                 st.session_state.archive_started = True
+                st.experimental_rerun()  # 바로 본문 진입!
         st.stop()
 
-# --------- [본문] ---------
-# "처음으로" 버튼 (RESET) 타이틀 아래 표시
-reset_col1, reset_col2, reset_col3 = st.columns([5,2,5])
-with reset_col2:
-    if st.button("🕹️ 처음으로", key="reset", help="시작화면으로 돌아가기", use_container_width=True):
-        st.session_state.archive_started = False
-        st.experimental_rerun()
+# --------- [본문: 탭 바 + 리셋 버튼 배치] ---------
+tab_names = ["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"]
 
-tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
+# 탭 바와 '처음으로' 버튼을 한 줄로 배치
+tab_bar_html = """
+<div class="tab-bar-flex">
+    <span id="tab-anchor"></span>
+"""
+for t in tab_names:
+    tab_bar_html += f"""<span style="font-family: 'Press Start 2P', monospace; font-size:1.1rem; background:#232946; color:#f2f2f2; border:2px solid #393e46; border-radius:12px 12px 0 0; margin-right:3px; padding:8px 18px 7px 18px; display:inline-block; opacity:0.7; cursor:default;">{t}</span>"""
+tab_bar_html += """
+    <button class="reset-btn2" onclick="window.location.reload()">🕹️ 처음으로</button>
+</div>
+"""
+st.markdown(tab_bar_html, unsafe_allow_html=True)
+
+# (실제 탭 컨텐츠 전환은 Streamlit의 st.tabs로 처리)
+tabs = st.tabs(tab_names)
 
 with tabs[0]:
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
