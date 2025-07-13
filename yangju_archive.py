@@ -109,25 +109,51 @@ with tabs[1]:
     <b>1. 인구와 행정</b><br>
     - 2025년 인구 약 29만 명, 면적 310.4㎢, 1읍 4면 7동.<br>
     - 초중고대학 67교, 약 2,800여 개의 공장 및 산업시설이 위치.<br>
-    <br>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.image("양주시 면적.jpg", caption="양주시 행정구역도", width=700)
+
+    st.markdown("""
+    <div style='font-size:14pt;'>
     <b>2. 신도시 개발 및 교통</b><br>
     - 옥정·회천 신도시 개발로 수도권 내 인구 급증(최근 수도권 증가율 1위).<br>
     - 7호선 연장, GTX-C 개통 등 서울 접근성 좋은 광역교통망 빠르게 확장.<br>
-    <br>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.image("양주 옥정신도시.jpg", caption="양주 옥정 신도시 전경", width=700)
+
+    st.markdown("""
+    <div style='font-size:14pt;'>
     <b>3. 산업기반 확충</b><br>
     - 양주테크노밸리, 첨단산업단지 개발<br>
     - 의료·바이오·IT 기업 유치 및 고용 창출, 세수 확대<br>
-    <br>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.image("양주 산업단지.jpg", caption="양주테크노밸리(조감도)", width=700)
+
+    st.markdown("""
+    <div style='font-size:14pt;'>
     <b>4. 문화·관광 자원 리브랜딩</b><br>
     - 장흥 조각공원, 송암천문대, 나리농원, 회암사지 등 관광자원 리브랜딩<br>
     - 전통+현대예술 융합, 청년예술가 지원<br>
-    <br>
+    </div>
+    """, unsafe_allow_html=True)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.image("양주시 나리농원 천일홍 축제.jpg", caption="양주시 나리농원 천일홍 축제", width=700)
+
+    st.markdown("""
+    <div style='font-size:14pt;'>
     <b>5. 삶의 질을 높이는 복지와 생활환경</b><br>
     - 광역 복지관, 문화센터, 체육시설 등 생활 인프라 대폭 확충<br>
     - 청년·고령자·다문화가정 등 맞춤 복지 정책 강화<br>
     - 쾌적한 공원, 녹지, 생활체육 환경 조성
     </div>
     """, unsafe_allow_html=True)
+    st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
+    st.image("양주 옥정 호수공원.jpg", caption="양주 옥정 호수공원", width=700)
 
 with tabs[2]:
     st.header("🌐 양주시의 미래")
