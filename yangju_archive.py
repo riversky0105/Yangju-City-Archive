@@ -1,4 +1,12 @@
 import streamlit as st
+import streamlit as st
+st.set_page_config(page_title="Test", layout="centered")
+st.write("✅ 여기는 출력 테스트용 입니다.")
+
+# 이후 코드 주석 처리
+# import pandas as pd
+# ... (모든 아래 코드 주석)
+
 st.set_page_config(page_title="양주시 아카이브 - GAMEBOY ADVANCE 스타일", layout="centered")
 
 import os
