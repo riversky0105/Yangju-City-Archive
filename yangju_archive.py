@@ -44,7 +44,6 @@ tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변
 with tabs[0]:
     st.header("📜 양주시의 과거")
 
-    # 1. 고려~조선 시대, 북방의 행정·군사 중심지
     st.markdown("""
     <div style='font-size:14pt;'>
     <b>1. 고려~조선 시대, 북방의 행정·군사 중심지</b><br>
@@ -56,7 +55,6 @@ with tabs[0]:
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주 관야지.jpg", caption="양주 관아지(양주목 관아터)", width=700)
 
-    # 2. 회암사: 왕실의 불교 수행처
     st.markdown("""
     <div style='font-size:14pt;'>
     <b>2. 회암사: 왕실의 불교 수행처</b><br>
@@ -70,7 +68,6 @@ with tabs[0]:
     st.image("회암사지.jpg", caption="회암사지 터", width=700)
     st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=700)
 
-    # 3. 조선 후기 천주교 박해의 현장
     st.markdown("""
     <div style='font-size:14pt;'>
     <b>3. 조선 후기 천주교 박해의 현장</b><br>
@@ -82,7 +79,6 @@ with tabs[0]:
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주 장흥 순교성지.jpg", caption="양주 장흥 순교성지", width=700)
 
-    # 4. 농업과 장터(조선~현대)
     st.markdown("""
     <div style='font-size:14pt;'>
     <b>4. 농업과 장터</b><br>
@@ -95,7 +91,6 @@ with tabs[0]:
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
     st.image("양주 장터.jpg", caption="1970~1980년대 시골 장터(경기북부, 양주 일대)", width=700)
 
-    # 5. 한국전쟁과 양주
     st.markdown("""
     <div style='font-size:14pt;'>
     <b>5. 한국전쟁과 양주</b><br>
