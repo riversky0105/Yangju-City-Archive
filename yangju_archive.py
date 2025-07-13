@@ -3,14 +3,13 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
-import numpy as np
 import re
+import numpy as np
 import folium
-import json
 from shapely.geometry import shape
-from streamlit_folium import st_folium
+from streamlit_folium import folium_static
 
-# ---------- 스타일 및 폰트 ----------
+# --------- 스타일/폰트 ---------
 st.markdown("""
 <style>
 body, .stApp { background: #232946; }
@@ -112,7 +111,13 @@ body, .stApp { background: #232946; }
     width: 100%;
     box-shadow: 0 0 16px #00f2fe50;
 }
-.img-gap { margin-bottom: 16px; }
+/* 이미지와 텍스트 사이 간격 추가 */
+.stImage {
+    margin-bottom: 0px !important;
+}
+.img-gap {
+    margin-bottom: 16px;
+}
 @media (max-width: 600px) {
     .arcade-frame { padding: 13vw 3vw 6vw 3vw; min-width: 0; }
     .main-title { font-size: 1.6rem; }
@@ -124,6 +129,7 @@ body, .stApp { background: #232946; }
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 """, unsafe_allow_html=True)
 
+# --------- 폰트(플롯용) ----------
 FONT_PATH = os.path.join("fonts", "NanumGothicCoding.ttf")
 if os.path.exists(FONT_PATH):
     font_prop = fm.FontProperties(fname=FONT_PATH)
@@ -133,8 +139,11 @@ else:
     font_prop = None
 
 st.set_page_config(page_title="양주시 아카이브 GAME", layout="wide")
+
+# --------- 항상 상단에 타이틀 고정 ---------
 st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
 
+# --------- 세션 상태로 시작화면/본문 분기 ---------
 if "archive_started" not in st.session_state:
     st.session_state.archive_started = False
 
@@ -142,9 +151,11 @@ def reset_to_start():
     st.session_state.archive_started = False
     st.session_state.current_tab = 0
 
+# --------- [스타트 화면] ---------
 if not st.session_state.archive_started:
     with st.container():
-        st.markdown("""
+        st.markdown(
+            """
             <div class="arcade-frame">
                 <div class="pixel-stars">★&nbsp;◀&nbsp;WELCOME&nbsp;▶&nbsp;★</div>
                 <div class="subtitle">
@@ -152,15 +163,15 @@ if not st.session_state.archive_started:
                 </div>
                 <div class="blink">PRESS START</div>
             </div>
-        """, unsafe_allow_html=True)
+            """, unsafe_allow_html=True)
         col1, col2, col3 = st.columns([2,3,2])
         with col2:
-            if st.button("🎮 GAME START", key="gamestart", use_container_width=True):
+            if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=True):
                 st.session_state.archive_started = True
         st.stop()
 
-tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화", "📍 지도"])
-
+# --------- [본문] ---------
+tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화", "🗺️ 지도"])
 
 def get_docum_msg():
     tab = st.session_state.get('current_tab', 0)
@@ -385,35 +396,32 @@ with tabs[3]:
 with tabs[4]:
     st.session_state.current_tab = 4
     st.markdown('<div class="pixel-border">', unsafe_allow_html=True)
-    st.header("📍 양주시 지도")
+    st.header("🗺️ 양주시 지도")
     st.markdown("""
-    <div style='font-size:14pt; color:#fff;'>
-    경기도 양주시의 위치와 지형을 위성 지도와 일반 지도로 확인할 수 있습니다.<br><br>
-    지도의 유형을 선택하세요.
-    </div>
+    <span style='color:#fff; font-size:14pt;'>경기도 양주시의 위치와 지형을 위성 지도와 일반 지도로 확인할 수 있습니다.</span>
     """, unsafe_allow_html=True)
 
-    map_type = st.radio("", ["일반 지도 (Map)", "위성 지도 (Satellite)"], index=0, horizontal=True, label_visibility="collapsed")
-    tiles = "OpenStreetMap" if "일반" in map_type else "Stamen Terrain"
-    m = folium.Map(location=[37.8, 127.05], zoom_start=11, tiles=tiles)
+    map_type = st.radio(
+        "지도의 유형을 선택하세요.",
+        options=["일반 지도 (Map)", "위성 지도 (Satellite)"],
+        horizontal=True,
+    )
 
-    try:
-        with open("yangju_boundary.geojson", encoding="utf-8") as f:
-            geo_data = json.load(f)
-        folium.GeoJson(
-            geo_data,
-            name="양주시 경계",
-            style_function=lambda feature: {
-                "fillColor": "#00000000",
-                "color": "#00f2fe",
-                "weight": 3,
-                "dashArray": "5, 5"
-            },
-            tooltip="양주시 경계"
-        ).add_to(m)
-        folium.LayerControl().add_to(m)
-        st_folium(m, width=700, height=500)
-    except Exception as e:
-        st.error(f"지도 데이터를 불러오는 데 실패했습니다: {e}")
+    center_coords = [37.7855, 127.0454]  # 양주시 옥정신도시 기준
 
-    st.markdown("</div>", unsafe_allow_html=True)
+    if map_type == "일반 지도 (Map)":
+        m = folium.Map(location=center_coords, zoom_start=12, tiles="OpenStreetMap")
+    else:
+        m = folium.Map(location=center_coords, zoom_start=12, tiles="Esri.WorldImagery")
+
+    # 예시 마커 - 양주시청 위치
+    folium.Marker(
+        location=center_coords,
+        popup="양주시청",
+        icon=folium.Icon(color="blue", icon="info-sign")
+    ).add_to(m)
+
+    folium_static(m)
+
+    show_back_button()
+    st.markdown('</div>', unsafe_allow_html=True)
