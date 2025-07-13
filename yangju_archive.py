@@ -53,7 +53,7 @@ with tabs[0]:
     """, unsafe_allow_html=True)
     
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
-    st.image("양주 관야지.jpg", caption="양주 관아지(양주목 관아터)", width=600)
+    st.image("양주 관야지.jpg", caption="양주 관아지(양주목 관아터)", width=700)
 
     st.markdown("""
     <div style='font-size:14pt;'>
@@ -66,8 +66,8 @@ with tabs[0]:
     """, unsafe_allow_html=True)
 
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
-    st.image("회암사지.jpg", caption="회암사지 터", width=600)
-    st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=600)
+    st.image("회암사지.jpg", caption="회암사지 터", width=700)
+    st.image("회암사지 복원도.jpg", caption="회암사지 추정 복원도", width=700)
 
     st.markdown("""
     <div style='font-size:14pt;'>
@@ -79,7 +79,7 @@ with tabs[0]:
     """, unsafe_allow_html=True)
 
     st.markdown("<div style='height:20px'></div>", unsafe_allow_html=True)
-    st.image("양주 장흥 순교성지.jpg", caption="양주 장흥 순교성지", width=600)
+    st.image("양주 장흥 순교성지.jpg", caption="양주 장흥 순교성지", width=700)
 
     st.markdown("""
     <div style='font-size:14pt;'>
