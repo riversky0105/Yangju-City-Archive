@@ -24,45 +24,61 @@ body, .stApp { background: #232946; }
     border: 4px solid #393e46;
     box-shadow: 0 0 15px #00f2fe80;
 }
-.game-btn {
-    background: #f44336;
-    color: white;
-    border-radius: 20px;
-    font-family: 'Press Start 2P', 'NanumGothicCoding', monospace;
-    border: 3px solid #232946;
-    box-shadow: 0 0 7px #ffadad;
-    margin: 30px 0 36px 0;
-    font-size: 1.4rem;
-    padding: 18px 50px;
-    transition: background 0.2s;
+.arcade-frame {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: rgba(35, 41, 70, 0.92);
+    border: 6px solid #00f2fe;
+    border-radius: 32px;
+    box-shadow: 0 0 40px #00f2fe44, 0 0 2px #232946;
+    padding: 60px 48px 36px 48px;
+    margin: 70px auto 40px auto;
+    max-width: 540px;
+    min-width: 330px;
+    z-index: 2;
 }
-.game-btn:hover {
-    background: #232946;
-    color: #ffadad;
-    border: 3px solid #f44336;
-}
-.pixel-border {
-    border: 5px solid #393e46;
-    border-radius: 20px;
-    background: #232946cc;
-    box-shadow: 0 0 20px #00f2fe99;
-    padding: 20px 35px 25px 35px;
-    margin-bottom: 32px;
-}
-.stTabs [role="tab"] {
+.arcade-frame .subtitle {
     font-family: 'Press Start 2P', monospace;
-    font-size: 1.1rem;
-    background: #232946;
-    color: #f2f2f2;
-    border: 2px solid #393e46;
-    border-radius: 12px 12px 0 0;
-    margin-right: 3px;
-}
-.stTabs [role="tab"][aria-selected="true"] {
-    background: #393e46;
     color: #ffd6e0;
-    border-bottom: 4px solid #00f2fe;
-    text-shadow: 0 0 10px #00f2fe90;
+    font-size: 15pt;
+    background: #232946f2;
+    padding: 15px 24px 13px 24px;
+    border-radius: 18px;
+    margin-bottom: 36px;
+    margin-top: 12px;
+    text-align: center;
+    box-shadow: 0 0 18px #00f2fe50;
+    letter-spacing: 1px;
+    border: 3px solid #393e46;
+}
+.blink {
+    animation: blink 1.15s steps(1) infinite;
+    font-family: 'Press Start 2P', monospace;
+    color: #ffd6e0;
+    font-size: 1.10rem;
+    margin-bottom: 8px;
+    margin-top: 18px;
+    text-shadow: 0 0 8px #00f2fe;
+}
+@keyframes blink {
+    0%, 55% { opacity: 1; }
+    56%, 100% { opacity: 0.22; }
+}
+.pixel-stars {
+    text-align: center;
+    font-size: 1.3rem;
+    color: #ffd6e0;
+    letter-spacing: 9px;
+    margin-top: 0px;
+    margin-bottom: 13px;
+    text-shadow: 0 0 8px #00f2fe70;
+    font-family: 'Press Start 2P', monospace;
+}
+@media (max-width: 600px) {
+    .arcade-frame { padding: 13vw 3vw 6vw 3vw; min-width: 0; }
+    .main-title { font-size: 1.6rem; }
 }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -79,25 +95,32 @@ else:
 
 st.set_page_config(page_title="양주시 아카이브 GAME", layout="wide")
 
+# --------- 항상 상단에 타이틀 고정 ---------
+st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
+
 # --------- 세션 상태로 시작화면/본문 분기 ---------
 if "archive_started" not in st.session_state:
     st.session_state.archive_started = False
 
-# --------- 상단 고정 타이틀 ---------
-st.markdown('<div class="main-title">양주시 아카이브 GAME</div>', unsafe_allow_html=True)
-
 if not st.session_state.archive_started:
-    # ---- [시작 화면] ----
-    st.markdown("<div style='height:25px'></div>", unsafe_allow_html=True)
-    st.markdown(
-        "<div style='text-align:center;'><span style='font-family: Press Start 2P, monospace; font-size:15pt; color:#fff; background:#232946cc; padding:14px 22px; border-radius:16px;'>경기도 양주시의 역사와 미래 비전을 구경하세요!</span></div>",
-        unsafe_allow_html=True
-    )
-    st.markdown("<div style='height:48px'></div>", unsafe_allow_html=True)
-    if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=False):
-        st.session_state.archive_started = True
-        st.experimental_rerun()
-    st.stop()
+    # ---- [스타트 화면] ----
+    with st.container():
+        st.markdown(
+            """
+            <div class="arcade-frame">
+                <div class="pixel-stars">★&nbsp;◀&nbsp;WELCOME&nbsp;▶&nbsp;★</div>
+                <div class="subtitle">
+                    경기도 양주시의<br>역사와 미래 비전을<br>구경하세요!
+                </div>
+                <div class="blink">PRESS START</div>
+            </div>
+            """, unsafe_allow_html=True)
+        # 버튼은 Streamlit에서 중앙에 나오도록 배치
+        col1, col2, col3 = st.columns([2,3,2])
+        with col2:
+            if st.button("🎮 GAME START", key="gamestart", help="아카이브 시작!", use_container_width=True):
+                st.session_state.archive_started = True
+        st.stop()
 
 # --------- [본문] ---------
 tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
@@ -357,9 +380,3 @@ with tabs[3]:
         st.error(f"출생자수·사망자수 그래프 로드 중 오류가 발생했습니다: {e}")
 
     st.markdown('</div>', unsafe_allow_html=True)
-
-# --------- 맨 아래 "처음으로" 버튼 1개만 ---------
-st.markdown("<div style='height:22px'></div>", unsafe_allow_html=True)
-if st.button("🕹 처음으로", key="back_to_start", help="시작 화면으로 돌아가기", use_container_width=False):
-    st.session_state.archive_started = False
-    st.experimental_rerun()
