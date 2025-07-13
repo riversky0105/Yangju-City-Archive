@@ -482,7 +482,7 @@ with tabs[4]:
     st.header("📍 양주시 지도")
     st.markdown("""
     <div style='font-size:14pt; color:#fff;'>
-    경기도 양주시의 위치와 지형을 일반 지도로 확인할 수 있습니다.
+    경기도 양주시의 위치와 각 행정 구역(읍·면·동)을 일반 지도로 확인할 수 있습니다.
     </div>
     """, unsafe_allow_html=True)
 
@@ -490,29 +490,30 @@ with tabs[4]:
     import folium
     from streamlit_folium import st_folium
 
-    # 기본 지도 생성
+    # 지도 생성
     m = folium.Map(location=[37.7855, 127.0454], zoom_start=11, tiles="OpenStreetMap")
 
     try:
-        # 최종 확정된 경계 파일 로드
         with open("yangju_only_fixed.geojson", "r", encoding="utf-8") as f:
             yangju_geo = json.load(f)
 
-        # GeoJSON 계층 추가
-        folium.GeoJson(
-            yangju_geo,
-            name="양주시 경계",
-            style_function=lambda feature: {
-                "fillColor": "#00000000",  # 투명 채우기
-                "color": "#000000",        # 검정색 테두리
-                "weight": 3,
-                "dashArray": "5, 5"
-            },
-            tooltip="양주시 경계"
-        ).add_to(m)
+        # 각 구역별로 테두리와 이름 표시
+        for feature in yangju_geo["features"]:
+            name = feature["properties"].get("읍면동명") or feature["properties"].get("adm_nm") or "양주시"
+            folium.GeoJson(
+                data=feature,
+                style_function=lambda f: {
+                    "fillColor": "#00000000",
+                    "color": "#000000",
+                    "weight": 2,
+                    "dashArray": "5, 5"
+                },
+                tooltip=folium.Tooltip(name, sticky=True)
+            ).add_to(m)
 
         folium.LayerControl().add_to(m)
-        st_folium(m, width=700, height=500)
+        # 지도 크기 넉넉하게 설정
+        st_folium(m, width=900, height=600)
 
     except Exception as e:
         st.error(f"양주시 경계 데이터를 불러오는 데 실패했습니다: {e}")
