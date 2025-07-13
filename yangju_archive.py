@@ -355,4 +355,3 @@ with tabs[3]:
         st.error(f"출생자수·사망자수 그래프 로드 중 오류가 발생했습니다: {e}")
 
     st.markdown('</div>', unsafe_allow_html=True)
-
