@@ -40,18 +40,36 @@ body, .stApp { background: #141a22 !important; }
 .arcade-screen {
     margin: 0 auto;
     width: 860px;
-    min-height: 740px;
+    height: 670px;                /* 고정 높이로 지정! */
+    max-height: 670px;
     border-radius: 28px;
     background: linear-gradient(180deg,#151a24 85%,#232946 100%);
     box-shadow: 0 0 48px #00f2fe88, 0 0 44px #232946cc;
     border: 8px solid #0dfcff;
-    padding: 34px 40px 38px 40px;
+    padding: 0;
     position: relative;
     z-index: 2;
+    overflow: hidden;             /* 화면 밖 스크롤X */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
+}
+.arcade-inner-scroll {
+    width: 100%;
+    height: 100%;
+    max-height: 670px;
+    overflow-y: auto !important;      /* 스크롤! */
+    padding: 34px 40px 38px 40px;
+    box-sizing: border-box;
+}
+.arcade-inner-scroll::-webkit-scrollbar {
+    width: 10px;
+    background: #222831;
+}
+.arcade-inner-scroll::-webkit-scrollbar-thumb {
+    background: #00f2fe88;
+    border-radius: 7px;
 }
 .arcade-buttons {
     display: flex;
@@ -143,7 +161,9 @@ st.markdown('<div class="arcade-cabinet">', unsafe_allow_html=True)
 st.markdown('<div class="arcade-top">양주시 아카이브</div>', unsafe_allow_html=True)
 st.markdown('<div class="arcade-screen">', unsafe_allow_html=True)
 
-# =============== 컨텐츠는 arcade-screen 내부 st.container로 래핑! ==============
+# ---------- 오락기 화면 내부 스크롤 컨테이너 ----------
+st.markdown('<div class="arcade-inner-scroll">', unsafe_allow_html=True)
+
 with st.container():
     tabs = st.tabs(["📜 과거", "🏙️ 현재", "🌐 미래", "📊 인구 변화"])
 
@@ -306,12 +326,11 @@ with st.container():
         양주시 인구 구조 변화를 월별/연도별 및 5년 단위 출생자수·사망자수와 함께 시각화합니다. <b>데이터 출처: KOSIS 국가통계포털</b>
         </div>
         """, unsafe_allow_html=True)
-        # 인구 변화 그래프 코드 ... (생략없이 기존 그래프코드 그대로!)
-        # 위에서 제공한 전체 코드 참고해서 인구 변화, 출생자/사망자수 그래프 코드를 넣어줘!
+        # ... 인구 그래프 코드 생략 없이 삽입!
         st.markdown('</div>', unsafe_allow_html=True)
 
-# ============== arcade-screen 닫기 ==============
-st.markdown('</div>', unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True) # arcade-inner-scroll 닫기
+st.markdown('</div>', unsafe_allow_html=True) # arcade-screen 닫기
 
 # --------- 하단 Arcade 버튼 장식 ---------
 st.markdown("""
